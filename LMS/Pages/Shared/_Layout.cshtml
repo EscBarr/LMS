@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>*@
+    <script src="~/lib/popper.js/umd/popper.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
+
+    <link href="~/MyCss/main.css" rel="stylesheet" />
+</head>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<body>
+    <!--меню--> 
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="       
+        min-height: 100px;
+        padding-left: 120px;
+        padding-right: 120px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #262626;
+        font-size: 24px;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="~/index" id="Namenavbar">ASTU.LMS</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item" id="courses">
+                                <a class="nav-link" aria-selected="true" href="~/courses">Курсы</a>
+                            </li>
+                            <li class="nav-item" id="journal">
+                                <a class="nav-link" aria-selected="false" href="~/Journal">Журнал</a>
+                            </li>
+                            @*<li class="nav-item" id="contest">
+                                <a class="nav-link" href="~/contest">Лабораторные работы</a>
+                            </li>*@
+                              <li class="nav-item" id="versioncontrol">
+                                <a class="nav-link" href="~/repositoryuser">Репозитории</a>
+                            </li>
+                              <li class="nav-item" id="versioncontrolteacher">
+                                <a class="nav-link" href="~/repositoryteacher">Репозитории студентов</a>
+                            </li>
+                            <li class="nav-item" id="privacy">
+                                <a class="nav-link" href="~/Privacy">О программе</a>
+                            </li>
+                            <li class="nav-item dropdown" id="users">
+                                <a class="nav-link dropdown-toggle" href="#" id="UsersDown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Пользователи</a>
+                                <ul class="dropdown-menu" aria-labelledby="ResultsDown">
+                                    <a class="dropdown-item" href="~/UserAdmin">Администраторы</a>
+                                    <a class="dropdown-item" href="~/UserTeacher">Преподаватели</a>
+                                    <a class="dropdown-item" href="~/UserStudent">Студенты</a>
+                                </ul>
+                            </li>
+                           @* <li class="nav-item" id="versioncontrolteacher">
+                                <a class="nav-link" aria-selected="false" href="~/groups">Группы</a>
+                            </li>*@
+                            <li class="nav-item dropdown" id="results">
+                                <a class="nav-link dropdown-toggle" href="#" id="ResultsDown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Администрирование</a>
+                                <ul class="dropdown-menu" aria-labelledby="ResultsDown">
+                                    <a class="nav-link" aria-selected="false" href="~/groups">Группы</a>
+                                </ul>
+                            </li>
+
+                        </ul>
+                        <div id="userInfo" class="align-items-center">
+                            <span class="userName" style="color: white;"></span>
+                            <input type="button" class="btn btn-outline-danger" style="margin-left: 10px;" value="Выйти" id="logOut" />
+                        </div>
+                    </div>
+            </div>
+        </nav>
+
+    </header>
+    <!--глобальный скрипт(Основные переменные и создание меню)-->
+    <script>
+        let username = "userName";
+        let userId = "userId";
+        let roles = 'roles';
+        let group = $('#group');
+        let gitusername ='';
+        let info = $('#privacy')
+        //let template = $('#template');
+       // let speciality = $('#speciality');
+        //let variant = $('#variant');
+        let cr = $('#courses');
+        let aw = $('#assignvariant');
+        //let disciplines = $('#disciplines');
+        let journal = $('#journal');
+        let contest = $('#contest');
+        //let themes = $('#themes');
+        //let components = $('#component');
+        let results = $('#results');
+        //let plans = $('#plans');
+        let users = $('#users');
+        let vcs = $('#versioncontrol');
+        let vcsteacher = $('#versioncontrolteacher');
+        //Переделать от
+        let btnLog = document.getElementById('logOut');
+        btnLog.style = "display: block";
+        //до 
+
+        let userInfo = $('#userInfo');
+
+        $('#logOut').click(function (e) {
+            e.preventDefault();
+            $('.loginForm').css('display', 'block');
+
+            userInfo.css('display', 'none');
+            btnLog.style = "display: none";//Переделать
+
+            sessionStorage.removeItem(username);
+            sessionStorage.removeItem(roles);
+            sessionStorage.removeItem(userId);
+            location.href = "/";
+            showMenu();
+        });
+        showMenu();
+        function showMenu() {
+            info.css('display', 'none');
+            vcsteacher.css('display', 'none');
+            vcs.css('display', 'none');
+            //disciplines.css('display', 'none');
+            journal.css('display', 'none');
+            group.css('display', 'none');
+            //template.css('display', 'none');
+            //speciality.css('display', 'none');
+            //variant.css('display', 'none');
+            cr.css('display', 'none');
+            aw.css('display', 'none');
+            contest.css('display', 'none');
+            //themes.css('display', 'none');
+            //components.css('display', 'none');
+            results.css('display', 'none');
+            //plans.css('display', 'none');
+            users.css('display', 'none');
+            let roles = JSON.parse(sessionStorage.getItem('roles'));
+            if (roles == null) return;
+            if (roles.includes('Teacher')) {
+                info.css('display', 'block');
+                //template.css('display', 'block');
+                //variant.css('display', 'block');
+                cr.css('display', 'block');
+                aw.css('display', 'block');
+                //themes.css('display', 'block');
+                //components.css('display', 'block');
+                journal.css('display', 'block');
+                group.css('display', 'block');
+                //disciplines.css('display', 'block');
+                //speciality.css('display', 'block');
+                results.css('display', 'block');
+                vcsteacher.css('display', 'block');
+            }
+            if (roles.includes('Admin')) {
+                info.css('display', 'block');
+                cr.css('display', 'block');
+                group.css('display', 'block');
+                //speciality.css('display', 'block');
+                //components.css('display', 'block');
+                users.css('display', 'block');
+                //plans.css('display', 'block');
+                vcsteacher.css('display', 'block');
+            }
+            if (roles.includes('Student')) {
+                info.css('display', 'block');
+                contest.css('display', 'block');
+                vcs.css('display', 'block');
+            }
+            if (sessionStorage.getItem(userId) != null) {
+                userInfo.css('display', 'flex');
+
+                btnLog.style = "display: block;  margin-left: 10px;";//Переделать
+               
+                $('.loginForm').css('display', 'none');
+                $('.userName').text(sessionStorage.getItem(username));
+            }
+        }
+        //function openCreateQuestionsWithParam() 
+        //{
+        //var queryString = "?id=" + userId;
+        //window.location.href = "/repositoryuser" + queryString; 
+        //}
+    </script>
+    <!--основной контент-->
+    <div id="content" class="container customContainer">
+        @RenderBody()
+    </div>
+    <hr />
+    <footer style="padding-left: 5%">
+        <p>@DateTime.Now.Year - ASTU.LMS</p>
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

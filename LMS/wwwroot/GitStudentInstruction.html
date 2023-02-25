@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<style>
+    .scrollup {
+        width: 40px;
+        height: 40px;
+        opacity: 0.3;
+        position: fixed;
+        bottom: 50px;
+        right: 100px;
+        display: none;
+        text-indent: -9999px;
+        background: no-repeat url("/img/testInstructionImg/icon_top.png");
+    }
+</style>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Инструкция для студента</title>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) {
+                    $('.scrollup').fadeIn();
+                } else {
+                    $('.scrollup').fadeOut();
+                }
+            });
+
+            $('.scrollup').click(function () {
+                $("html, body").animate({ scrollTop: 0 }, 600);
+                return false;
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+
+        <h2 class="my-4" style="text-align: center;">Инструкция для студента</h2>
+        <hr />
+        <button class="btn btn-primary">
+            <a style="color: white;" href="/files/Инструкция студента.pdf" download="Инструкция для студента">Скачать файл с инструкцией</a>
+        </button>
+        <hr />
+        <div name="tableСontents">
+            <h4>Содержание</h4>
+            <ul>
+                <li><a href="#RepoAccess">1 Доступ к репозиториям</a></li>
+                <ul>
+                    <li><a href="#RepoInternals">1.1 Устройство репозитория</a></li>
+   
+                </ul>
+                <li><a href="#RepoFiles">2 Взаимодействием с файлами</a></li>
+                <ul>
+                    <li><a href="#RepoDownload">2.1 Скачивание репозитория</a></li>
+                    <li><a href="#RepoUrl">2.2 Получение ссылки для удаленной отправки изменений</a></li>
+                </ul>
+            </ul>
+        </div>
+        <hr />
+        <div name="content">
+            <h3><a name="RepoAccess">1. Доступ к репозиториям</a></h3>
+            <p>Первым шагом в процессе просмотра исходного кода является просмотр, созданных вами репозиториев</p>
+            <div style="margin-left: 2%;">
+                <h4><a name="RepoInternals">1.1 Устройство репозитория</</a></h4>
+                <ul>
+                    <li>Перейдите на вкладку "Репозитории", выбрав соответсвующий пункт в меню</li>
+                    <li>Нажмите на название репозитория</li>
+                    <li>В появившемся окне будет отображен список файлов вашего проекта</li>
+                    <li>Взаимодествие с файлами описано ниже в <a href="#RepoAccess">2 главе</a> </li>
+                </ul>
+            </div>
+
+            <hr />
+
+            <h3><a name="RepoFiles">2. Взаимодействием с файлами</a></h3>
+            <p>Для взаимодествия с файлами необходимо зайти в ваш репозиторий, если вы этого не сделали перейдите к <a href="#RepoAccess">пункту 1</a></p>
+            <p>Когда вы вносите изменения в файл репозитории будет создан новый коммит, с названием, которое вы указали</p>
+            <div>
+                <ul>
+                    <li>После открытия репозитрория с файлами нажмите на файл который хотите просмотреть/изменить</li>
+                    <li>Для начала внесения изменений в файл нажмите на кнопку "Редактировать"</li>
+                    <li>После того как вы закончили нажмите "Сохранить" и введите название вашего коммита</li>
+                    <li>Теперь преподаватель увидит изменения, которые вы внесли</li>
+
+                </ul>
+            </div>
+            <div style="margin-left: 2%;">
+                <h4><a name="RepoDownload">2.1 Скачивание репозитория</</a></h4>
+                <ul>
+                    <li>Перейдите на вкладку "Репозитории", выбрав соответсвующий пункт в меню</li>
+                    <li>Нажмите на название репозитория</li>
+                    <li>В появившемся окне будет отображен список файлов вашего проекта</li>
+                    <li>Нажмите на кнопку "Скачать"</li>
+                    <li>После этого запустится скачивание сжатого архива с файлами репозитория</li>
+                </ul>
+            </div>
+            <div style="margin-left: 2%;">
+                <h4><a name="RepoUrl">2.2 Получение ссылки для удаленной отправки изменений</</a></h4>
+                <ul>
+                    <li>Перейдите на вкладку "Репозитории", выбрав соответсвующий пункт в меню</li>
+                    <li>Нажмите на название репозитория</li>
+                    <li>В появившемся окне будет отображен список файлов вашего проекта</li>
+                    <li>Нажмите на кнопку "Код" и в выпадающем меню вы увидете ссылку на репозиторий</li>
+                    <li>После этого скопируйте её и вставьте в свою среду разработки для удаленной отправки изменений</li>
+                </ul>
+            </div>
+        </div>
+        <a href="#" class="scrollup">Наверх</a>
+</body>
+</html>

@@ -1,0 +1,217 @@
+@page
+@model LMS.Pages.Groups
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Группы";
+}
+<div class="container customContainer LabWorkContainer">
+
+        <div aria-label="breadcrumb">
+            <ol class="mybreadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="~/index">Домой</a>
+                </li>
+                <li class="breadcrumb-item not-active" aria-current="page">
+                    Группы
+                </li>
+            </ol>
+        </div>
+    <div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+        <div class="myHeadingPage">
+            Группы
+        </div>
+        <div>
+            <button class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить группу</button>
+        </div>
+    </div>
+    <div id="ContentGroups"></div>
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Новая группа</h4><button class="close" type="button" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Groups", FormMethod.Post))
+                {
+                    @Html.Label("Наименование группы:\t")
+                    @Html.TextBox("Name", null, new { id = "newName" })
+                    @Html.Label("Год начала обучения:\t")
+                    @Html.TextBox("Year", null, new { id = "newYear" })
+                    //@Html.Label("Код специальности:\t")
+                    //@Html.DropDownList("SpecialityId", Model.Specialities, new { id = "newSpecialityId" })
+                    <p><input type="button" class="btn btn-dark" value="Отправить" onclick="createGroup()" /></p>
+                }
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
+
+<div id="edit" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Редактирование группы</h4><button class="close" type="button" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Update", "Groups", FormMethod.Post))
+                {
+                    @Html.Label("Наименование группы:\t")
+                    @Html.TextBox("Name", null, new { id = "EditName" })
+                    @Html.Label("Год начала обучения:\t")
+                    @Html.TextBox("Year", null, new { id = "EditYear" })
+                    //@Html.Label("Код специальности:\t")
+                    //@Html.DropDownList("SpecialityId", Model.Specialities, new { id = "EditSpecialityId" })
+                    @Html.Hidden("groupId", null, new { id = "EditGroupId" });
+                    <p><input type="button" class="btn btn-dark" value="Отправить" onclick="editGroup()" /></p>
+                }
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $.ajax(
+        {
+            type: 'GET',
+            url: '/api/groups/getall',
+            beforeSend: (xhr) => {
+            },
+            success: (groups) => {
+                let contentZone = document.getElementById('ContentGroups');
+                for (let group of groups) {
+                    let divZone = document.createElement('div');
+                    divZone.className = "d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow";
+                    divZone.style = "justify-content: space-between;";
+                    for (let prop in group) {
+                        if (prop !== 'groupId') {
+                            let divContent = document.createElement('div');
+                            divContent.className = "nameTheme";
+                            if (prop == 'specialtyId')
+                                divContent.textContent= "Код: ";
+                            else if (prop == 'year')
+                                divContent.textContent = "Год: ";
+                            divContent.appendChild(document.createTextNode(group[prop]));
+                            divZone.appendChild(divContent);
+                        }
+                    }
+                    let divButton = document.createElement('div');
+                    divButton.dataset.id = group.groupId;
+                    divButton.innerHTML = '<button data-bs-toggle="modal" onclick="editPrepareGroup(this)" data-bs-target="#edit" class="btn custom btn-primary edit-item">Редактировать</button>' +
+                        '<button onclick="removeGroup(' + group.groupId + ')" style="margin-left: 10px;" class="btn custom btn-danger remove-item">Удалить</button>';
+                    divZone.appendChild(divButton);
+                    contentZone.appendChild(divZone);
+                }
+            },
+            error: (groupsFail) => {
+                document.body.innerHTML = '';
+                alert('Нет доступа');
+                history.go(-1);
+            }
+        }
+    );
+
+    function createGroup() {
+        let group = {
+            Name: $('#newName').val(),
+            Year: $('#newYear').val(),
+            //SpecialityId: $('#newSpecialityId').val()
+        };
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/groups/create',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(group),
+                beforeSend: (xhr) => {
+                },
+                success: (g) => {
+                    document.location.reload(true);
+                },
+                error: (response) => {
+                    console.log(response);
+                    alert('Не удалось добавить группу');
+                }
+            }
+        );
+    }
+    function removeGroup(groupId) {
+        if (confirm("Вы точно хотите удалить эту группу?")) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/api/groups/delete',
+                    beforeSend: (xhr) => {
+                        xhr.setRequestHeader("groupId", groupId)
+                    },
+                    success: (g) => {
+                        document.location.reload(true);
+                    },
+                    error: (response) => {
+                        console.log(response);
+                        alert('В группе есть ещё студенты');
+                    }
+                }
+            );
+        }
+    }
+
+    //function editPrepareGroup(obj) {
+    //    let id = $(obj).parent("td").data('id');
+    //    let code = $(obj).parent("td").prev("td").text();
+    //    let year = $(obj).parent("td").prev("td").prev("td").text();
+    //    let group = $(obj).parent("td").prev("td").prev("td").prev("td").text();
+
+    //    $("#edit").find("input[id='EditName']").val(group);
+    //    $("#edit").find("input[id='EditYear']").val(year);
+    //    $("#edit").find("input[type='hidden']").val(id);
+    //    $("#edit").find("select[id='EditSpecialityId']").val(code);
+    //}
+
+    function editPrepareGroup(obj) {
+        let id = $(obj).parent("div").data('id');
+        //let code = $(obj).parent("div").prev("div").text();
+        let year = $(obj).parent("div").prev("div").prev("div").text();
+        let group = $(obj).parent("div").prev("div").prev("div").prev("div").text();
+
+        year = year.split(' ');
+        //code = code.split(' ');
+
+        $("#edit").find("input[id='EditName']").val(group);
+        $("#edit").find("input[id='EditYear']").val(year[1]);
+        $("#edit").find("input[type='hidden']").val(id);
+       //$("#edit").find("select[id='EditSpecialityId']").val(code[1]);
+    }
+
+    function editGroup() {
+        let group = {
+            Name: $('#EditName').val(),
+            Year: $('#EditYear').val(),
+            //SpecialityId: $('#EditSpecialityId').val()
+        };
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/groups/update',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(group),
+                beforeSend: (xhr) => {
+                    xhr.setRequestHeader("groupId", $('#EditGroupId').val());
+                },
+                success: (g) => {
+                    document.location.reload(true);
+                },
+                error: (response) => {
+                    console.log(response);
+                    alert('Не удалось обновить группу');
+                }
+            }
+        );
+    }
+</script>
+

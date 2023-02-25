@@ -1,0 +1,177 @@
+﻿@page
+@model LMS.Pages.RepositoryTeacherModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Репозитории студентов";
+}
+
+<div aria-label="breadcrumb">
+        <ol class="mybreadcrumb">
+            <li class="breadcrumb-item">
+                <a href="~/index">Домой</a>
+            </li>
+            <li class="breadcrumb-item not-active">
+                Репозитории
+            </li>
+        </ol>
+    </div>
+
+    <div class="myHeadingPage">
+        Список репозиториев
+    </div>
+      <div class="d-flex d-flex align-items-end">
+            <div class="mySubContainerForFilter m-3" style="justify-content:space-between">
+                <div>
+                    <span>Группа: </span><select title="Выбор группы студента" onchange="InitStudentsContainer()" id="groupSelect"></select>
+                </div>
+                <div>
+                    <span>Cтудент: </span><select title="Выбор конкретного студента" onchange="InitRepoContainer()" id="studentSelect"></select>
+                </div>
+                <input title="Введите название для поиска" onchange="RepoSearch()" id="RepoSearch" placeholder="Найти репозиторий…">
+            </div>
+        </div>
+<div id="DecsofElem" class="d-flex align-items-center" @*style="justify-content: space-between"*@> 
+    <div class="col-sm-3">Название</div>
+    <div class="col-sm-6">Описание</div>
+    <div class="col-sm-3">Дата обновления</div>
+   @*<div class="col-sm-3" style="visibility: hidden">Удаление</div>*@
+</div>
+<div id="ContentRepos"></div>
+<script>
+     $.ajax(
+            {
+                type: 'GET',
+                url: '/api/groups/getall',
+                async: false,
+                beforeSend: (xhr) => {
+                },
+                success: (groups) => {
+                    let sel = $('#groupSelect');
+                      let NavBarName = document.getElementById("Namenavbar");
+                      NavBarName.textContent = "LMS.Git";
+                    if (groups.length === 0) {
+                        alert('Не существует групп студентов');
+                        history.go(-1);
+                    }
+                    for (let group of groups) {
+                        let opt = document.createElement('option');
+                        opt.text = group.name;
+                        opt.dataset.id = group.groupId;
+                        sel.append(opt);
+                    }
+                },
+                error: (awFail) => {
+                    document.body.innerHTML = '';
+                    alert('Нет доступа');
+                    history.go(-1);
+                }
+            }
+        );
+         InitStudentsContainer();
+         function InitStudentsContainer() 
+         {
+              let idGroup = $('#groupSelect option:selected')[0].dataset.id;
+                  $.ajax(
+                {
+                type: 'GET',
+                url: '/api/users/getusersbygroup',
+                async: false,
+                beforeSend: (xhr) => {
+                    xhr.setRequestHeader("groupId", idGroup);
+                },
+                success: (users) => {
+                    if (users.length === 0) 
+                    {
+                        alert("В группе нет студентов");
+                        return;
+                    }
+                    let sel = $('#studentSelect');
+                     for (let user of users) 
+                     {
+                        let opt = document.createElement('option');
+                        opt.text = user.name + " " + user.surname;
+                        opt.dataset.id = user.id;
+                        sel.append(opt);
+                     }
+                     InitRepoContainer();
+                    }
+                    }
+                    );
+                    
+
+         }
+
+          function InitRepoContainer() 
+         {
+              let idstudent = $('#studentSelect option:selected')[0].dataset.id;
+                  $.ajax({
+               type: 'GET',
+            url: '/api/repositoryteacher/getrepos',
+            beforeSend: (xhr) => {
+                xhr.setRequestHeader("curUserId", idstudent);
+            },
+            success: (repos) => {
+                let optionsTime = {
+                                dateStyle: 'short',
+                                timeStyle: 'short'
+                            };
+                let contentZone = document.getElementById("ContentRepos");
+                repos.sort(function(a, b) 
+                {
+                var c = new Date(a.updateTime);
+                var d = new Date(b.updateTime);
+                return d-c;
+                });
+                let divdescrip = document.getElementById("DecsofElem");
+                        
+                if (repos.length === 0) 
+                    {
+                        divdescrip.className = "d-none"; 
+                        contentZone.textContent = "Репозиториев у данного студента не найдено";
+                        return;
+                    }
+                    divdescrip.className = "d-flex align-items-center";
+                    contentZone.textContent = "";
+                    //divdescrip.hidden = false;
+                for (let repo of repos) {
+                    let divZone = document.createElement('div');
+                    divZone.className = "d-flex align-items-center p-3 my-2 text-black-100 board rounded box-shadow";
+                    //divZone.style = "justify-content: space-between;";
+                    let divContent = document.createElement('div');
+                    divContent.className = "nameTheme col-sm-3";
+                    let RefContent = document.createElement('a');
+                    RefContent.textContent = repo.name;
+                    RefContent.setAttribute('href',window.location.search + '/' + repo.name);
+                    RefContent.setAttribute('title',"Нажмите для перехода в репозиторий");
+                    divContent.appendChild(RefContent);
+                    let divDecs = document.createElement('div');
+                    divDecs.className = "nameTheme col-sm-6";
+                    divDecs.textContent = repo.description;
+                    let dateUpdate = document.createElement('div');
+                    dateUpdate.className = "col-sm-3";
+                    dateStr = new Date(repo.updateTime).toLocaleString('ru', optionsTime);
+                    dateUpdate.textContent = dateStr;
+               
+                    divZone.appendChild(divContent);
+                    divZone.appendChild(divDecs);
+                    divZone.appendChild(dateUpdate);
+                    //let divButton = document.createElement('div');
+                    //divButton.dataset.id = repo.id;
+                    //divButton.className = "col-sm-3";
+                    //divButton.innerHTML = 
+                    //    '<button onclick="removeRepo(' + repo.id + ')" style=" display:block; margin-left: auto; margin-right: 0;" class="btn custom btn-danger remove-item">Удалить</button>';
+                    //divZone.appendChild(divButton);
+                    contentZone.appendChild(divZone);
+                }
+            },
+            error: (reposFail) => {
+                document.body.innerHTML = '';
+                alert('Нет доступа');
+                //history.go(-1);
+            }
+                    }
+                    );
+
+         }
+
+</script>
