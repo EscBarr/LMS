@@ -1,0 +1,175 @@
+﻿@page
+@model LMS.Pages.RepositoryUserModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Репозитории";
+}
+<div aria-label="breadcrumb">
+        <ol class="mybreadcrumb">
+            <li class="breadcrumb-item">
+                <a href="~/index">Домой</a>
+            </li>
+            <li class="breadcrumb-item not-active">
+                Репозитории
+            </li>
+        </ol>
+    </div>
+
+    <div class="myHeadingPage">
+        Список репозиториев
+    </div>
+    
+      <div class="d-flex d-flex align-items-end">
+            <div class="mySubContainerForFilter">
+                <input onchange="RepoSearch()" id="RepoSearch" placeholder="Найти репозиторий…">
+            </div>
+            <div сlass="">
+        <button title="Создание нового репозитория" class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Создать</button>
+            </div>
+        </div>
+
+
+       <div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Новый репозиторий</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Repos", FormMethod.Post))
+                {
+                    @Html.Label("Название репозитория:\t")
+                    @Html.TextBox("Name", null, new { id = "newName" })
+                    @Html.Label("Описание репозитория:\t")
+                    @Html.TextBox("Desc", null, new { id = "newDesc" })
+                    <p><input type="button" class="btn btn-dark" value="Подтвердить" onclick="createRepo()" /></p>
+                }
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
+<div id="DecsofElem" class="d-flex align-items-center" @*style="justify-content: space-between"*@> 
+    <div class="col-sm-2">Название</div>
+    <div class="col-sm-4">Описание</div>
+    <div class="col-sm-3">Дата обновления</div>
+    <div class="col-sm-3" style="visibility: hidden">Удаление</div>
+</div>
+<div id="ContentRepos"></div>
+
+<script>
+$.ajax(
+      {
+            
+            type: 'GET',
+            url: '/api/repositoryuser/getrepos',
+            beforeSend: (xhr) => {
+            },
+            success: (repos) => {
+                let optionsTime = {
+                                dateStyle: 'short',
+                                timeStyle: 'short'
+                            };
+                let NavBarName = document.getElementById("Namenavbar");
+                NavBarName.textContent = "LMS.Git";
+                let contentZone = document.getElementById("ContentRepos");
+                repos.sort(function(a, b) 
+                {
+                var c = new Date(a.updateTime);
+                var d = new Date(b.updateTime);
+                return d-c;
+                });
+                let divdescrip = document.getElementById("DecsofElem");
+                if (repos.length === 0) 
+                    {
+                         divdescrip.className = "d-none"; 
+                        contentZone.textContent = "У вас ещё нет репозиториев";
+                        return;
+                    }
+                    divdescrip.className = "d-flex align-items-center";
+                    contentZone.textContent = "";
+                for (let repo of repos) {
+                    let divZone = document.createElement('div');
+                    divZone.className = "d-flex align-items-center p-3 my-2 text-black-100 board rounded box-shadow";
+                    //divZone.style = "justify-content: space-between;";
+                    let divContent = document.createElement('div');
+                    divContent.className = "nameTheme col-sm-2";
+                    let RefContent = document.createElement('a');
+                    RefContent.textContent = repo.name;
+                    RefContent.setAttribute('href',window.location.search + '/' + repo.name);
+                    RefContent.setAttribute('title',"Нажмите для перехода в репозиторий");
+                    divContent.appendChild(RefContent);
+                    let divDecs = document.createElement('div');
+                    divDecs.className = "nameTheme col-sm-4";
+                    divDecs.textContent = repo.description;
+                    let dateUpdate = document.createElement('div');
+                    dateUpdate.className = "col-sm-3";
+                    dateStr = new Date(repo.updateTime).toLocaleString('ru', optionsTime);
+                    dateUpdate.textContent = dateStr;
+               
+                    divZone.appendChild(divContent);
+                    divZone.appendChild(divDecs);
+                    divZone.appendChild(dateUpdate);
+                    let divButton = document.createElement('div');
+                    divButton.dataset.id = repo.id;
+                    divButton.className = "col-sm-3";
+                    divButton.innerHTML = 
+                        '<button onclick="removeRepo(' + repo.id + ')" style=" display:block; margin-left: auto; margin-right: 0;" class="btn custom btn-danger remove-item">Удалить</button>';
+                    divButton.setAttribute('title',"Безвозвратное удаление данного репозитория из системы");
+                    divZone.appendChild(divButton);
+                    contentZone.appendChild(divZone);
+                }
+            },
+            error: (reposFail) => {
+                document.body.innerHTML = '';
+                alert('Нет доступа');
+                history.go(-1);
+            }
+        }
+);
+
+function createRepo() {
+        let repo = {
+            Name: $('#newName').val(),
+            Description: $('#newDesc').val()
+        };
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/repositoryuser/create',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(repo),
+                beforeSend: (xhr) => {
+                },
+                success: (g) => {
+                    document.location.reload(true);
+                },
+                error: (response) => {
+                    console.log(response);
+                    alert('Не удалось создать репозиторий');
+                }
+            }
+        );
+    }
+    function removeRepo(Id) {
+        if (confirm("Вы точно хотите удалить этот репозиторий?")) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/api/repositoryuser/delete',
+                    beforeSend: (xhr) => {
+                        xhr.setRequestHeader("Id", Id)
+                    },
+                    success: (g) => {
+                        document.location.reload(true);
+                    },
+                    error: (response) => {
+                        console.log(response);
+                        //alert('В группе есть ещё студенты');
+                    }
+                }
+            );
+        }
+    }
+</script>

@@ -44,13 +44,14 @@ namespace LMS.Controllers
             return Ok(await Task.Run(() => _db.Repos.Where(repo => repo.UserId == curUserId).Select(repo => new { repo.Id, repo.Name, repo.Description, repo.UpdateTime }).ToList()));
         }
 
-        [HttpPost]//Получить все репозитории пользователя в список их название описание и дату создания, для вывода на страницу
+        [HttpPost]//Создать
         public async Task<IActionResult> create([FromBody] RepositoryDTO model)
         {
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
             RepoMager.CreateRepository(model.Name, curUserId);
             var size_repo = RepoMager.GetRepositorySize(model.Name, curUserId);
-            var repo = new RepositoryEntity { Name = model.Name, Description = model.Description, DefaultBranch = "main", CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
+            var repo = new RepositoryEntity { Name = model.Name, Description = model.Description, DefaultBranch = "main", UserName = NickName, CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
             try
             {
                 await _db.Repos.AddAsync(repo);
@@ -63,7 +64,7 @@ namespace LMS.Controllers
             return Ok(model);
         }
 
-        [HttpPost]
+        [HttpPost]//Удалить
         public async Task<IActionResult> delete([FromHeader] int Id)
         {
             var Repo = await _db.Repos.FirstOrDefaultAsync(g => g.Id == Id);

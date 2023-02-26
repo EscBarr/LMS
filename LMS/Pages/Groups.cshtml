@@ -30,7 +30,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Новая группа</h4><button class="close" type="button" data-dismiss="modal">×</button>
+                <h4 class="modal-title">Новая группа</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("Create", "Groups", FormMethod.Post))
@@ -44,7 +44,7 @@
                     <p><input type="button" class="btn btn-dark" value="Отправить" onclick="createGroup()" /></p>
                 }
             </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
+                <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
         </div>
     </div>
 </div>
@@ -53,7 +53,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Редактирование группы</h4><button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Редактирование группы</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("Update", "Groups", FormMethod.Post))
@@ -68,7 +68,7 @@
                     <p><input type="button" class="btn btn-dark" value="Отправить" onclick="editGroup()" /></p>
                 }
             </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
+                <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
         </div>
     </div>
 </div>

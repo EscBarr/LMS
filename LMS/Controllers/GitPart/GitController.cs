@@ -9,8 +9,6 @@ using System.IO;
 
 namespace LMS.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
     public class GitController : GitControllerBase
     {

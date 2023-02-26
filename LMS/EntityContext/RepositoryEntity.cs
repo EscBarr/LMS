@@ -26,7 +26,6 @@ namespace LMS.EntityСontext
         public int UserId { get; set; }
         public string UserName { get; set; } //Для генерации ссылок на репозиторий лучше использовать ник пользователя
 
-        [Required]
         public User User { get; set; }
     }
 }

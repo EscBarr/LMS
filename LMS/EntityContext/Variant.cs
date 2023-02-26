@@ -21,7 +21,7 @@ namespace LMS.EntityСontext
         [StringLength(1024, MinimumLength = 5)]
         public string Description { get; set; }
 
-        public RepoTemplate AttachedRepo { get; set; }
+        public RepoTemplate? AttachedRepo { get; set; }
 
         public ICollection<AssignedVariant> AssignedVariants { get; set; }
         public LaboratoryWork LaboratoryWork { get; set; }

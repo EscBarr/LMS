@@ -20,10 +20,9 @@ app.ConfigureMiddleware();
 app.RegisterEndpoints();
 
 SetupDatabase();
+CreateNeedDirectory();
 
 app.Run();
-
-CreateNeedDirectory();
 
 void CreateNeedDirectory()
 {

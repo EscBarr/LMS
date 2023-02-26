@@ -31,7 +31,7 @@ namespace LMS.Controllers
         protected GitCommandResult GitCommand(string repoName, string service, bool advertiseRefs, bool endStreamWithNull = true)
         {
             return new GitCommandResult(_gitOptions.Value.GitPath, new GitCommandOptions(
-                RepositoryService.GetRepository(repoName),
+                RepositoryService.GetRepository(repoName, 1),
                 service,
                 advertiseRefs,
                 endStreamWithNull

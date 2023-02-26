@@ -11,12 +11,12 @@ namespace LMS.Git
     {
         private static List<string>? _repos = null;
 
-        public IEnumerable<DirectoryInfo> RepositoryDirectories(string userName)//Получение списка всех репозиториев созданных пользователем
+        public IEnumerable<DirectoryInfo> RepositoryDirectories(int userId)//Получение списка всех репозиториев созданных пользователем
         {
             if (_repos == null)
             {
                 _repos = new List<string>();
-                DirectoryInfo basePath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Repositories", userName));
+                DirectoryInfo basePath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Repositories", userId.ToString()));
                 foreach (DirectoryInfo path in basePath.EnumerateDirectories())
                 {
                     string repPath = Repository.Discover(path.FullName);
@@ -47,27 +47,27 @@ namespace LMS.Git
             }
         }
 
-        public Repository GetRepository(string RepoName)
+        public Repository GetRepository(string RepoName, int userId)
         {
-            //var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userId.ToString());
-            //var taskDirectory = Path.Combine(userDirectory, RepoName);
-            return new Repository(RepoName);
+            var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userId.ToString());
+            var taskDirectory = Path.Combine(userDirectory, RepoName);
+            return new Repository(taskDirectory);
         }
 
-        //public (double, string) AdjustFileSize(long fileSizeInBytes)
-        //{
-        //    string[] names = { "BYTES", "KB", "MB", "GB" };
+        public (double, string) AdjustFileSize(long fileSizeInBytes)
+        {
+            string[] names = { "BYTES", "KB", "MB", "GB" };
 
-        //    double sizeResult = fileSizeInBytes * 1.0;
-        //    int nameIndex = 0;
-        //    while (sizeResult > 1024 && nameIndex < names.Length)
-        //    {
-        //        sizeResult /= 1024;
-        //        nameIndex++;
-        //    }
+            double sizeResult = fileSizeInBytes * 1.0;
+            int nameIndex = 0;
+            while (sizeResult > 1024 && nameIndex < names.Length)
+            {
+                sizeResult /= 1024;
+                nameIndex++;
+            }
 
-        //    return (sizeResult, names[nameIndex]);
-        //}
+            return (sizeResult, names[nameIndex]);
+        }
 
         public long GetCatalogsSize(DirectoryInfo Directory)
         {
@@ -154,6 +154,6 @@ namespace LMS.Git
                 throw new Exception("Ну удалось удалить репозиторий", e);
         }
 
-        public ReferenceCollection GetReferences(string repoName) => GetRepository(repoName).Refs;
+        public ReferenceCollection GetReferences(string repoName, int userId) => GetRepository(repoName, userId).Refs;
     }
 }
