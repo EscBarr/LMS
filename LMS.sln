@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS", "LMS\LMS.csproj", "{B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Git", "LMS.Git\LMS.Git.csproj", "{34F5D6C0-9D5B-4AA3-9C78-5D7AB2613975}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{700FDA66-7234-4FCF-BE80-13D25BE792A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{34F5D6C0-9D5B-4AA3-9C78-5D7AB2613975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34F5D6C0-9D5B-4AA3-9C78-5D7AB2613975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34F5D6C0-9D5B-4AA3-9C78-5D7AB2613975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
