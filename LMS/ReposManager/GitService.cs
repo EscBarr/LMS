@@ -17,8 +17,9 @@ namespace LMS.Git
         private IOptions<GitSettings> _settings;
         protected GitSettings Settings => _settings.Value;
 
-        public GitService()
+        public GitService(IOptions<GitSettings> gitOptions)
         {
+            _settings = gitOptions;
         }
 
         public Repository GetRepository(string name)

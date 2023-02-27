@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using LMS.DTO;
 using LMS.EntityСontext;
+using LMS.Extensions;
 using LMS.Git;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace LMS.Controllers
@@ -25,11 +27,11 @@ namespace LMS.Controllers
         private IWebHostEnvironment _environment;
         private GitService RepoMager;
 
-        public RepositoryUserController(ApplicationContext db, IWebHostEnvironment env)
+        public RepositoryUserController(ApplicationContext db, IWebHostEnvironment env, GitService gitService)
         {
             _db = db;
             _environment = env;
-            RepoMager = new GitService();
+            RepoMager = gitService;
         }
 
         public IActionResult Index()

@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LMS.Repos;
 using LMS.EntityContext;
+using LMS.Git;
 
 namespace ASTU_LMS.StartupPrep
 {
@@ -39,6 +40,7 @@ namespace ASTU_LMS.StartupPrep
             services.AddHttpClient();
             services.Configure<GitSettings>(configuration.GetSection(nameof(GitSettings)));
             services.AddScoped<CourseRepo>();
+            services.AddScoped<GitService>();
             services.AddScoped<LabWorksRepo>();
             services.AddScoped<VariantsRepo>();
             services.AddScoped<UsersRepo>();
