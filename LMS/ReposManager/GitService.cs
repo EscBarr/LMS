@@ -251,7 +251,14 @@ namespace LMS.Git
             {
                 var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userName);
                 var taskDirectory = Path.Combine(userDirectory, RepoName);
-                Directory.Delete(taskDirectory, true);
+                var directory = new DirectoryInfo(taskDirectory) { Attributes = FileAttributes.Normal };
+
+                foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                {
+                    info.Attributes = FileAttributes.Normal;
+                }
+
+                directory.Delete(true);
 
                 //_repos.Remove(path);
             }
