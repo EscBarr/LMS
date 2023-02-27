@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace LMS.Pages
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
     public class StudentCoursesModel : PageModel
     {
         private readonly ApplicationContext _db;

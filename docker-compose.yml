@@ -7,7 +7,7 @@ services:
       - '5000:5000'
     build:
       context: ..
-      dockerfile:  LMS/ LMS/Dockerfile
+      dockerfile:  VKR/LMS/Dockerfile
     depends_on: 
      - "db"
    db:

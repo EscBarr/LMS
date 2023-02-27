@@ -1,5 +1,5 @@
 ﻿@page
-@model LMS.Pages.CoursesModel
+@model LMS.Pages.StudentCoursesModel
 @{
     Layout = "_Layout";
 }
@@ -21,17 +21,14 @@
         <div class="myHeadingPage">
             Курсы
         </div>
-        <div>
-
-            <button class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить курс</button>
-        </div>
+        
 </div>
 
 <div class="MainContainerCourse">
 @foreach (var item in Model.Courses)
 {
         <div class="ContainerCourse">
-            <a asp-page="./ControlCourse" asp-route-id="@item.CourseId" >@item.Name</a>
+            <a asp-page="./CourseDetail" asp-route-id="@item.CourseId" >@item.Name</a>
             <div class="footerCourse">
              Количество участников @item.Users.Count()
              Количество заданий    @item.LaboratoryWorks.Count()

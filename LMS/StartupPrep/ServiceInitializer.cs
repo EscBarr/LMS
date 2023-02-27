@@ -47,8 +47,8 @@ namespace ASTU_LMS.StartupPrep
         }
 
         private static void RegisterDBContextDependencies(IServiceCollection services, IConfiguration configuration)
-        {                                                                                                            //DockerConnection
-            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        {                                                                                                            //DockerConnection DefaultConnection
+            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("DockerConnection")));
         }
 
         private static void RegisterAuthDependencies(IServiceCollection services, IConfiguration configuration)

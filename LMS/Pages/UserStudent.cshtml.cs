@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ALS.Pages
+namespace LMS.Pages
 {
     public class UserStudent : PageModel
     {
         public void OnGet()
         {
-            
         }
     }
 }
