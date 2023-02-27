@@ -47,7 +47,7 @@ namespace ASTU_LMS.StartupPrep
         }
 
         private static void RegisterDBContextDependencies(IServiceCollection services, IConfiguration configuration)
-        {
+        {                                                                                                            //DockerConnection
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         }
 
