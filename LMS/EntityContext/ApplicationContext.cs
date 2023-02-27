@@ -87,8 +87,8 @@ namespace LMS.EntityСontext
             //    optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=LMS;Username=postgres;Password=root");
             //}
 
-            //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=LMS;Username=postgres;Password=root");
-            optionsBuilder.UseNpgsql("Host=db;Port=5432;Database=LMS;Username=postgres;Password=root");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=LMS;Username=postgres;Password=root");
+            //optionsBuilder.UseNpgsql("Host=db;Port=5432;Database=LMS;Username=postgres;Password=root");
         }
     }
 }

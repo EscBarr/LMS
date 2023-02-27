@@ -72,7 +72,8 @@ namespace LMS.Controllers
         {
             var Repo = await _db.Repos.FirstOrDefaultAsync(g => g.Id == Id);
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            RepoMager.DeleteRepository(Repo.Name, curUserId);
+            var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
+            RepoMager.DeleteRepository(Repo.Name, NickName);
             if (Repo != null)
             {
                 try

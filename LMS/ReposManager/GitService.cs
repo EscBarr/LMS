@@ -227,12 +227,29 @@ namespace LMS.Git
         //    }
         //}
 
-        public void DeleteRepository(string RepoName, int userId)
+        //public void DeleteRepository(string RepoName, int userId)
+        //{
+        //    Exception e = null;
+        //    try
+        //    {
+        //        var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userId.ToString());
+        //        var taskDirectory = Path.Combine(userDirectory, RepoName);
+        //        Directory.Delete(taskDirectory, true);
+
+        //        //_repos.Remove(path);
+        //    }
+        //    catch (Exception ex) { e = ex; }
+
+        //    if (e != null)
+        //        throw new Exception("Ну удалось удалить репозиторий", e);
+        //}
+
+        public void DeleteRepository(string RepoName, string userName)
         {
             Exception e = null;
             try
             {
-                var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userId.ToString());
+                var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userName);
                 var taskDirectory = Path.Combine(userDirectory, RepoName);
                 Directory.Delete(taskDirectory, true);
 
