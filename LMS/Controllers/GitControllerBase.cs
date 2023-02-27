@@ -2,7 +2,6 @@
 using System.IO;
 using LMS.Models;
 
-//using GitServer.Services;
 using LMS.Git;
 using LMS.Extensions;
 using LibGit2Sharp;
@@ -31,7 +30,7 @@ namespace LMS.Controllers
         protected GitCommandResult GitCommand(string repoName, string service, bool advertiseRefs, bool endStreamWithNull = true)
         {
             return new GitCommandResult(_gitOptions.Value.GitPath, new GitCommandOptions(
-                RepositoryService.GetRepository(repoName, 1),
+                RepositoryService.GetRepository(repoName),
                 service,
                 advertiseRefs,
                 endStreamWithNull

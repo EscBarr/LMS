@@ -22,12 +22,12 @@ namespace LMS.Controllers
         //TODO ÏÐÎÂÅÐÈÒÜ ÏÐÀÂÈËÜÍÎÑÒÜ ÑÎÇÄÀÍÈß ÏÓÒÈ
 
         [Route("{userName}/{repoName}.git/git-upload-pack")]
-        public IActionResult ExecuteUploadPack(string userName, string repoName) => TryGetResult(repoName, () => GitUploadPack(Path.Combine(Environment.CurrentDirectory, "Repositories", userName, repoName)));
+        public IActionResult ExecuteUploadPack(string userName, string repoName) => TryGetResult(repoName, () => GitUploadPack(Path.Combine(userName, repoName)));
 
         [Route("{userName}/{repoName}.git/git-receive-pack")]
-        public IActionResult ExecuteReceivePack(string userName, string repoName) => TryGetResult(repoName, () => GitReceivePack(Path.Combine(Environment.CurrentDirectory, "Repositories", userName, repoName)));
+        public IActionResult ExecuteReceivePack(string userName, string repoName) => TryGetResult(repoName, () => GitReceivePack(Path.Combine(userName, repoName)));
 
         [Route("{userName}/{repoName}.git/info/refs")]
-        public IActionResult GetInfoRefs(string userName, string repoName, string service) => TryGetResult(repoName, () => GitCommand(Path.Combine(Environment.CurrentDirectory, "Repositories", userName, repoName), service, true));
+        public IActionResult GetInfoRefs(string userName, string repoName, string service) => TryGetResult(repoName, () => GitCommand(Path.Combine(userName, repoName), service, true));
     }
 }

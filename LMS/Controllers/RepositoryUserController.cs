@@ -49,8 +49,9 @@ namespace LMS.Controllers
         {
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
-            RepoMager.CreateRepository(model.Name, curUserId);
-            var size_repo = RepoMager.GetRepositorySize(model.Name, curUserId);
+            //RepoMager.CreateRepository(model.Name, curUserId);
+            RepoMager.CreateRepository(model.Name, NickName);
+            var size_repo = RepoMager.GetRepositorySize(model.Name, NickName);
             var repo = new RepositoryEntity { Name = model.Name, Description = model.Description, DefaultBranch = "main", UserName = NickName, CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
             try
             {

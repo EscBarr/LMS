@@ -26,4 +26,8 @@
     <ProjectReference Include="..\LMS.Git\LMS.Git.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\GitPart\" />
+  </ItemGroup>
+
 </Project>

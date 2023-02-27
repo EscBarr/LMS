@@ -95,8 +95,8 @@ $.ajax(
                     let divContent = document.createElement('div');
                     divContent.className = "nameTheme col-sm-2";
                     let RefContent = document.createElement('a');
-                    RefContent.textContent = repo.name;
-                    RefContent.setAttribute('href',window.location.search + '/' + repo.name);
+                    RefContent.textContent = sessionStorage.getItem(gitusername) + '/' + repo.name +'.git';
+                    RefContent.setAttribute('href',sessionStorage.getItem(gitusername) + '/' + repo.name +'.git');
                     RefContent.setAttribute('title',"Нажмите для перехода в репозиторий");
                     divContent.appendChild(RefContent);
                     let divDecs = document.createElement('div');
