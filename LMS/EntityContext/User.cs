@@ -27,7 +27,7 @@ namespace LMS.EntityСontext
         public string Patronymic { get; set; }
         public int? GroupId { get; set; }
 
-        public string GitUsername { get; set; }
+        public string? GitUsername { get; set; }
 
         public ICollection<LaboratoryWork> LaboratoryWorks { get; set; } //Созданные задания?
         public ICollection<AssignedVariant> AssignedVariants { get; set; } //Полученные задания

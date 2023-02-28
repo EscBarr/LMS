@@ -70,13 +70,16 @@ namespace LMS.Controllers
         {
             var appUser = new User { Email = model.Email, Name = model.Name, Surname = model.Surname, Patronymic = model.Patronymic, PwHash = _authService.GetHashedPassword(model.Password), GroupId = model.GroupId };
 
+            int index = model.Email.IndexOf("@");
+            appUser.GitUsername = model.Email.Substring(0, index);
+
             try
             {
                 await _db.Users.AddAsync(appUser);
                 var roleUsr = await _db.Roles.FirstOrDefaultAsync(role => role.RoleName == model.Role);
                 await _db.UserRoles.AddAsync(new UserRole { Role = roleUsr, User = appUser });
                 await _db.SaveChangesAsync();
-                await SendIdentityResponse(model.Email, appUser);
+                //await SendIdentityResponse(model.Email, appUser);
             }
             catch (Exception)
             {
@@ -119,7 +122,8 @@ namespace LMS.Controllers
             usr.Name = model.Name;
             usr.Surname = model.Surname;
             usr.Patronymic = model.Patronymic;
-
+            int index = model.Email.IndexOf("@");
+            usr.GitUsername = model.Email.Substring(0, index);
             _db.Users.Update(usr);
             await _db.SaveChangesAsync();
             return Ok(usr);
