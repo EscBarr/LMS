@@ -105,7 +105,8 @@
         let vcsteacher = $('#versioncontrolteacher');
         //Переделать от
         let btnLog = document.getElementById('logOut');
-        btnLog.style = "display: block";
+        //btnLog.style = "display: block";
+        btnLog.style = "display: none";
         //до 
 
         let userInfo = $('#userInfo');
@@ -147,6 +148,7 @@
             let roles = JSON.parse(sessionStorage.getItem('roles'));
             if (roles == null) return;
             if (roles.includes('Teacher')) {
+                btnLog.style = "display: block";
                 info.css('display', 'block');
                 //template.css('display', 'block');
                 //variant.css('display', 'block');
@@ -162,6 +164,7 @@
                 vcsteacher.css('display', 'block');
             }
             if (roles.includes('Admin')) {
+                btnLog.style = "display: block";
                 info.css('display', 'block');
                 cr.css('display', 'block');
                 group.css('display', 'block');
@@ -172,6 +175,7 @@
                 vcsteacher.css('display', 'block');
             }
             if (roles.includes('Student')) {
+                btnLog.style = "display: block";
                 scr.css('display', 'block');
                 info.css('display', 'block');
                 contest.css('display', 'block');
