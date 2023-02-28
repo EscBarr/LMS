@@ -79,7 +79,7 @@ namespace LMS.Controllers
                 var roleUsr = await _db.Roles.FirstOrDefaultAsync(role => role.RoleName == model.Role);
                 await _db.UserRoles.AddAsync(new UserRole { Role = roleUsr, User = appUser });
                 await _db.SaveChangesAsync();
-                //await SendIdentityResponse(model.Email, appUser);
+                await SendIdentityResponse(model.Email, appUser);
             }
             catch (Exception)
             {
@@ -130,7 +130,6 @@ namespace LMS.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> ResetPassword([FromHeader] int userId, [FromHeader] string password)
         {
             var usr = await _db.Users.FirstOrDefaultAsync(user => user.Id == userId);
@@ -141,7 +140,6 @@ namespace LMS.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> DeleteUser([FromHeader] int userId)
         {
             var usr = await _db.Users.Include(user => user.UserRoles).FirstOrDefaultAsync(user => user.Id == userId);
