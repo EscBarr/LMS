@@ -229,8 +229,7 @@ myButtonInBlock:hover {
 }
 
 .footerCourse {
-    //position: fixed;
-    bottom: 0;
+    font-size: 14px;
 }
 
 .Actionscourse {
