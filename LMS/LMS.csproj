@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Shared\_CoursesTeacher.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CryptoHelper" Version="3.0.2" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
@@ -32,6 +36,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\GitPart\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Courses\_CoursesTeacher.cshtml" />
   </ItemGroup>
 
 </Project>

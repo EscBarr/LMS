@@ -1,12 +1,11 @@
-@page
-@model LMS.Pages.UserTeacher
-
+@page "/Admin/"
+@model LMS.Pages.UserAdmin
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Преподаватели";
+    ViewData["Title"] = "Администраторы";
 }
 
-<h3>Преподаватели </h3>
+<h3>Администраторы </h3>
 <div class="container">
     <table style="width: 100%" class="table table-hover" border="1">
         <thead>
@@ -20,13 +19,12 @@
         <tbody id="tbodyContent">
     </table>
 </div>
-<button class="btn btn-info btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить преподавателя</button>
+<button class="btn btn-info btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить администратора</button>
 
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Новый пользователь</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            <div class="modal-header"><h4 class="modal-title">Новый пользователь</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("Register", "Users", FormMethod.Post))
@@ -108,16 +106,16 @@
     </div>
 </div>
 
+
 <script>
 Init();
-
 function Init() {
     let table = document.getElementById('tbodyContent');
     table.innerHTML = '';
     $.ajax(
                 {
                     type: 'GET',
-                    url: '/api/users/GetTeachersUsers',
+                    url: '/api/users/GetAdminUsers',
                     beforeSend: (xhr) => {
                     },
                     success: (users) => {
@@ -140,7 +138,7 @@ function Init() {
                             tr.appendChild(tdUserPatronymic);
                             let tdUserActions = document.createElement('td');
                         tdUserActions.innerHTML = '<button style="margin-right: 5%" data-bs-toggle="modal" onclick="editPrepareUser(this)" data-bs-target="#edit" class="btn btn-primary edit-item">Редактировать</button>' +
-                            '<button style="margin-right: 5%" data-bs-toggle="modal" onclick="prepareResetPwd(' + user.id + ')" data-bs-target="#resetPwd" class="btn btn-primary edit-item">Сбросить пароль</button>' +
+                                                        '<button style="margin-right: 5%" data-bs-toggle="modal" onclick="prepareResetPwd(' + user.id + ')" data-bs-target="#resetPwd" class="btn btn-primary edit-item">Сбросить пароль</button>' +
                                                         '<button onclick="removeUser(' + user.id + ')" class="btn btn-danger remove-item">Удалить</button>';
                             tr.appendChild(tdUserActions);
                         }
@@ -209,7 +207,6 @@ function editPrepareUser(obj) {
                 $("#edit").find("input[type='hidden']").val(id);
       }
       
-      
       function createUser() {
           let password = $('#newPassword').val();
           let repeatePassword = $('#newRepeatePassword').val();
@@ -225,7 +222,7 @@ function editPrepareUser(obj) {
                                      Patronymic: $('#newSurname').val(),
                                      Password: $('#newPassword').val(),
                                      GroupId: null,
-                                     Role: 1
+                                     Role: 2
                                      };
                         $.ajax(
                             {
@@ -305,5 +302,4 @@ function editPrepareUser(obj) {
                        );
          }
       }
-
 </script>

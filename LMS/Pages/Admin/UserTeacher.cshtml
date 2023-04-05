@@ -1,16 +1,11 @@
-@page
-@model LMS.Pages.UserStudent
-
+@page "/Admin/"   
+@model LMS.Pages.UserTeacher
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Студенты";
+    ViewData["Title"] = "Преподаватели";
 }
 
-<h3>Студенты </h3>
-<p class="form-group row">
-        <label class="col-sm-3 col-form-label font-weight-bold">Группа</label>
-        <select class="col-sm-9 form-control" name="getByGroup" id="getByGroup"></select>
-    </p>
+<h3>Преподаватели </h3>
 <div class="container">
     <table style="width: 100%" class="table table-hover" border="1">
         <thead>
@@ -24,8 +19,7 @@
         <tbody id="tbodyContent">
     </table>
 </div>
-<button class="btn btn-info btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить студента</button>
-
+<button class="btn btn-info btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить преподавателя</button>
 
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
@@ -114,43 +108,16 @@
 </div>
 
 <script>
-$.ajax(
-        {
-            type: 'GET',
-            url: '/api/groups/getall',
-            beforeSend: (xhr) => {
-            },
-            success: (groups) => {
-                let selectSort = document.getElementById('getByGroup');
-                for (let group of groups) {
-                    let opt = document.createElement('option');
-                    opt.dataset.id = group.groupId;
-                    opt.innerText = group.name + " " + group.year;
-        
-                    selectSort.appendChild(opt);
-                }
-                Init();
-                selectSort.addEventListener("change", Init);
-            },
-            error: (groupsFail) => {
-                document.body.innerHTML = '';
-                alert('Нет доступа');
-                history.go(-1);
-            }
-        }
-    );
-
+Init();
 
 function Init() {
-    let groupId = $('#getByGroup option:selected')[0].dataset.id
     let table = document.getElementById('tbodyContent');
     table.innerHTML = '';
     $.ajax(
                 {
                     type: 'GET',
-                    url: '/api/users/GetUsersByGroup',
+                    url: '/api/users/GetTeachersUsers',
                     beforeSend: (xhr) => {
-                        xhr.setRequestHeader("groupId", groupId);
                     },
                     success: (users) => {
                         for(let user of users)
@@ -189,6 +156,7 @@ function Init() {
 function prepareResetPwd(id) {
   $("#resetPwd").find("input[type='hidden']").val(id);
 }
+
 
 function resetPasswordFun() {
       let password = $('#resetPassword').val();
@@ -239,99 +207,102 @@ function editPrepareUser(obj) {
                 $("#edit").find("input[id='editPatronymic']").val(patronymic);
                 $("#edit").find("input[type='hidden']").val(id);
       }
+      
+      
+      function createUser() {
+          let password = $('#newPassword').val();
+          let repeatePassword = $('#newRepeatePassword').val();
+          if(password !== repeatePassword)
+          {
+              alert("Пароли не совпадают");
+              return;
+          }
+          let user = {
+                                     Email: $('#newEmail').val(),
+                                     Name: $('#newName').val(),
+                                     Surname: $('#newSurname').val(),
+                                     Patronymic: $('#newSurname').val(),
+                                     Password: $('#newPassword').val(),
+                                     GroupId: null,
+                                     Role: 1
+                                     };
+                        $.ajax(
+                            {
+                                type: 'POST',
+                                url: '/api/users/register',
+                                contentType:  "application/json; charset=utf-8",
+                                dataType: "json",
+                                data: JSON.stringify(user),
+                                beforeSend: (xhr) =>
+                                {
+                                },
+                                success: (g) =>
+                                {
+                                    $('#myModal').modal('hide');
+                                    Init();
+                                },
+                                error: (response) =>
+                                {
+                                    console.log(response);
+                                    alert('Не удалось добавить пользователя');
+                                }
+                            }
+                          );
+      }
+      
+      function editUser() {
+                  let user = {
+                                                 Email: $('#editEmail').val(),
+                                                 Name: $('#editName').val(),
+                                                 Surname: $('#editSurname').val(),
+                                                 Patronymic: $('#editPatronymic').val()
+                                                 };
+                  $.ajax(
+                                        {
+                                            type: 'POST',
+                                            url: '/api/users/edituser',
+                                            contentType:  "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            data: JSON.stringify(user),
+                                            beforeSend: (xhr) =>
+                                            {
+                                                xhr.setRequestHeader('userId', $('#editUserId').val());
+                                            },
+                                            success: (g) =>
+                                            {
+                                                $('#edit').modal('hide');
+                                                Init();
+                                            },
+                                            error: (response) =>
+                                            {
+                                                alert('Не удалось обновить пользователя');
+                                            }
+                                        }
+                                      );
+      }
+      
+      function removeUser(userId) {
+        if(confirm("Вы действительно хотите удалить этого пользователя?"))
+         {
+             $.ajax(
+                         {
+                             type: 'POST',
+                             url: '/api/users/deleteuser',
+                             beforeSend: (xhr) =>
+                             {
+                                 xhr.setRequestHeader('userId', userId);
+                             },
+                             success: (g) =>
+                             {
+                                 Init();
+                             },
+                             error: (response) =>
+                             {
+                                 alert('Не удалось удалить пользователя');
+                             }
+                         }
+                       );
+         }
+      }
 
-function createUser() {
-    let password = $('#newPassword').val();
-    let repeatePassword = $('#newRepeatePassword').val();
-    if(password !== repeatePassword)
-    {
-        alert("Пароли не совпадают");
-        return;
-    }
-    let user = {
-                Email: $('#newEmail').val(),
-                Name: $('#newName').val(),
-                Surname: $('#newSurname').val(),
-                Patronymic: $('#newSurname').val(),
-                Password: $('#newPassword').val(),
-                GroupId: $('#getByGroup option:selected')[0].dataset.id,
-                Role: 0
-                };
-    $.ajax(
-        {
-            type: 'POST',
-            url: '/api/users/register',
-            contentType:  "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(user),
-            beforeSend: (xhr) =>
-            {
-            },
-            success: (g) =>
-            {
-                $('#myModal').modal('hide');
-                Init();
-            },
-            error: (response) =>
-            {
-                alert('Не удалось добавить пользователя');
-            }
-        }
-    );
-}
-
-function editUser() {
-            let user = {
-                                           Email: $('#editEmail').val(),
-                                           Name: $('#editName').val(),
-                                           Surname: $('#editSurname').val(),
-                                           Patronymic: $('#editPatronymic').val()
-                                           };
-            $.ajax(
-                                  {
-                                      type: 'POST',
-                                      url: '/api/users/edituser',
-                                      contentType:  "application/json; charset=utf-8",
-                                      dataType: "json",
-                                      data: JSON.stringify(user),
-                                      beforeSend: (xhr) =>
-                                      {
-                                          xhr.setRequestHeader('userId', $('#editUserId').val());
-                                      },
-                                      success: (g) =>
-                                      {
-                                          $('#edit').modal('hide');
-                                          Init();
-                                      },
-                                      error: (response) =>
-                                      {
-                                          alert('Не удалось обновить пользователя');
-                                      }
-                                  }
-                                );
-}
-
-function removeUser(userId) {
-  if(confirm("Вы действительно хотите удалить этого пользователя?"))
-   {
-       $.ajax(
-                   {
-                       type: 'POST',
-                       url: '/api/users/deleteuser',
-                       beforeSend: (xhr) =>
-                       {
-                           xhr.setRequestHeader('userId', userId);
-                       },
-                       success: (g) =>
-                       {
-                           Init();
-                       },
-                       error: (response) =>
-                       {
-                           alert('Не удалось удалить пользователя');
-                       }
-                   }
-                 );
-   }
-}
 </script>

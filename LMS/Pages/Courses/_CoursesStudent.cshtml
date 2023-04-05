@@ -1,0 +1,26 @@
+﻿@using LMS.EntityСontext
+@model IList<Course>
+@{
+
+}
+<div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+    <div class="myHeadingPage">
+        Курсы
+    </div>
+
+</div>
+
+<div class="MainContainerCourse">
+    @foreach (var item in Model)
+    {
+        <div class="ContainerCourse">
+            <a asp-page="CourseDetails" asp-route-id="@item.CourseId">@item.Name</a>
+            <div class="footerCourse">
+                <i class="fa-solid fa-user"></i> @item.Users.Count()
+                <i class="fas fa-tasks"></i>  @item.LaboratoryWorks.Count()
+            </div>
+        </div>
+
+    }
+</div>
+

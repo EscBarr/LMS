@@ -70,6 +70,7 @@ namespace LMS.Controllers
         {
             var appUser = new User { Email = model.Email, Name = model.Name, Surname = model.Surname, Patronymic = model.Patronymic, PwHash = _authService.GetHashedPassword(model.Password), GroupId = model.GroupId };
 
+            //TODO ДОБАВИТЬ ВВОД ГИТ ИМЕНИ
             int index = model.Email.IndexOf("@");
             appUser.GitUsername = model.Email.Substring(0, index);
 

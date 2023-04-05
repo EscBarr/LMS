@@ -225,12 +225,26 @@ myButtonInBlock:hover {
     margin: 10px 0 0 2%;
     flex-grow: 1;
     width: calc(100% * (1/4) - 10px - 1px);
-    height: 150px;
+    height: fit-content;
 }
 
 .footerCourse {
     font-size: 14px;
 }
+
+.btn.SwitchModeButton {
+    margin-left: 10px;
+    padding-left: 10px;
+    position: relative;
+}
+
+    .btn.SwitchModeButton:before {
+        position: absolute;
+        font-family: 'FontAwesome';
+        top: 0;
+        left: 10px;
+        content: "\f186";
+    }
 
 .Actionscourse {
 }

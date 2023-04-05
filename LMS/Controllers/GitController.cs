@@ -9,7 +9,7 @@ using System.IO;
 
 namespace LMS.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher,Student")]
     public class GitController : GitControllerBase
     {
         public GitController(

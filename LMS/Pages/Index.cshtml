@@ -23,61 +23,61 @@
 
     
 <script>
-    function ShowLogin()
+function ShowLogin()
+{
+    if (sessionStorage.getItem(userId) != null)
     {
-        if (sessionStorage.getItem(userId) != null)
-        {
-            $('.loginForm').css('display', 'none');
-        }
-        else
-        {
-            $('.loginForm').css('display', 'block');
-        }
+       $('.loginForm').css('display', 'none');
     }
-//function ShowInfo()
-//{
-//    let roles = JSON.parse(sessionStorage.getItem('roles'));
-//    if (roles == null) return;
-//    if (roles.includes('Teacher')) {
-//        let contentBlock = document.getElementById("content");
-//        let chooseBlock = document.createElement('div');
-//        contentBlock.appendChild(chooseBlock);
+    else
+    {
+       $('.loginForm').css('display', 'block');
+    }
+}
+function ShowInfo()
+{
+    let roles = JSON.parse(sessionStorage.getItem('roles'));
+    if (roles == null) return;
+    if (roles.includes('Teacher')) {
+        let contentBlock = document.getElementById("content");
+        let chooseBlock = document.createElement('div');
+        contentBlock.appendChild(chooseBlock);
 
-//        let buttonGit = document.createElement('button');
+        let buttonGit = document.createElement('button');
 
-//        buttonGit.innerText = "Инструкция по работе с модулем контроля версий";
-//        buttonGit.classList = "btn btn-primary edit-item";
-//        //buttonComponentsInstruction.classList = "btn btn-primary edit-item";
-//        //buttonTemplateInstruction.classList = "btn btn-primary edit-item";
-//        //chooseBlock.appendChild(buttonTemplateInstruction);
-//        //chooseBlock.appendChild(buttonComponentsInstruction);
-//         chooseBlock.appendChild(buttonGit);
-//        let helpBlock = document.createElement('div');
-//        helpBlock.style = "padding-top: 20px;"
-//        helpBlock.id = "helpBlock";
-//        contentBlock.appendChild(helpBlock);
-//        //buttonComponentsInstruction.onclick = (ev => {
-//        //    $('#helpBlock').load('TeacherInstructionComponents.html');
-//        //});
+        buttonGit.innerText = "Инструкция по работе с модулем контроля версий";
+        buttonGit.classList = "btn btn-primary edit-item";
+        //buttonComponentsInstruction.classList = "btn btn-primary edit-item";
+        //buttonTemplateInstruction.classList = "btn btn-primary edit-item";
+        //chooseBlock.appendChild(buttonTemplateInstruction);
+        //chooseBlock.appendChild(buttonComponentsInstruction);
+         chooseBlock.appendChild(buttonGit);
+        let helpBlock = document.createElement('div');
+        helpBlock.style = "padding-top: 20px;"
+        helpBlock.id = "helpBlock";
+        contentBlock.appendChild(helpBlock);
+        //buttonComponentsInstruction.onclick = (ev => {
+        //    $('#helpBlock').load('TeacherInstructionComponents.html');
+        //});
         
-//        //buttonTemplateInstruction.onclick = (ev => {
-//        //    $('#helpBlock').load('TemplateInstruction.html');
-//        //});
-//         buttonGit.onclick = (ev => {
-//            $('#helpBlock').load('GitTeacherInstruction.html');
-//        });
-//        $('#helpBlock').load('GitTeacherInstruction.html');
+        //buttonTemplateInstruction.onclick = (ev => {
+        //    $('#helpBlock').load('TemplateInstruction.html');
+        //});
+         buttonGit.onclick = (ev => {
+            $('#helpBlock').load('GitTeacherInstruction.html');
+        });
+        $('#helpBlock').load('GitTeacherInstruction.html');
         
-//    }
-//    if (roles.includes('Admin')) {
+    }
+    if (roles.includes('Admin')) {
         
-//    }
-//    if (roles.includes('Student')) {
-//            $('#content').load('GitStudentInstruction.html');
-//    }
-//}
-//ShowInfo();
-    ShowLogin();
+    }
+    if (roles.includes('Student')) {
+            $('#content').load('GitStudentInstruction.html');
+    }
+}
+ShowInfo();
+ShowLogin();
 $('#submitLogin').click(function (e) {
                 e.preventDefault();
                 let emailVal = $('#emailLogin').val().trim();

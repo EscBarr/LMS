@@ -9,8 +9,12 @@
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
-
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link href="~/MyCss/main.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" media="all" href="~/css/Flatly.min.css" id="Theme" />
+    @*<link rel="alternate stylesheet" href="~/css/Flatly.min.css" id="Dark" />*@
+    
 </head>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <body>
@@ -36,9 +40,6 @@
                             <li class="nav-item" id="courses">
                                 <a class="nav-link" aria-selected="true" href="~/courses">Курсы</a>
                             </li>
-                        <li class="nav-item" id="studentcourses">
-                            <a class="nav-link" aria-selected="true" href="~/studentcourses">Курсы</a>
-                        </li>
                             <li class="nav-item" id="journal">
                                 <a class="nav-link" aria-selected="false" href="~/Journal">Журнал</a>
                             </li>
@@ -73,6 +74,7 @@
                         <div id="userInfo" class="align-items-center">
                             <span class="userName" style="color: white;"></span>
                             <input type="button" class="btn btn-outline-danger" style="margin-left: 10px;" value="Выйти" id="logOut" />
+                        <button class="btn SwitchModeButton" onclick="switchTheme()" id="ThemeButton"></button>
                         </div>
                     </div>
             </div>
@@ -91,7 +93,6 @@
        // let speciality = $('#speciality');
         //let variant = $('#variant');
         let cr = $('#courses');
-        let scr = $('#studentcourses');
         let aw = $('#assignvariant');
         //let disciplines = $('#disciplines');
         let journal = $('#journal');
@@ -137,7 +138,6 @@
             //speciality.css('display', 'none');
             //variant.css('display', 'none');
             cr.css('display', 'none');
-            scr.css('display', 'none');
             aw.css('display', 'none');
             contest.css('display', 'none');
             //themes.css('display', 'none');
@@ -176,7 +176,7 @@
             }
             if (roles.includes('Student')) {
                 btnLog.style = "display: block";
-                scr.css('display', 'block');
+                cr.css('display', 'block');
                 info.css('display', 'block');
                 contest.css('display', 'block');
                 vcs.css('display', 'block');
@@ -195,6 +195,27 @@
         //var queryString = "?id=" + userId;
         //window.location.href = "/repositoryuser" + queryString; 
         //}
+        function switchTheme() {
+            var check = document
+                .getElementById('Theme')
+                .classList[0] === 'Flatly';
+            var test = document
+                .getElementById('Theme')
+                .classList;
+            var element = document.getElementById('Theme');
+            
+
+            if (check) {
+                element.href = "~/css/Darkly.min.css";
+                element.classList.remove('Flatly')
+                element.classList.add('Darkly');
+            } else {
+                element.href = '~/css/Flatly.min.css';
+                element.classList.remove('Darkly')
+                element.classList.add('Flatly');
+            }
+
+        }
     </script>
     <!--основной контент-->
     <div id="content" class="container customContainer">

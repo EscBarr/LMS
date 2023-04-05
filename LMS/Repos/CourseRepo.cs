@@ -17,17 +17,17 @@ namespace LMS.EntityContext
             _db = context;
         }
 
-        public List<Course> GetAll(int userId)
+        public async Task<List<Course>> GetAll(int userId)
         {
             //var Test = await _db.Courses.Include(course => (course.Users)).ToListAsync();
             //return Test.FindAll(course => course.UserId == userId);
 
-            return _db.Courses.Where(course => course.UserId == userId).Include(course => (course.Users)).ThenInclude(course => (course.LaboratoryWorks)).ToList();
+            return await _db.Courses.Where(course => course.UserId == userId).Include(course => (course.Users)).ThenInclude(course => (course.LaboratoryWorks)).ToListAsync();
         }
 
-        public List<Course> GetAllWhereUser(int userId)//Получить все курсы, в которых состоит пользователь
+        public async Task<List<Course>> GetAllWhereUser(int userId)//Получить все курсы, в которых состоит пользователь
         {
-            return _db.Courses.Where(course => course.Users.Any(us => us.Id == userId)).ToList();
+            return await _db.Courses.Where(course => course.Users.Any(us => us.Id == userId)).ToListAsync();
         }
 
         public async Task<Course> GetById(int? ID)

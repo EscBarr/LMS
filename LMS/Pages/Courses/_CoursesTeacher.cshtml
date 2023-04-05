@@ -1,0 +1,51 @@
+﻿@using LMS.EntityСontext
+@model IList<Course>
+@{
+    
+}
+<div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+    <div class="myHeadingPage">
+        Курсы
+    </div>
+    <div>
+
+        <button class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Добавить курс</button>
+    </div>
+</div>
+
+<div class="MainContainerCourse">
+    @foreach (var item in Model)
+    {
+        <div class="ContainerCourse">
+            <a asp-page="ControlCourse" asp-route-id="@item.CourseId">@item.Name</a>
+            <div class="footerCourse">
+                <i class="fa-solid fa-user"></i> @item.Users.Count()
+                <i class="fas fa-tasks"></i>  @item.LaboratoryWorks.Count()
+            </div>
+        </div>
+
+    }
+</div>
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Новый курс</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form asp-page="Courses" asp-page-handler="Add" method="post">
+                        <label>Название</label><br />
+                        <input/>
+                        
+                        <p><input type="submit" class="btn btn-success" value="Отправить"> </p>
+                    </form>
+
+
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>

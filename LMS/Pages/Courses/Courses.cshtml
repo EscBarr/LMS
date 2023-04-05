@@ -1,0 +1,43 @@
+﻿@page "/Courses/"
+@using System.Security.Claims;
+@model LMS.Pages.CoursesModel
+@{
+    Layout = "_Layout";
+}
+     <div aria-label="breadcrumb">
+            <ol class="mybreadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="~/Index" >На главную</a>
+                </li>
+                <li class="breadcrumb-item not-active" aria-current="page">
+                    Курсы
+                </li>
+            </ol>
+     </div>
+
+@*<form asp-page-handler="OnGet" method="get"
+      data-ajax="true"
+      data-ajax-update="#CoursePlace"
+      data-ajax-mode="after"
+      data-ajax-method="get">
+</form>*@
+@{
+    var Role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+    if (Role == "Teacher")
+    {
+        <partial name="_CoursesTeacher" model="Model.Courses" />
+    }
+    else if (Role == "Student")
+    {
+        <partial name="_CoursesStudent" model="Model.Courses" />
+    }
+    
+}
+ 
+<div id="CoursePlace">
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+}
