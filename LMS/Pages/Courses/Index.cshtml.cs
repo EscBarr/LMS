@@ -43,6 +43,7 @@ namespace LMS.Pages
         {
             //var UserId = Int32.Parse(HttpContext.Session.GetString("userId"));
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            //TODO Пример записи гит имени
             //var GitNme = User.Claims.First(c => c.Type == ClaimTypes.Surname).Value;
             var Role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
             if (Role == "Teacher")
@@ -57,37 +58,13 @@ namespace LMS.Pages
             }
         }
 
-        public async void OnPostEdit(int CourseId)
-        {
-            var Course = await _courseRepo.GetById(CourseId);
-            Course.Name = courseDTO.Name;
-            _courseRepo.Update(Course);
-            await _courseRepo.Save();
-
-            //Course
-        }
-
-        public async Task<IActionResult> OnPostAdd()
+        public async Task<IActionResult> OnPostAdd(string name)
         {
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var Course = new Course { Name = courseDTO.Name, UserId = UserId };
+            var Course = new Course { Name = name, UserId = UserId };
             _courseRepo.Create(Course);
             await _courseRepo.Save();
             return RedirectToPage("Courses");
-        }
-
-        public async void OnPostAddUsers()
-        {
-            var Course = new Course { Name = courseDTO.Name };
-            _courseRepo.Create(Course);
-            await _courseRepo.Save();
-        }
-
-        public async void OnPostAddLabs()
-        {
-            var Course = new Course { Name = courseDTO.Name };
-            _courseRepo.Create(Course);
-            await _courseRepo.Save();
         }
     }
 }

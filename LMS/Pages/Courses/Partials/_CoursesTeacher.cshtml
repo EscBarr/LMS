@@ -17,7 +17,7 @@
     @foreach (var item in Model)
     {
         <div class="ContainerCourse">
-            <a asp-page="ControlCourse" asp-route-id="@item.CourseId">@item.Name</a>
+            <a asp-page="Manage" asp-route-id="@item.CourseId">@item.Name</a>
             <div class="footerCourse">
                 <i class="fa-solid fa-user"></i> @item.Users.Count()
                 <i class="fas fa-tasks"></i>  @item.LaboratoryWorks.Count()
@@ -36,9 +36,9 @@
             <div class="modal-body">
                 <div>
                     <form asp-page="Courses" asp-page-handler="Add" method="post">
-                        <label>Название</label><br />
-                        <input/>
-                        
+                        <label for="name">Название</label>
+                        <br/>
+                        <input type="text" class="form-control" name="name">
                         <p><input type="submit" class="btn btn-success" value="Отправить"> </p>
                     </form>
 

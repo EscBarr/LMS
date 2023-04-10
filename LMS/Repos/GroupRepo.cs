@@ -18,9 +18,9 @@ namespace LMS.EntityContext
             return await _db.Groups.ToListAsync();
         }
 
-        public async Task<Group> GetById(int? typeID)
+        public async Task<Group> GetById(int? GroupID)
         {
-            return await _db.Groups.FirstOrDefaultAsync(m => m.GroupId == typeID);
+            return await _db.Groups.FirstOrDefaultAsync(m => m.GroupId == GroupID);
         }
 
         public void Create(Group group)

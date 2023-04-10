@@ -1,5 +1,5 @@
-﻿@page "/Courses/ControlCourse"
-@model LMS.Pages.CoursesModel
+﻿@page "{handler?}"
+@model LMS.Pages.ManageCourseModel
 @{
     Layout = "_Layout";
 }
@@ -9,14 +9,16 @@
      <div aria-label="breadcrumb">
             <ol class="mybreadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="~/index">Домой </a>
+                <a href="~/index">На главную</a>
                 </li>
                 <li class="breadcrumb-item not-active" aria-current="page">
-                    Курсы
+                @Model.Cur_Course.Name
                 </li>
             </ol>
         </div>
 </div>
+
+
 
 
 

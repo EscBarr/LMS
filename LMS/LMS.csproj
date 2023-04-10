@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Pages\Courses\_CoursesTeacher.cshtml" />
+    <None Include="Pages\Courses\Partials\_CoursesTeacher.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ using System.Security.Claims;
 namespace LMS.Pages
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
-    public class ControlCourseModel : PageModel
+    public class ManageCourseModel : PageModel
     {
         private readonly ApplicationContext _db;
 
@@ -23,7 +23,9 @@ namespace LMS.Pages
 
         private readonly UsersRepo _usersRepo;
 
-        public List<SelectListItem>? _AddedUsers;
+        public List<SelectListItem>? _CurrentUsers;
+
+        public List<SelectListItem>? _SelectedUsers;
 
         public List<SelectListItem>? _AddedLabs;
 
@@ -35,7 +37,7 @@ namespace LMS.Pages
         [BindProperty]
         public Course Cur_Course { get; set; }//Èíôîðìàöèÿ î êóðñå
 
-        public ControlCourseModel(ApplicationContext db, CourseRepo courseRepo, LabWorksRepo labWorksRepo, UsersRepo usersRepo)
+        public ManageCourseModel(ApplicationContext db, CourseRepo courseRepo, LabWorksRepo labWorksRepo, UsersRepo usersRepo)
         {
             _db = db;
             _courseRepo = courseRepo;
@@ -44,14 +46,16 @@ namespace LMS.Pages
             Cur_Course = new Course();
         }
 
-        public async Task<IActionResult> OnGet([FromRoute] int CourseId)
+        public async Task<IActionResult> OnGet(int Id)
         {
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            Cur_Course = await _courseRepo.GetById(CourseId);
+            Cur_Course = await _courseRepo.GetById(Id);
             if (Cur_Course == null)
             {
-                return NotFound();
+                return NotFound("Êóðñ íå íàéäåí");
             }
+            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname }).ToList();
+            //TODO ÇÄÅÑÜ ÂÛÁÎÐÊÀ ÃÐÓÏÏ ÅÙ¨ ÍÓÆÍÀ
             return Page();
         }
 
@@ -65,10 +69,16 @@ namespace LMS.Pages
             //Course
         }
 
-        public async void OnPostAdd()
+        public async Task OnPostGetUsers(int GroupId)
         {
-            var Course = new Course { Name = courseDTO.Name };
-            _courseRepo.Create(Course);
+            var UserGroup = await _usersRepo.GetAllByGroup(GroupId);
+            _SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname }).ToList();
+        }
+
+        public async void OnPostEdit(string Name)
+        {
+            Cur_Course.Name = Name;
+            _courseRepo.Update(Cur_Course);
             await _courseRepo.Save();
         }
 

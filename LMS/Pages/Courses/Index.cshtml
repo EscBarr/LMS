@@ -1,4 +1,4 @@
-﻿@page "/Courses/"
+﻿@page "{handler?}" 
 @using System.Security.Claims;
 @model LMS.Pages.CoursesModel
 @{
@@ -34,8 +34,6 @@
     
 }
  
-<div id="CoursePlace">
-</div>
 
 @section scripts{
     <partial name="_ValidationScriptsPartial" />

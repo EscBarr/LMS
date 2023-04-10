@@ -10,6 +10,7 @@ using System.Text;
 using LMS.Repos;
 using LMS.EntityContext;
 using LMS.Git;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace ASTU_LMS.StartupPrep
 {
@@ -32,7 +33,17 @@ namespace ASTU_LMS.StartupPrep
         {
             // Add services to the container.
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            //services.AddRazorPages();
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AddPageRoute("/Courses/Manage",
+                                                 "courses/Manage");
+            });
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.PageViewLocationFormats.Add("/Pages/Courses/Partials/{0}" + RazorViewEngine.ViewExtension);
+            });
+
             services.AddSingleton<IAuthService>(new AuthService(configuration));
             services.AddSingleton<IConfiguration>(configuration);
             services.AddDistributedMemoryCache();
