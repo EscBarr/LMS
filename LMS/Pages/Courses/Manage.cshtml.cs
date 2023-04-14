@@ -54,7 +54,7 @@ namespace LMS.Pages
             {
                 return NotFound("Êóðñ íå íàéäåí");
             }
-            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname }).ToList();
+            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname + a.Patronymic }).ToList();
             //TODO ÇÄÅÑÜ ÂÛÁÎÐÊÀ ÃÐÓÏÏ ÅÙ¨ ÍÓÆÍÀ
             return Page();
         }
@@ -72,7 +72,7 @@ namespace LMS.Pages
         public async Task OnPostGetUsers(int GroupId)
         {
             var UserGroup = await _usersRepo.GetAllByGroup(GroupId);
-            _SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname }).ToList();
+            _SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + a.Surname + a.Patronymic }).ToList();
         }
 
         public async void OnPostEdit(string Name)
@@ -84,16 +84,20 @@ namespace LMS.Pages
 
         public async void OnPostAddUsers()
         {
-            var Course = new Course { Name = courseDTO.Name };
-            _courseRepo.Create(Course);
+            List<int> SelectedId = new List<int>();
+            foreach (var item in _SelectedUsers)
+            {
+                if (item.Selected)
+                {
+                    SelectedId.Add(int.Parse(item.Value));
+                }
+            }
+            await _courseRepo.AddUsers(Cur_Course.CourseId, SelectedId);
             await _courseRepo.Save();
         }
 
         public async void OnPostAddLabs()
         {
-            var Course = new Course { Name = courseDTO.Name };
-            _courseRepo.Create(Course);
-            await _courseRepo.Save();
         }
     }
 }
