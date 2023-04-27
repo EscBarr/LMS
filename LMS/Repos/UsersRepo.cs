@@ -15,8 +15,7 @@ namespace LMS.Repos
         //TODO ИСПРАВИТЬ ВЫБОРКУ ВСЕ ПОЛЯ НЕ НУЖНЫ
         public async Task<IEnumerable<User>> GetAllByGroup(int groupId)
         {
-            if (await _db.Groups.Include(group => group.Users).FirstOrDefaultAsync(group => group.GroupId == groupId) !=
-                null)
+            if (await _db.Groups.Include(group => group.Users).FirstOrDefaultAsync(group => group.GroupId == groupId) != null)
             {
                 return await _db.Users.Where(user => user.GroupId == groupId).ToListAsync();
             }

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html data-bs-theme ="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,14 +9,18 @@
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
-   
+    
+    <script type="text/javascript" src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.min.css" type="text/css" />
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link href="~/MyCss/main.css" rel="stylesheet" />
-    <link type="text/css" rel="stylesheet" media="all" href="~/css/Flatly.min.css" id="Theme" />
+   @* <link type="text/css" rel="stylesheet" media="all" href="~/css/Flatly.min.css" id="Theme" />*@
     @*<link rel="alternate stylesheet" href="~/css/Flatly.min.css" id="Dark" />*@
     
 </head>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+@*<link rel="icon" type="image/x-icon" href="favicon.ico">*@
 <body>
     <!--меню--> 
     <header>
@@ -36,7 +40,7 @@
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav me-auto">
                             <li class="nav-item" id="courses">
                                 <a class="nav-link" aria-selected="true" href="~/courses">Курсы</a>
                             </li>
@@ -69,13 +73,34 @@
                                 <a class="dropdown-item" aria-selected="false" href="~/groups">Группы</a>
                                 </ul>
                             </li>
-
-                        </ul>
-                        <div id="userInfo" class="align-items-center">
+                        <li id="userInfo" class="align-items-center">
                             <span class="userName" style="color: white;"></span>
-                            <input type="button" class="btn btn-outline-danger" style="margin-left: 10px;" value="Выйти" id="logOut" />
-                        <button class="btn SwitchModeButton" onclick="switchTheme()" id="ThemeButton"></button>
-                        </div>
+                            <button class="btn btn-outline-danger" style="margin-left: 10px;" value="Выйти" id="logOut">Выйти</button>
+
+                        </li>
+                        <li class="nav-item dropdown ">
+                            <button class="btn btn-link nav-link dropdown-toggle" id="ThemeSwitch" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Выбор темы">
+                             <i class="fa-solid fa-circle-half-stroke"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="ThemeSwitch">
+                                <li>
+                                    <button class="dropdown-item" onclick="switchThemeDark()">
+                                        <i class="fa-regular fa-moon"></i>
+                                        Темная
+                                    </button>
+                                </li>
+                               <li>
+                                    <button class="dropdown-item" onclick="switchThemeLight()">
+                                        <i class="fa-regular fa-sun"></i>
+                                        Светлая
+                                    </button>
+                               </li>
+                              
+                            </ul>
+                        </li>
+                       
+                        </ul>
+
                     </div>
             </div>
         </nav>
@@ -104,11 +129,11 @@
         let users = $('#users');
         let vcs = $('#versioncontrol');
         let vcsteacher = $('#versioncontrolteacher');
-        //Переделать от
+
         let btnLog = document.getElementById('logOut');
-        //btnLog.style = "display: block";
+
         btnLog.style = "display: none";
-        //до 
+        
 
         let userInfo = $('#userInfo');
 
@@ -195,27 +220,49 @@
         //var queryString = "?id=" + userId;
         //window.location.href = "/repositoryuser" + queryString; 
         //}
-        function switchTheme() {
-            var check = document
-                .getElementById('Theme')
-                .classList[0] === 'Flatly';
-            var test = document
-                .getElementById('Theme')
-                .classList;
-            var element = document.getElementById('Theme');
-            
+        function switchThemeDark() {
+            localStorage.setItem('theme', 'dark')
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+        }
+        function switchThemeLight() {
+            localStorage.setItem('theme', 'light')
+            document.documentElement.setAttribute('data-bs-theme', 'light')
+        }
 
-            if (check) {
-                element.href = "~/css/Darkly.min.css";
-                element.classList.remove('Flatly')
-                element.classList.add('Darkly');
-            } else {
-                element.href = '~/css/Flatly.min.css';
-                element.classList.remove('Darkly')
-                element.classList.add('Flatly');
+        (() => {
+            'use strict'
+
+            const storedTheme = localStorage.getItem('theme')
+
+            const getPreferredTheme = () => {
+                if (storedTheme) {
+                    return storedTheme
+                }
+
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
             }
 
-        }
+            const setTheme = function (theme) {
+                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark')
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme)
+                }
+            }
+
+            setTheme(getPreferredTheme())
+
+            
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (storedTheme !== 'light' || storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme())
+                }
+            })
+
+        
+        })()
+       
     </script>
     <!--основной контент-->
     <div id="content" class="container customContainer">

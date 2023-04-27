@@ -26,7 +26,7 @@ namespace LMS.Pages
         [BindProperty]
         public CourseDTO courseDTO { get; set; }//Изменение названия курса
 
-        public List<User>? CurUsers { get; set; }//Загружаем всех пользователей
+        public List<User> CurUsers { get; set; }//Загружаем всех пользователей
 
         [BindProperty]
         public List<Course> Courses { get; set; }//Загружаем все курсы, созданные пользователем
@@ -64,7 +64,7 @@ namespace LMS.Pages
             var Course = new Course { Name = name, UserId = UserId };
             _courseRepo.Create(Course);
             await _courseRepo.Save();
-            return RedirectToPage("Courses");
+            return RedirectToPage("index");
         }
     }
 }

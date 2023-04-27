@@ -32,7 +32,7 @@ namespace LMS.EntityContext
 
         public async Task<Course> GetById(int? ID)
         {
-            return await _db.Courses.FirstOrDefaultAsync(m => m.CourseId == ID);
+            return await _db.Courses.Include(course => (course.Users)).ThenInclude(course => (course.LaboratoryWorks)).FirstOrDefaultAsync(m => m.CourseId == ID);
         }
 
         public void Create(Course course)
@@ -45,19 +45,55 @@ namespace LMS.EntityContext
             _db.Courses.Update(course);
         }
 
-        public async Task AddUsers(int ID, List<int> UserID)
+        public async Task AddUsers(Course course, List<int> UserID)
         {
-            Course course = await _db.Courses.FindAsync(ID);
-            var Users = _db.Users.Where(T => UserID.Contains(T.Id)).ToList();
+            //Course course = await _db.Courses.FindAsync(ID);
+            var Users = await _db.Users.Where(T => UserID.Contains(T.Id)).ToListAsync();
             course.Users.Union(Users);
+            Update(course);
+        }
+
+        public async Task DeleteUsers(Course course, List<int> UserID)
+        {
+            //Course course = await _db.Courses.FindAsync(ID);
+            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
+            var Users = await _db.Users.Where(T => UserID.Contains(T.Id)).ToListAsync();
+            foreach (var user in Users)
+            {
+                course.Users.Remove(user);
+            }
+            Update(course);
+        }
+
+        public async Task DeleteUser(Course course, int UserID)
+        {
+            //Course course = await _db.Courses.FindAsync(ID);
+            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
+            var User = await course.Users.AsQueryable().FirstOrDefaultAsync((T => T.Id == UserID));
+            if (User != null)
+            {
+                course.Users.Remove(User);
+
+                Update(course);
+            }
         }
 
         public async Task AddLab(int ID, int LabworkID)
         {
             Course course = await _db.Courses.FindAsync(ID);
+
             LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.LaboratoryWorkId == LabworkID);
             course.LaboratoryWorks.Add(laboratory);
-            _db.Courses.Remove(course);
+            Update(course);
+        }
+
+        public async Task DeleteLab(int ID, int LabworkID)
+        {
+            Course course = await _db.Courses.FindAsync(ID);
+            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
+            LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.LaboratoryWorkId == LabworkID);
+            course.LaboratoryWorks.Remove(laboratory);
+            Update(course);
         }
 
         public async Task Delete(int ID)

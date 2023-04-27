@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 
-<div class="container customContainer LabWorkContainer">
+
 
      <div aria-label="breadcrumb">
             <ol class="mybreadcrumb">
@@ -12,13 +12,101 @@
                 <a href="~/index">На главную</a>
                 </li>
                 <li class="breadcrumb-item not-active" aria-current="page">
-                @Model.Cur_Course.Name
+                <a href="~/courses">Все курсы</a>
+                </li>
+                <li class="breadcrumb-item not-active" aria-current="page">
+                Управление курсом
                 </li>
             </ol>
         </div>
+
+
+
+    <div class="row">
+        <div class="col-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-primary border-bottom">
+                <h1>@Model.Cur_Course.Name</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-10 ms-sm-auto px-md-4">
+        @{
+            foreach (var item in Model.Cur_Course.Users)
+            {
+                <div class="StudentContainer">@item.Name @item.Surname @item.Patronymic
+                
+                 
+                </div>
+            }
+         }
+    </div>
+    <div class="col-2 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black;">
+        <ul class="nav flex-column border-primary">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStudents">Добавить участников</a>
+            </li>
+            
+        </ul>
+
+    </div>
+    </div>
+    
+    
+
+
+
+<div id="AddStudents" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Добавление студентов</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-8">
+                            <select id="SelectedUsers" @*name="_SelectedUsers" multiple*@ asp-items="Model._SelectedUsers"></select>
+                            <form asp-page="Manage" asp-page-handler="AddUsers" method="post">
+                                <p><input type="submit" class="btn btn-success" value="Добавить"> </p>
+                            </form>
+
+                        </div>
+                        <div class="col-4">
+                            <select name="_Groups" asp-items="Model._Groups"></select>
+                        </div>
+                    </div>
+                 <div/>
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
 </div>
 
+@*<div id="RemoveStudents" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удаление студентов</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form asp-page="Manage" asp-page-handler="AddUsers" method="post">
 
+                        <p><input type="submit" class="btn btn-success" value="Добавить"> </p>
+                    </form>
 
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>*@
 
-
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#SelectedUsers').multiselect();
+    });
+</script>
