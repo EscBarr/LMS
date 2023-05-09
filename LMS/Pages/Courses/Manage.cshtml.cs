@@ -24,18 +24,26 @@ namespace LMS.Pages
 
         private readonly UsersRepo _usersRepo;
 
-        public List<SelectListItem>? _Groups;
+        public List<SelectListItem> _Groups { get; set; }
 
-        public List<SelectListItem>? _CurrentUsers;
+        [BindProperty(SupportsGet = true)]
+        public int Id { get; set; }
 
-        public List<SelectListItem> _SelectedUsers;
+        [BindProperty(SupportsGet = true)]
+        public int SelectedGroupID { get; set; }
 
-        //public List<SelectListItem>? _AddedLabs;
+        public List<SelectListItem> _CurrentUsers { get; set; }
+
+        public List<SelectListItem> _SelectedUsers { get; set; }
+
+        [BindProperty]
+        public int[] SelectedUsersIDs { get; set; }
+
+        [BindProperty]
+        public int[] SelectedUsersDeletion { get; set; }
 
         [BindProperty]
         public CourseDTO courseDTO { get; set; }//Èçìåíåíèå íàçâàíèÿ êóğñà
-
-        //public List<User>? CurUsers { get; set; }//Çàãğóæàåì âñåõ ïîëüçîâàòåëåé
 
         [BindProperty]
         public Course Cur_Course { get; set; }//Èíôîğìàöèÿ î êóğñå
@@ -49,20 +57,21 @@ namespace LMS.Pages
             Cur_Course = new Course();
         }
 
-        public async Task<IActionResult> OnGet(int Id)
+        public async Task<IActionResult> OnGet(/*int Id*/)
         {
+            var test = this.Id;
+            HttpContext.Session.SetInt32("CourseId", Id);
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             Cur_Course = await _courseRepo.GetById(Id);
             if (Cur_Course == null)
             {
                 return NotFound("Êóğñ íå íàéäåí");
             }
-            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).ToList();
             _Groups = _db.Groups.Select(a => new SelectListItem { Value = a.GroupId.ToString(), Text = a.Name }).ToList();
-            _Groups[0].Selected = true;
-            var UserGroup = await _usersRepo.GetAllByGroup(int.Parse(_Groups[0].Value));
-            //TODO ÏĞÎÂÅĞÈÒÜ ĞÀÁÎÒÀÅÒ ËÈ ÂÛÁÎĞÊÀ, ÑÏÈÑÎÊ ÃĞÓÏÏÛ ÂÛÂÎÄÈÒÑß ÁÅÇ Ó×ÀÑÒÍÈÊÎÂ ÊÎÒÎĞÛÅ ÓÆÅ ÅÑÒÜ Â ÊÓĞÑÅ
-            _SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
+            //SelectedGroupID = int.Parse(_Groups[0].Value);
+            //var UserGroup = await _usersRepo.GetAllByGroup(int.Parse(_Groups[0].Value));
+            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).ToList();
+            //_SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
             return Page();
         }
 
@@ -76,62 +85,64 @@ namespace LMS.Pages
             //Course
         }
 
-        public async Task OnPostGetUsers(int GroupId)
+        public async Task<JsonResult> OnGetGroupUsers()
         {
-            var UserGroup = await _usersRepo.GetAllByGroup(GroupId);
+            var id = (int)HttpContext.Session.GetInt32("CourseId");
+            Cur_Course = await _courseRepo.GetById(id);
+            _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).ToList();
+            var UserGroup = await _usersRepo.GetAllByGroup(SelectedGroupID);
+            _SelectedUsers = new List<SelectListItem>();
             //TODO ÏĞÎÂÅĞÈÒÜ ĞÀÁÎÒÀÅÒ ËÈ ÂÛÁÎĞÊÀ, ÑÏÈÑÎÊ ÃĞÓÏÏÛ ÂÛÂÎÄÈÒÑß ÁÅÇ Ó×ÀÑÒÍÈÊÎÂ ÊÎÒÎĞÛÅ ÓÆÅ ÅÑÒÜ Â ÊÓĞÑÅ
-            _SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
+            foreach (var user in UserGroup)
+            {
+                var SelUser = new SelectListItem { Value = user.Id.ToString(), Text = user.Name + " " + user.Surname + " " + user.Patronymic };
+                if (!_CurrentUsers.Exists(a => a.Value == SelUser.Value))
+                {
+                    _SelectedUsers.Add(SelUser);
+                }
+            }
+            //_SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
             //TODO Çäåñü âîçâğàùàåòñÿ ñïèñîê ãğóïïû äëÿ äîáàâëåíèÿ
-            //return Partial()
+            return new JsonResult(_SelectedUsers);
         }
 
-        public async void OnPostEdit(string Name)
+        public async Task OnPostEdit(string Name)
         {
             Cur_Course.Name = Name;
             _courseRepo.Update(Cur_Course);
             await _courseRepo.Save();
         }
 
-        public async Task OnPostAddUsers()
+        public async Task<IActionResult> OnPostAddUsers()
         {
-            List<int> SelectedId = new List<int>();
-            foreach (var item in _SelectedUsers)
+            var id = (int)HttpContext.Session.GetInt32("CourseId");
+            if (SelectedUsersIDs.Length > 0)
             {
-                if (item.Selected)
-                {
-                    SelectedId.Add(int.Parse(item.Value));
-                }
+                await _courseRepo.AddUsers(id, SelectedUsersIDs);
+                await _courseRepo.Save();
             }
-            await _courseRepo.AddUsers(Cur_Course.CourseId, SelectedId);
-            await _courseRepo.Save();
+
+            return RedirectToPage("Manage", id);
         }
 
-        public async Task OnPostDeleteUsers()
+        public async Task<IActionResult> OnPostDeleteUsers()
         {
-            List<int> SelectedId = new List<int>();
-            foreach (var item in _SelectedUsers)
+            var id = (int)HttpContext.Session.GetInt32("CourseId");
+            if (SelectedUsersIDs.Length > 0)
             {
-                if (item.Selected)
-                {
-                    SelectedId.Add(int.Parse(item.Value));
-                }
+                await _courseRepo.DeleteUsers(id, SelectedUsersIDs);
+                await _courseRepo.Save();
             }
-            await _courseRepo.DeleteUsers(Cur_Course.CourseId, SelectedId);
-            await _courseRepo.Save();
+
+            return RedirectToPage("Manage", id);
         }
 
-        public async Task OnPostDeleteUser(int UserId)
+        public async Task<IActionResult> OnPostDeleteUser(int UserId)
         {
-            List<int> SelectedId = new List<int>();
-            foreach (var item in _SelectedUsers)
-            {
-                if (item.Selected)
-                {
-                    SelectedId.Add(int.Parse(item.Value));
-                }
-            }
-            await _courseRepo.DeleteUsers(Cur_Course.CourseId, SelectedId);
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            await _courseRepo.DeleteUser(CourseId, UserId);
             await _courseRepo.Save();
+            return RedirectToPage("Manage", CourseId);
         }
 
         public async Task OnPostAddLab()

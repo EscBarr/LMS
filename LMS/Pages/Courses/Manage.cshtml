@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+﻿@page "{id?}"
 @model LMS.Pages.ManageCourseModel
 @{
     Layout = "_Layout";
@@ -22,36 +22,73 @@
 
 
 
-    <div class="row">
-        <div class="col-10 ms-sm-auto px-md-4">
+ <div class="row">
+        <div class="col-9 ms-sm-auto px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-primary border-bottom">
                 <h1>@Model.Cur_Course.Name</h1>
             </div>
         </div>
-    </div>
-    <div class="row">
-    <div class="col-10 ms-sm-auto px-md-4">
-        @{
-            foreach (var item in Model.Cur_Course.Users)
-            {
-                <div class="StudentContainer">@item.Name @item.Surname @item.Patronymic
-                
-                 
-                </div>
-            }
-         }
-    </div>
-    <div class="col-2 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black;">
-        <ul class="nav flex-column border-primary">
+</div>
+<div class="row">
+    <div class="col-9 ms-sm-auto px-md-4">
+        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+            <li class="nav-item border-primary" role="presentation">
+                <button class="nav-link active" id="Users-tab" data-bs-toggle="tab" data-bs-target="#Users-tab-pane" type="button" role="tab" aria-controls="Users-tab-pane" aria-selected="true">Студенты курса</button>
+               
+            </li>
+            <li class="nav-item border-primary" role="presentation">
+                <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#Labs-tab-pane" type="button" role="tab" aria-controls="Labs-tab-pane" aria-selected="true">Задания курса</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="Users-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0">
 
+                @{
+                    foreach (var item in Model.Cur_Course.Users)
+                    {
+                        <div class="StudentContainer ">
+
+                            <span> @item.Name @item.Surname @item.Patronymic</span>
+                            <form class="float-end align-middle" method="post">
+                                <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.Id">Удалить</button>
+                            </form>
+                        </div>
+                    }
+                }
+
+
+            </div>
+            <div class="tab-pane fade" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">Пустышка</div>
+
+        </div>
+    </div>
+  
+    
+    <div class="col-3 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black;">
+        <ul class="nav flex-column border-primary">
             <li class="nav-item ">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStudents">Добавить участников</a>
+                <button class="nav-link"  data-bs-target="#">Журнал сдачи</button>
+            </li>
+            <li class="nav-item ">
+                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStudents">Добавить участников</button>
+            </li>
+            <li class="nav-item ">
+                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#RemoveStudents">Удалить участников</button>
+            </li>
+            <li class="nav-item ">
+                <a class="button nav-link" asp-page="ManageTask">Добавить задания</a>
+            </li>
+            <li class="nav-item ">
+                <button class="nav-link">Удалить задания</button>
+            </li>
+            <li class="nav-item ">
+                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">Удалить курс</button>
             </li>
             
         </ul>
 
     </div>
-    </div>
+</div>
     
     
 
@@ -61,52 +98,81 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Добавление студентов</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+                <h4 class="modal-title">Добавление студентов</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        
+                            <div class="col-8">
+
+                                <form asp-page="Manage" asp-page-handler="AddUsers" method="post">
+                                <select class="selectpicker form-control" data-style="btn border" title="Выберите студентов..." asp-for="SelectedUsersIDs">
+                                </select>
+                                <button type="submit" class="btn btn-success pt-2 mt-2" >Добавить</button>
+                                </form>
+                            </div>
+                           
+                        
+                        <div class="col-4">
+                            <select class="selectpicker form-control" data-style="btn border" title="Выберите группу" asp-for="SelectedGroupID" asp-items="Model._Groups"></select>
+                        </div>
+                        
+                    </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div id="RemoveStudents" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удаление студентов</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-8">
-                            <select id="SelectedUsers" @*name="_SelectedUsers" multiple*@ asp-items="Model._SelectedUsers"></select>
-                            <form asp-page="Manage" asp-page-handler="AddUsers" method="post">
-                                <p><input type="submit" class="btn btn-success" value="Добавить"> </p>
+                            <form asp-page="Manage" asp-page-handler="DeleteUsers" method="post">
+                                <select class="selectpicker form-control" data-style="btn border" title="Выберите студентов..." asp-for="SelectedUsersDeletion" asp-items="Model._CurrentUsers">
+                                </select>
+                                <button type="submit" class="btn btn-danger pt-2 mt-2" value="Удалить">Удалить</button>
                             </form>
-
-                        </div>
-                        <div class="col-4">
-                            <select name="_Groups" asp-items="Model._Groups"></select>
                         </div>
                     </div>
-                 <div/>
-            </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
-        </div>
-    </div>
-</div>
-</div>
-
-@*<div id="RemoveStudents" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Удаление студентов</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form asp-page="Manage" asp-page-handler="AddUsers" method="post">
-
-                        <p><input type="submit" class="btn btn-success" value="Добавить"> </p>
-                    </form>
-
                 </div>
+                <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
             </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
         </div>
     </div>
-</div>*@
+</div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#SelectedUsers').multiselect();
-    });
-</script>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#SelectedGroupID").on("change", function () {
+                var selectedgroupID = $(this).val();
+                $('#SelectedUsersIDs').selectpicker("destroy");
+                $('#SelectedUsersIDs option').each(function () {
+                    $(this).remove();
+                });
+                $.getJSON(`?handler=GroupUsers&selectedgroupID=${selectedgroupID}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#SelectedUsersIDs").append(`<option value="${item.value}">${item.text}</option>`);
+                        
+
+                    });
+                    $('#SelectedUsersIDs').addClass('selectpicker').selectpicker("render");
+
+                });
+               
+            });
+            
+        });
+    </script>
+}

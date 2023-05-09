@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LMS.EntityСontext;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
+using LMS.DTO;
 
 namespace LMS.EntityContext
 {
@@ -45,18 +46,18 @@ namespace LMS.EntityContext
             _db.Courses.Update(course);
         }
 
-        public async Task AddUsers(Course course, List<int> UserID)
+        public async Task AddUsers(int ID, int[] UserID)
         {
-            //Course course = await _db.Courses.FindAsync(ID);
+            Course course = await GetById(ID);
             var Users = await _db.Users.Where(T => UserID.Contains(T.Id)).ToListAsync();
-            course.Users.Union(Users);
+            course.Users = course.Users.Union(Users).ToList();
             Update(course);
         }
 
-        public async Task DeleteUsers(Course course, List<int> UserID)
+        public async Task DeleteUsers(int ID, int[] UserID)
         {
             //Course course = await _db.Courses.FindAsync(ID);
-            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
+            Course course = await GetById(ID);
             var Users = await _db.Users.Where(T => UserID.Contains(T.Id)).ToListAsync();
             foreach (var user in Users)
             {
@@ -65,11 +66,11 @@ namespace LMS.EntityContext
             Update(course);
         }
 
-        public async Task DeleteUser(Course course, int UserID)
+        public async Task DeleteUser(int ID, int UserID)
         {
             //Course course = await _db.Courses.FindAsync(ID);
-            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
-            var User = await course.Users.AsQueryable().FirstOrDefaultAsync((T => T.Id == UserID));
+            Course course = await GetById(ID);
+            var User = course.Users.FirstOrDefault((T => T.Id == UserID));
             if (User != null)
             {
                 course.Users.Remove(User);
@@ -78,19 +79,17 @@ namespace LMS.EntityContext
             }
         }
 
-        public async Task AddLab(int ID, int LabworkID)
+        public async Task AddLab(int ID, LaboratoryWorkDTO Labwork)
         {
-            Course course = await _db.Courses.FindAsync(ID);
-
-            LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.LaboratoryWorkId == LabworkID);
+            Course course = await GetById(ID);
+            LaboratoryWork laboratory = new LaboratoryWork { Name = Labwork.Name, Description = Labwork.Description, CourseId = Labwork.CourseId, UserId = Labwork.UserId };
             course.LaboratoryWorks.Add(laboratory);
             Update(course);
         }
 
         public async Task DeleteLab(int ID, int LabworkID)
         {
-            Course course = await _db.Courses.FindAsync(ID);
-            //TODO ЗАПРОСЫ К ДБ ЛИШНИЕ ПРИ УДАЛЕНИИ
+            Course course = await GetById(ID);
             LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.LaboratoryWorkId == LabworkID);
             course.LaboratoryWorks.Remove(laboratory);
             Update(course);
@@ -98,7 +97,7 @@ namespace LMS.EntityContext
 
         public async Task Delete(int ID)
         {
-            Course course = await _db.Courses.FindAsync(ID);
+            Course course = await GetById(ID);
             _db.Courses.Remove(course);
         }
 

@@ -4,18 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link href="~/MyCss/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/popper.js/umd/popper.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
-    
-    <script type="text/javascript" src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.min.css" type="text/css" />
+   
+    <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" type="text/css" />
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <link href="~/MyCss/main.css" rel="stylesheet" />
+   
    @* <link type="text/css" rel="stylesheet" media="all" href="~/css/Flatly.min.css" id="Theme" />*@
     @*<link rel="alternate stylesheet" href="~/css/Flatly.min.css" id="Dark" />*@
     
@@ -25,7 +27,7 @@
     <!--меню--> 
     <header>
 
-        <nav class="navbar navbar-expand-lg navbar-dark" style="       
+        <nav class="navbar navbar-expand-lg navbar-dark " style="       
         min-height: 100px;
         padding-left: 120px;
         padding-right: 120px;
@@ -40,7 +42,7 @@
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav justify-content-between">
                             <li class="nav-item" id="courses">
                                 <a class="nav-link" aria-selected="true" href="~/courses">Курсы</a>
                             </li>
@@ -78,8 +80,8 @@
                             <button class="btn btn-outline-danger" style="margin-left: 10px;" value="Выйти" id="logOut">Выйти</button>
 
                         </li>
-                        <li class="nav-item dropdown ">
-                            <button class="btn btn-link nav-link dropdown-toggle" id="ThemeSwitch" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Выбор темы">
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-link nav-link dropdown-toggle " id="ThemeSwitch" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Выбор темы">
                              <i class="fa-solid fa-circle-half-stroke"></i>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="ThemeSwitch">
@@ -181,8 +183,8 @@
                 aw.css('display', 'block');
                 //themes.css('display', 'block');
                 //components.css('display', 'block');
-                journal.css('display', 'block');
-                group.css('display', 'block');
+                //journal.css('display', 'block');
+                //group.css('display', 'block');
                 //disciplines.css('display', 'block');
                 //speciality.css('display', 'block');
                 results.css('display', 'block');

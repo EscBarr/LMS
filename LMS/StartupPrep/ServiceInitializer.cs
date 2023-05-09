@@ -33,12 +33,12 @@ namespace ASTU_LMS.StartupPrep
         {
             // Add services to the container.
             services.AddControllersWithViews();
-            //services.AddRazorPages();
-            services.AddRazorPages().AddRazorPagesOptions(options =>
-            {
-                options.Conventions.AddPageRoute("/Courses/Manage",
-                                                 "courses/Manage");
-            });
+            services.AddRazorPages();
+            //services.AddRazorPages().AddRazorPagesOptions(options =>
+            //{
+            //    options.Conventions.AddPageRoute("/Courses/Manage",
+            //                                     "courses/Manage/{id?}/{handler?}/{UserId?}");
+            //});
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.PageViewLocationFormats.Add("/Pages/Courses/Partials/{0}" + RazorViewEngine.ViewExtension);

@@ -7,7 +7,7 @@
       "destination": "wwwroot/lib/bootstrap/"
     },
     {
-      "library": "jquery@3.6.3",
+      "library": "jquery@3.6.4",
       "destination": "wwwroot/lib/jquery/"
     },
     {
@@ -30,9 +30,8 @@
       "destination": "wwwroot/lib/jquery-ajax-unobtrusive/"
     },
     {
-      "provider": "cdnjs",
-      "library": "bootstrap-multiselect@1.1.2",
-      "destination": "wwwroot/lib/bootstrap-multiselect/"
+      "library": "bootstrap-select@1.14.0-beta3",
+      "destination": "wwwroot/lib/bootstrap-select/"
     }
   ]
 }

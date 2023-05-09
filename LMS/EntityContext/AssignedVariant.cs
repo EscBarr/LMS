@@ -12,9 +12,9 @@ namespace LMS.EntityСontext
 
         public DateTime AssignDateTime { get; set; }
         public DateTime CompletionDateTime { get; set; }
-        public double Mark { get; set; }
+        public int Mark { get; set; }
 
-        public double MaxMark { get; set; }
+        public int MaxMark { get; set; }
 
         public User User { get; set; }
         public Variant Variant { get; set; }
