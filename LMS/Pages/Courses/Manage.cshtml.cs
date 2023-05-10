@@ -50,6 +50,9 @@ namespace LMS.Pages
         [BindProperty]
         public Course Cur_Course { get; set; }//Информация о курсе
 
+        [BindProperty]
+        public LaboratoryWorkDTO LabDTO { get; set; }//Информация о курсе
+
         public ManageCourseModel(ApplicationContext db, CourseRepo courseRepo, LabWorksRepo labWorksRepo, UsersRepo usersRepo)
         {
             _db = db;
@@ -140,11 +143,14 @@ namespace LMS.Pages
             return RedirectToPage("Manage", CourseId);
         }
 
-        public async Task OnPostAddLab()
+        public async Task<IActionResult> OnPostAddLab()
         {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            await _courseRepo.AddLab(CourseId, LabDTO);
+            return RedirectToPage("Manage", CourseId);
         }
 
-        public async Task OnPostDeleteLab()
+        public async Task OnPostDeleteLab(int LabId)
         {
         }
     }

@@ -69,7 +69,20 @@
 
 
             </div>
-            <div class="tab-pane fade" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">Пустышка</div>
+            <div class="tab-pane fade" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+                @{
+                    foreach (var item in Model.Cur_Course.LaboratoryWorks)
+                    {
+                        <div class="StudentContainer ">
+
+                            <span> @item.Name</span>
+                            <form class="float-end align-middle" method="post">
+                                <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.LaboratoryWorkId">Удалить</button>
+                            </form>
+                        </div>
+                    }
+                }
+            </div>
 
         </div>
     </div>
@@ -161,7 +174,29 @@
     </div>
 </div>
 
-
+<div id="CreateLab" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Создание лабораторной работы</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-8">
+                            <form asp-page="Manage" asp-page-handler="DeleteUsers" method="post">
+                                <select class="selectpicker form-control" data-style="btn border" title="Выберите студентов..." asp-for="SelectedUsersDeletion" asp-items="Model._CurrentUsers">
+                                </select>
+                                <button type="submit" class="btn btn-danger pt-2 mt-2" value="Удалить">Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script>
