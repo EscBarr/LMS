@@ -43,7 +43,9 @@ namespace LMS.Pages
         public int[] SelectedUsersDeletion { get; set; }
 
         [BindProperty]
-        public CourseDTO courseDTO { get; set; }//Изменение названия курса
+        public string CourseName { get; set; }//Изменение названия курса
+
+        //public CourseDTO courseDTO { get; set; }//Изменение названия курса
 
         [BindProperty]
         public Course Cur_Course { get; set; }//Информация о курсе
@@ -54,10 +56,9 @@ namespace LMS.Pages
             _courseRepo = courseRepo;
             _labWorksRepo = labWorksRepo;
             _usersRepo = usersRepo;
-            Cur_Course = new Course();
         }
 
-        public async Task<IActionResult> OnGet(/*int Id*/)
+        public async Task<IActionResult> OnGet()
         {
             var test = this.Id;
             HttpContext.Session.SetInt32("CourseId", Id);
@@ -67,6 +68,7 @@ namespace LMS.Pages
             {
                 return NotFound("Курс не найден");
             }
+            CourseName = Cur_Course.Name;
             _Groups = _db.Groups.Select(a => new SelectListItem { Value = a.GroupId.ToString(), Text = a.Name }).ToList();
             //SelectedGroupID = int.Parse(_Groups[0].Value);
             //var UserGroup = await _usersRepo.GetAllByGroup(int.Parse(_Groups[0].Value));
@@ -75,14 +77,14 @@ namespace LMS.Pages
             return Page();
         }
 
-        public async void OnPostEdit(int CourseId)
+        public async Task<IActionResult> OnPostEditName()
         {
-            var Course = await _courseRepo.GetById(CourseId);
-            Course.Name = courseDTO.Name;
-            _courseRepo.Update(Course);
+            var id = (int)HttpContext.Session.GetInt32("CourseId");
+            Cur_Course = await _courseRepo.GetById(id);
+            Cur_Course.Name = CourseName;
+            _courseRepo.Update(Cur_Course);
             await _courseRepo.Save();
-
-            //Course
+            return RedirectToPage("Manage", id);
         }
 
         public async Task<JsonResult> OnGetGroupUsers()
@@ -104,13 +106,6 @@ namespace LMS.Pages
             //_SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
             //TODO Здесь возвращается список группы для добавления
             return new JsonResult(_SelectedUsers);
-        }
-
-        public async Task OnPostEdit(string Name)
-        {
-            Cur_Course.Name = Name;
-            _courseRepo.Update(Cur_Course);
-            await _courseRepo.Save();
         }
 
         public async Task<IActionResult> OnPostAddUsers()

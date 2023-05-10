@@ -24,10 +24,21 @@
 
  <div class="row">
         <div class="col-9 ms-sm-auto px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-primary border-bottom">
-                <h1>@Model.Cur_Course.Name</h1>
+        
+            <div class="pt-3 pb-2 mb-3 border-primary border-bottom">
+            <form class="mw-100 w-100" method="post">
+              <div class="row">
+                <div class="col-11">
+                        <input type="text" class="h1 bg-transparent border-0 h-100 w-100" asp-for="CourseName"> </input>
+                </div>
+                <div class="col-1">
+                        <button type="submit" class="btn btn-primary h-100 w-100" asp-page-handler="EditName"><i class="fa-solid fa-pen-to-square"></i></button>
+                </div>
+              </div>
+            </form>
             </div>
         </div>
+        
 </div>
 <div class="row">
     <div class="col-9 ms-sm-auto px-md-4">
@@ -67,22 +78,22 @@
     <div class="col-3 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black;">
         <ul class="nav flex-column border-primary">
             <li class="nav-item ">
-                <button class="nav-link"  data-bs-target="#">Журнал сдачи</button>
+                <a class="button nav-link" data-bs-target="#">Журнал сдачи</a>
             </li>
             <li class="nav-item ">
-                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStudents">Добавить участников</button>
+                <a class="button nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStudents">Добавить участников</a>
             </li>
             <li class="nav-item ">
-                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#RemoveStudents">Удалить участников</button>
+                <a class="button nav-link" href="#" data-bs-toggle="modal" data-bs-target="#RemoveStudents">Удалить участников</a>
             </li>
             <li class="nav-item ">
-                <a class="button nav-link" asp-page="ManageTask">Добавить задания</a>
+                <a class="button nav-link align-middle" asp-page="ManageTask">Добавить задания</a>
             </li>
             <li class="nav-item ">
-                <button class="nav-link">Удалить задания</button>
+                <a class="button nav-link">Удалить задания</a>
             </li>
             <li class="nav-item ">
-                <button class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">Удалить курс</button>
+                <a class="button nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">Удалить курс</a>
             </li>
             
         </ul>
