@@ -40,11 +40,11 @@ namespace LMS.Controllers
         public async Task<IActionResult> GetAllByLaboratoryId([FromHeader] int laboratoryWorkId)
         {
             var userId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            if (await _db.LaboratoryWorks.Where(w => w.UserId == userId && w.LaboratoryWorkId == laboratoryWorkId).FirstOrDefaultAsync() != null)
+            if (await _db.LaboratoryWorks.Where(w => w.UserId == userId && w.Id == laboratoryWorkId).FirstOrDefaultAsync() != null)
             {
                 return Ok(await Task.Run(() => _db.Variants
                     .Include(variant => variant.LaboratoryWork)
-                    .Where(v => v.LaboratoryWork.LaboratoryWorkId == laboratoryWorkId)
+                    .Where(v => v.LaboratoryWork.Id == laboratoryWorkId)
                     .Select(v => new { v.VariantId, v.LaboratoryWorkId, v.LaboratoryWork.Name, v.VariantNumber, v.Description })
                     .OrderBy(x => x.VariantNumber)
                     .ToList())
@@ -58,7 +58,7 @@ namespace LMS.Controllers
         public async Task<IActionResult> Get([FromHeader] int laboratoryWorkId)
         {
             var laboratoryWorks = await _db.LaboratoryWorks
-                .Where(laboratoryWork => laboratoryWork.LaboratoryWorkId == laboratoryWorkId)
+                .Where(laboratoryWork => laboratoryWork.Id == laboratoryWorkId)
                 .Select(laboratoryWork => new { laboratoryWork.Name, laboratoryWork.Description, laboratoryWork.UserId })
                 .FirstOrDefaultAsync();
             if (laboratoryWorks != null)
@@ -80,7 +80,7 @@ namespace LMS.Controllers
         {
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return Ok(await Task.Run(() => _db.LaboratoryWorks.Where(lw => lw.UserId == curUserId)
-                .Select(laboratoryWork => new { laboratoryWork.LaboratoryWorkId, laboratoryWork.Name, laboratoryWork.Description, laboratoryWork.CourseId, laboratoryWork.UserId }).ToList()));
+                .Select(laboratoryWork => new { laboratoryWork.Id, laboratoryWork.Name, laboratoryWork.Description, laboratoryWork.CourseId, laboratoryWork.UserId }).ToList()));
         }
 
         [HttpGet]
@@ -121,7 +121,7 @@ namespace LMS.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] LaboratoryWorkDTO model, [FromHeader] int laboratoryWorkId)
         {
-            var laboratoryWorkUpdate = await _db.LaboratoryWorks.FirstOrDefaultAsync(laboratoryWork => laboratoryWork.LaboratoryWorkId == laboratoryWorkId);
+            var laboratoryWorkUpdate = await _db.LaboratoryWorks.FirstOrDefaultAsync(laboratoryWork => laboratoryWork.Id == laboratoryWorkId);
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (laboratoryWorkUpdate != null)
             {
@@ -151,7 +151,7 @@ namespace LMS.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromHeader] int laboratoryWorkId)
         {
-            var laboratoryWorkDelete = await _db.LaboratoryWorks.FirstOrDefaultAsync(laboratoryWork => laboratoryWork.LaboratoryWorkId == laboratoryWorkId);
+            var laboratoryWorkDelete = await _db.LaboratoryWorks.FirstOrDefaultAsync(laboratoryWork => laboratoryWork.Id == laboratoryWorkId);
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (laboratoryWorkDelete != null)
             {

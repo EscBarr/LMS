@@ -68,12 +68,10 @@ namespace LMS.EntityСontext
                 .HasIndex(var => new { var.VariantNumber, var.LaboratoryWorkId })
                 .IsUnique();
 
-            //modelBuilder.Entity<Course>().HasOne<User>(e => e.User).WithMany(d => d.CreatedCourses);
-            //modelBuilder.Entity<Course>().HasMany<User>(e => e.Users).WithMany(d => d.Courses);
-
             modelBuilder.Entity<Course>().HasMany(t => t.Users).WithMany(p => p.Courses);
-            //modelBuilder.Entity<Course>().Ignore(e => e.User);
+
             modelBuilder.Entity<Course>().HasOne(t => t.User).WithMany(d => d.CreatedCourses).HasForeignKey(t => t.UserId);
+            //modelBuilder.Entity<LaboratoryWork>().HasMany(t => t.).WithOne(d => d.Course).HasForeignKey(t => t.LaboratoryWorkId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

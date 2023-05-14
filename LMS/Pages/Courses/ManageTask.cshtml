@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page "{id?}"
 @model LMS.Pages.LaboratoryWorksModel
 @{
     Layout = "_Layout";
@@ -13,10 +13,10 @@
             <a href="~/courses">Все курсы</a>
         </li>
         <li class="breadcrumb-item not-active" aria-current="page">
-            <a href="~/courses/Manage/@Model.CourseID"></a>
+            <a href="~/courses/Manage/@Model.CourseID">@Model.CourseName</a>
         </li>
         <li class="breadcrumb-item not-active" aria-current="page">
-           Управление лабораторной работой
+           Редактирование лабораторной работы
         </li>
     </ol>
 </div>
@@ -24,32 +24,57 @@
 
 <div class="d-flex d-flex align-items-lg-start" style="justify-content: space-between;">
     <div class="col-7">
-        <div class="body customCenter myHeadingPage">Лабораторная работа</div>
-        <div id="initTask">
+        <div class="container-fluid ">
+            <div class="col text-center">
+                <form asp-page="ManageTask" asp-page-handler="UpdateLab" method="post">
+                    <div class="input-group">
+                        <label class="mr-sm-2">Тема:</label>
+                        <textarea class="form-control" asp-for="@Model.Cur_laboratoryWork.Name" style="width: 100%; height: 200px;"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="mr-sm-2">Описание задания:</label>
+                        <textarea class="form-control" asp-for="@Model.Cur_laboratoryWork.Description" style="width: 100%; height: 500px;"></textarea>
+                    </div>
+                    <div class="input-group align-items-center">
+                        <label class="mr-sm-2">Максимальная оценка:</label>
+                        <input class="form-control" asp-for="@Model.Cur_laboratoryWork.MaxMark" type="number" min="1" value="1" />
+                    </div>
+                    <button type="submit" class="btn btn-success ">Сохранить изменения</button>
+                </form>
+            </div>
 
-            <div class="input-group">
-                <label class="mr-sm-2" for="inputThemeForLabWork">Тема:</label>
-                <textarea class="form-control" id="inputThemeForLabWork" style="width: 100%; height: 200px;"></textarea>
-            </div>
-            <div class="input-group">
-                <label class="mr-sm-2" for="inputTaskForLabWork">Задание:</label>
-                <textarea class="form-control" id="inputTaskForLabWork" style="width: 100%; height: 500px;"></textarea>
-            </div>
+
         </div>
-        <button id="SaveLab" class="myButtonInBlock save" onclick="updateLw()">Сохранить</button>
     </div>
     <div class="col-5">
         <div class="body customCenter myHeadingPage">
-            <div class="btn custom btn-success"  onclick="createPrepareVariant()" style="text-decoration: none;" data-toggle="modal" data-target="#myModal">Добавить вариант</div>
+            <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Добавить вариант</div>
         </div>
         <label class="mr-sm-2" for="inputThemeForLabWork">Варианты:</label>
-        @*<p class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">Лабораторная работа</label>
-            <select class="col-sm-9 form-control"
-        name="getbByLaboratoryWork"
-        id="getByLaboratoryWork"></select>
-        </p>*@
-        <div id="tbodyContent2"></div>
+
+        @{
+            if (Model.Cur_laboratoryWork.Variants.Count == 0)
+            {
+                <p>Вы ещё не добавили варианты</p>
+            }
+            else
+            {
+                foreach (var item in Model.Cur_laboratoryWork.Variants)
+                {
+                    <div class="StudentContainer ">
+
+                        <p>"Вариант №" @item.VariantNumber</p>
+
+                        <a class="btn btn-primary float-end" data-bs-toggle="tooltip" data-bs-title="Редактирование варианта" asp-page="ManageTask" asp-route-Id="@item.VariantId"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <form class="float-end align-middle" method="post">
+
+                            <button type="submit" class="btn btn-danger align-middle" asp-page-handler="UpdateVariant" asp-route-VariantId="@item.VariantId">Удалить</button>
+                        </form>
+                    </div>
+                }
+            }
+        }
+        
     </div>
 </div>
 
@@ -160,9 +185,34 @@
     </div>
 </div>
 
-<script src="~/lib/markdown-it/markdown-it.min.js"></script>
-<script src="~/lib/KaTeX/katex.min.js"></script>
-<script src="~/lib/markdown-it-katex/markdown-it-katex.js"></script>
-<link rel="stylesheet" href="~/lib/KaTeX/katex.min.css">
-<link href="~/loading.css" rel="stylesheet" />
+
+<div id="CreateVariant" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Создание нового варианта</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid ">
+                    <div class="col text-center">
+                        <form asp-page="Manage" asp-page-handler="AddLab" method="post">
+                            <div class="input-group">
+                                <label class="mr-sm-2">Номер варианта:</label>
+                                <input class="form-control" asp-for="@Model.Variant.VariantNumber" type="number" min="1" value="1" />
+                            </div>
+                            <div class="input-group">
+                                <label class="mr-sm-2">Описание варианта:</label>
+                                <textarea class="form-control" asp-for="@Model.Variant.Description" style="width: 100%; height: 500px;"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success ">Добавить</button>
+                        </form>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+            </div>
+        </div>
+    </div>
+</div>
 

@@ -20,12 +20,12 @@ namespace LMS.EntityContext
 
         public async Task<LaboratoryWork> GetById(int? LabID)
         {
-            return await _db.LaboratoryWorks.FirstOrDefaultAsync(m => m.LaboratoryWorkId == LabID);
+            return await _db.LaboratoryWorks.Include(L => L.Variants).FirstOrDefaultAsync(m => m.Id == LabID);
         }
 
         public async Task<IEnumerable<LaboratoryWork>> GetAllByCourseId(int? CourseID)
         {
-            return await _db.LaboratoryWorks.Where(lw => lw.CourseId == CourseID).ToListAsync();
+            return await _db.LaboratoryWorks.Where(lw => lw.CourseId == CourseID).Include(L => L.Variants).ToListAsync();
         }
 
         public void Create(LaboratoryWork laboratory)

@@ -20,10 +20,7 @@ namespace LMS.EntityContext
 
         public async Task<List<Course>> GetAll(int userId)
         {
-            //var Test = await _db.Courses.Include(course => (course.Users)).ToListAsync();
-            //return Test.FindAll(course => course.UserId == userId);
-
-            return await _db.Courses.Where(course => course.UserId == userId).Include(course => (course.Users)).ThenInclude(course => (course.LaboratoryWorks)).ToListAsync();
+            return await _db.Courses.Where(course => course.UserId == userId).Include(course => (course.LaboratoryWorks)).Include(course => (course.Users)).ToListAsync();
         }
 
         public async Task<List<Course>> GetAllWhereUser(int userId)//Получить все курсы, в которых состоит пользователь
@@ -33,7 +30,7 @@ namespace LMS.EntityContext
 
         public async Task<Course> GetById(int? ID)
         {
-            return await _db.Courses.Include(course => (course.Users)).ThenInclude(course => (course.LaboratoryWorks)).FirstOrDefaultAsync(m => m.CourseId == ID);
+            return await _db.Courses.Include(course => course.LaboratoryWorks).Include(course => (course.Users)).FirstOrDefaultAsync(m => m.CourseId == ID);
         }
 
         public void Create(Course course)
@@ -82,7 +79,7 @@ namespace LMS.EntityContext
         public async Task AddLab(int ID, LaboratoryWorkDTO Labwork)
         {
             Course course = await GetById(ID);
-            LaboratoryWork laboratory = new LaboratoryWork { Name = Labwork.Name, Description = Labwork.Description, CourseId = Labwork.CourseId, UserId = Labwork.UserId };
+            LaboratoryWork laboratory = new LaboratoryWork { Name = Labwork.Name, Description = Labwork.Description, CourseId = Labwork.CourseId, UserId = Labwork.UserId, MaxMark = Labwork.MaxMark };
             course.LaboratoryWorks.Add(laboratory);
             Update(course);
         }
@@ -90,7 +87,7 @@ namespace LMS.EntityContext
         public async Task DeleteLab(int ID, int LabworkID)
         {
             Course course = await GetById(ID);
-            LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.LaboratoryWorkId == LabworkID);
+            LaboratoryWork laboratory = await _db.LaboratoryWorks.FirstOrDefaultAsync(L => L.Id == LabworkID);
             course.LaboratoryWorks.Remove(laboratory);
             Update(course);
         }

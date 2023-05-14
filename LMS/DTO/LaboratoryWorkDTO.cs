@@ -6,6 +6,7 @@ namespace LMS.DTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int MaxMark { get; set; }
         public int UserId { get; set; }
         public int CourseId { get; set; }
     }

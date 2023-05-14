@@ -9,8 +9,8 @@
     <link href="~/MyCss/main.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
     <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/popper.js/umd/popper.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    @*<script src="~/lib/popper.js/umd/popper.min.js"></script>*@
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
    
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" type="text/css" />
@@ -277,6 +277,8 @@
     <script>
         $(document).ready(function () {
             $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

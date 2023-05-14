@@ -41,7 +41,7 @@
         
 </div>
 <div class="row">
-    <div class="col-9 ms-sm-auto px-md-4">
+    <div class="col-sm-9 ms-sm-auto px-md-4 ">
         <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
             <li class="nav-item border-primary" role="presentation">
                 <button class="nav-link active" id="Users-tab" data-bs-toggle="tab" data-bs-target="#Users-tab-pane" type="button" role="tab" aria-controls="Users-tab-pane" aria-selected="true">Студенты курса</button>
@@ -52,35 +52,54 @@
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="Users-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0">
+            <div class="tab-pane fade show active overflow-hidden" id="Users-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0">
 
                 @{
-                    foreach (var item in Model.Cur_Course.Users)
+                    if (Model.Cur_Course.Users.Count == 0)
                     {
-                        <div class="StudentContainer ">
-
-                            <span> @item.Name @item.Surname @item.Patronymic</span>
-                            <form class="float-end align-middle" method="post">
-                                <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.Id">Удалить</button>
-                            </form>
-                        </div>
+                        <p>Вы ещё не добавили студентов</p>
                     }
+                    else
+                    {
+                        foreach (var item in Model.Cur_Course.Users)
+                        {
+                            <div class="StudentContainer ">
+
+                                <span> @item.Surname @item.Name @item.Patronymic</span>
+                                <form class="float-end align-middle" method="post">
+                                    <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.Id">Удалить</button>
+                                </form>
+                            </div>
+                        }
+                    }
+                   
                 }
 
 
             </div>
-            <div class="tab-pane fade" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+            <div class="tab-pane fade overflow-auto" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
                 @{
-                    foreach (var item in Model.Cur_Course.LaboratoryWorks)
+                    if (Model.Cur_Course.LaboratoryWorks.Count == 0)
                     {
-                        <div class="StudentContainer ">
-
-                            <span> @item.Name</span>
-                            <form class="float-end align-middle" method="post">
-                                <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.LaboratoryWorkId">Удалить</button>
-                            </form>
-                        </div>
+                        <p>Вы ещё не добавили заданий в курс</p>
                     }
+                    else
+                    {
+                        foreach (var item in Model.Cur_Course.LaboratoryWorks)
+                        {
+                            <div class="StudentContainer ">
+
+                                <span> @item.Name</span>
+
+                                <a class="btn btn-primary float-end" data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <form class="float-end align-middle" method="post">
+
+                                    <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteLab" asp-route-LabId="@item.Id">Удалить</button>
+                                </form>
+                            </div>
+                        }
+                    }
+                    
                 }
             </div>
 
@@ -88,8 +107,8 @@
     </div>
   
     
-    <div class="col-3 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black;">
-        <ul class="nav flex-column border-primary">
+    <div class="col-3 order-first position-sticky sidebar-sticky" style="border-radius: 25px; border: 2px solid black; height:fit-content">
+        <ul class="nav flex-column">
             <li class="nav-item ">
                 <a class="button nav-link" data-bs-target="#">Журнал сдачи</a>
             </li>
@@ -100,13 +119,15 @@
                 <a class="button nav-link" href="#" data-bs-toggle="modal" data-bs-target="#RemoveStudents">Удалить участников</a>
             </li>
             <li class="nav-item ">
-                <a class="button nav-link align-middle" asp-page="ManageTask">Добавить задания</a>
+                <a class="button nav-link align-middle" href="#" data-bs-toggle="modal" data-bs-target="#CreateLab">Добавить задание</a>
             </li>
             <li class="nav-item ">
                 <a class="button nav-link">Удалить задания</a>
             </li>
             <li class="nav-item ">
-                <a class="button nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">Удалить курс</a>
+                <form asp-page-handler="DeleteCourse" method="post">
+                    <button  class="button nav-link" onclick="return confirm('Вы уверены, что хотите удалить курс?')">Удалить курс</button>
+                </form>
             </li>
             
         </ul>
@@ -181,16 +202,27 @@
                 <h4 class="modal-title">Создание лабораторной работы</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-8">
-                            <form asp-page="Manage" asp-page-handler="DeleteUsers" method="post">
-                                <select class="selectpicker form-control" data-style="btn border" title="Выберите студентов..." asp-for="SelectedUsersDeletion" asp-items="Model._CurrentUsers">
-                                </select>
-                                <button type="submit" class="btn btn-danger pt-2 mt-2" value="Удалить">Удалить</button>
-                            </form>
-                        </div>
+                <div class="container-fluid ">
+                    <div class="col text-center">
+                        <form asp-page="Manage" asp-page-handler="AddLab" method="post">
+                            <div class="input-group align-items-center">
+                                <label class="mr-sm-2">Тема:</label>
+                                <textarea class="form-control" asp-for="@Model.LabDTO.Name" style="width: 100%; height: 200px;"></textarea>
+                            </div>
+                            <div class="input-group align-items-center">
+                                <label class="mr-sm-2">Описание задания:</label>
+                                <textarea class="form-control" asp-for="@Model.LabDTO.Description" style="width: 100%; height: 500px;"></textarea>
+                            </div>
+                            <div class="input-group align-items-center">
+                                <label class="mr-sm-2">Максимальная оценка:</label>
+                                <input class="form-control" asp-for="@Model.LabDTO.MaxMark" type="number" min="1" value="1" />
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success ">Добавить</button>
+                        </form>
                     </div>
+                            
+                     
                 </div>
                 <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
             </div>

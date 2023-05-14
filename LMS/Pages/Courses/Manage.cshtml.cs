@@ -73,10 +73,8 @@ namespace LMS.Pages
             }
             CourseName = Cur_Course.Name;
             _Groups = _db.Groups.Select(a => new SelectListItem { Value = a.GroupId.ToString(), Text = a.Name }).ToList();
-            //SelectedGroupID = int.Parse(_Groups[0].Value);
-            //var UserGroup = await _usersRepo.GetAllByGroup(int.Parse(_Groups[0].Value));
             _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).ToList();
-            //_SelectedUsers = UserGroup.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).Where(a => !_CurrentUsers.Contains(a)).ToList();
+            Cur_Course.Users = Cur_Course.Users.OrderBy(x => x.Surname).ToList();
             return Page();
         }
 
@@ -94,6 +92,7 @@ namespace LMS.Pages
         {
             var id = (int)HttpContext.Session.GetInt32("CourseId");
             Cur_Course = await _courseRepo.GetById(id);
+            Cur_Course.Users = Cur_Course.Users.OrderBy(x => x.Surname).ToList();
             _CurrentUsers = Cur_Course.Users.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name + " " + a.Surname + " " + a.Patronymic }).ToList();
             var UserGroup = await _usersRepo.GetAllByGroup(SelectedGroupID);
             _SelectedUsers = new List<SelectListItem>();
@@ -146,12 +145,28 @@ namespace LMS.Pages
         public async Task<IActionResult> OnPostAddLab()
         {
             var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            LabDTO.UserId = UserId;
+            LabDTO.CourseId = CourseId;
             await _courseRepo.AddLab(CourseId, LabDTO);
+            await _courseRepo.Save();
             return RedirectToPage("Manage", CourseId);
         }
 
-        public async Task OnPostDeleteLab(int LabId)
+        public async Task<IActionResult> OnPostDeleteLab(int LabId)
         {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            await _courseRepo.DeleteLab(CourseId, LabId);
+            await _courseRepo.Save();
+            return RedirectToPage("Manage", CourseId);
+        }
+
+        public async Task<IActionResult> OnPostDeleteCourse()
+        {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            await _courseRepo.Delete(CourseId);
+            await _courseRepo.Save();
+            return RedirectToPage("Index");
         }
     }
 }

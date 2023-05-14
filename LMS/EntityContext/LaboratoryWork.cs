@@ -11,7 +11,7 @@ namespace LMS.EntityСontext
             Variants = new List<Variant>();
         }
 
-        public int LaboratoryWorkId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(150, MinimumLength = 5)]
@@ -20,6 +20,8 @@ namespace LMS.EntityСontext
         [Required]
         [StringLength(256, MinimumLength = 5)]
         public string Description { get; set; }
+
+        public int MaxMark { get; set; }
 
         public int UserId { get; set; }//Создатель
 

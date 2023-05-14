@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LMS.Pages
 {
@@ -15,30 +17,29 @@ namespace LMS.Pages
     {
         private readonly ApplicationContext _db;
 
-        private readonly CourseRepo _courseRepo;
+        //private readonly CourseRepo _courseRepo;
 
         private readonly LabWorksRepo _labWorksRepo;
 
-        private readonly UsersRepo _usersRepo;
-
         [BindProperty]
-        public LaboratoryWorkDTO laboratoryWorkDTO { get; set; }
+        public LaboratoryWork Cur_laboratoryWork { get; set; }
 
-        [BindProperty]
         public int? CourseID { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public int? Id { get; set; } //ID лабораторной работы в случае изменения
+        public int? Id { get; set; } //ID лабораторной работы
 
         [BindProperty]
         public string CourseName { get; set; }//Название курса
 
-        public LaboratoryWorksModel(ApplicationContext db, CourseRepo courseRepo, LabWorksRepo labWorksRepo, UsersRepo usersRepo)
+        [BindProperty]
+        public Variant Variant { get; set; }//Вариант курса для добавления
+
+        public LaboratoryWorksModel(ApplicationContext db, /*CourseRepo courseRepo,*/ LabWorksRepo labWorksRepo)
         {
             _db = db;
-            _courseRepo = courseRepo;
+            //_courseRepo = courseRepo;
             _labWorksRepo = labWorksRepo;
-            _usersRepo = usersRepo;
         }
 
         public async Task<IActionResult> OnGet()
@@ -46,14 +47,49 @@ namespace LMS.Pages
             CourseID = HttpContext.Session.GetInt32("CourseId");
             if (CourseID == null)
             {
-                return NotFound("Переход на страницу был совершен без выбора курса");
+                return BadRequest("Переход на страницу был совершен без выбора курса");
             }
-            if (Id != null)
+            if (Id == null)
             {
-                HttpContext.Session.SetInt32("LabWorkId", (int)Id); //Сохраняем ID задания для дальнейшего доступа(добавление вариантов,прикрепление репозитория)
-                //TODO ЗАПРОС К БД С ПОЛЯМИ ДЛЯ ЗАПОЛНЕНИЯ ЗАДАНИЯ
+                return NotFound("Лабораторная работа не найдена");
             }
+            CourseName = await _db.Courses.Where(c => c.CourseId == CourseID).Select(c => c.Name).FirstOrDefaultAsync();
+            //TODO ЗАПРОС К БД С ПОЛЯМИ ДЛЯ ЗАПОЛНЕНИЯ ЗАДАНИЯ
+            Cur_laboratoryWork = await _labWorksRepo.GetById(Id);
+            HttpContext.Session.SetInt32("LabWorkId", (int)Id); //Сохраняем ID задания для дальнейшего доступа(добавление вариантов,прикрепление репозитория)
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostUpdateLab()
+        {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            return RedirectToPage("Manage", CourseId);
+        }
+
+        public async Task<IActionResult> OnPostAddVariant()
+        {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            return RedirectToPage("Manage", CourseId);
+        }
+
+        public async Task<IActionResult> OnPostUpdateVariant()
+        {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            return RedirectToPage("Manage", CourseId);
+        }
+
+        public async Task<IActionResult> OnPostDeleteVariant()
+        {
+            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            return RedirectToPage("Manage", CourseId);
         }
     }
 }
