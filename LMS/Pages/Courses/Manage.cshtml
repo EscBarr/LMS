@@ -42,7 +42,7 @@
 </div>
 <div class="row">
     <div class="col-sm-9 ms-sm-auto px-md-4 ">
-        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+        <ul class="nav nav-pills nav-fill " id="myTab" role="tablist">
             <li class="nav-item border-primary" role="presentation">
                 <button class="nav-link active" id="Users-tab" data-bs-toggle="tab" data-bs-target="#Users-tab-pane" type="button" role="tab" aria-controls="Users-tab-pane" aria-selected="true">Студенты курса</button>
                
@@ -51,8 +51,8 @@
                 <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#Labs-tab-pane" type="button" role="tab" aria-controls="Labs-tab-pane" aria-selected="true">Задания курса</button>
             </li>
         </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active overflow-hidden" id="Users-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0">
+        <div class="tab-content overflow-auto" id="myTabContent" style="height: 47vh;">
+            <div class="tab-pane fade show active" id="Users-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0">
 
                 @{
                     if (Model.Cur_Course.Users.Count == 0)
@@ -63,7 +63,7 @@
                     {
                         foreach (var item in Model.Cur_Course.Users)
                         {
-                            <div class="StudentContainer ">
+                            <div class="StudentContainer">
 
                                 <span> @item.Surname @item.Name @item.Patronymic</span>
                                 <form class="float-end align-middle" method="post">
@@ -77,7 +77,7 @@
 
 
             </div>
-            <div class="tab-pane fade overflow-auto" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+            <div class="tab-pane fade" id="Labs-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
                 @{
                     if (Model.Cur_Course.LaboratoryWorks.Count == 0)
                     {

@@ -33,12 +33,12 @@ namespace LMS.EntityContext
             return await _db.Courses.Include(course => course.LaboratoryWorks).Include(course => (course.Users)).FirstOrDefaultAsync(m => m.CourseId == ID);
         }
 
-        public void Create(Course course)
+        public async Task Create(Course course)
         {
-            _db.Courses.Add(course);
+            await _db.Courses.AddAsync(course);
         }
 
-        public void Update(Course course)
+        public async Task Update(Course course)
         {
             _db.Courses.Update(course);
         }

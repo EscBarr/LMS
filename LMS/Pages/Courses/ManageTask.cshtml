@@ -48,7 +48,7 @@
     </div>
     <div class="col-5">
         <div class="body customCenter myHeadingPage">
-            <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Добавить вариант</div>
+            <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#CreateVariant">Добавить вариант</div>
         </div>
         <label class="mr-sm-2" for="inputThemeForLabWork">Варианты:</label>
 
@@ -65,10 +65,9 @@
 
                         <p>"Вариант №" @item.VariantNumber</p>
 
-                        <a class="btn btn-primary float-end" data-bs-toggle="tooltip" data-bs-title="Редактирование варианта" asp-page="ManageTask" asp-route-Id="@item.VariantId"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <form class="float-end align-middle" method="post">
-
-                            <button type="submit" class="btn btn-danger align-middle" asp-page-handler="UpdateVariant" asp-route-VariantId="@item.VariantId">Удалить</button>
+                        <button class="btn btn-primary details float-end" data-bs-toggle="tooltip" data-bs-title="Редактирование варианта" data-id="@item.VariantId"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <form class="float-end" method="post">
+                            <button type="submit" class="btn btn-danger " asp-page-handler="UpdateVariant" asp-route-VariantId="@item.VariantId">Удалить</button>
                         </form>
                     </div>
                 }
@@ -78,112 +77,7 @@
     </div>
 </div>
 
-<div id="myModalUpdate" class="modal fade bd-example-modal-lg">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Обновление лабораторной работы</h4><button class="close" type="button" data-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                <form method="post">
-                    @*<p class="form-group row">
-                            <label class="col-sm-2 col-form-label font-weight-bold">ID Шаблон</label>
-                            @Html.DropDownList("TemplateId", Model.TemplateLWs, new { @class = "form-control col-sm-10", id = "s2TemplateId" })
-                        </p>*@
-@*                    <p class="form-group row">
-                        <label class="col-sm-2 col-form-label font-weight-bold">Тема</label>
-                        @Html.DropDownList("ThemeId", Model.Themes, new { @class = "form-control col-sm-10", id = "s2ThemeId" })
-                    </p>*@
-@*                    <p class="form-group row">
-                        <label class="col-sm-2 col-form-label font-weight-bold">Дисциплина</label>
-                        @Html.DropDownList("DisciplineCipher", Model., new { @class = "form-control col-sm-10", id = "s2DisciplineCipher" })
-                    </p>
-                    <p class="form-group row">
-                        <label class="col-sm-2 col-form-label font-weight-bold">Оценка</label>
-                        @Html.DropDownList("Evaluation", Model.Evaluations, new { @class = "form-control col-sm-10", @id = "s2Evaluation" })
-                    </p>*@
-                    <p class="form-group row">
-                        <label class="col-sm-2 col-form-label font-weight-bold">Название</label>
-                        @Html.TextBox("Name", null, new { @class = "form-control col-sm-10", id = "i2Name" })
-                    </p>
-                    <p>
-                        <label class="col-form-label font-weight-bold">Описание</label>
-                        <textarea class="form-control" id="i2Description" name="i2Description"></textarea>
-                    </p>
-                  
-                    <input id="hiddenId" name="hiddenId" hidden>
-                    <input id="hiddenUserId" name="hiddenUserId" hidden>
-                    <p><input type="button" class="btn btn-info btn-lg" value="Отправить" id="submitUpdate" onclick="updateLw()" /></p>
-                </form>
-            </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
-        </div>
-    </div>
-</div>
 
-<div id="myModal" class="modal fade">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="myModalCreate">
-                <div class="modal-header">
-                    <h4 class="modal-title">Новый вариант</h4><button class="close" type="button" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                    @using (Html.BeginForm("Create", "Variants", FormMethod.Post))
-                    {
-                        <p class="form-group row">
-                            <label class="col-sm-2 col-form-label font-weight-bold">Номер варианта</label>
-                            <input class="form-control col-sm-5" id="newNumber" name="Number" type="number" min="1" value="1" />
-                        </p>
-                        <div id="generationPart">
-                            <p class="form-group">
-                                <label class="col-form-label font-weight-bold">Описание варианта</label>
-                                @Html.TextArea("Description", "Описание", new { @class = "form-control", id = "newDescription" })
-                            </p>
-                           
-                        </div>
-
-                        <p><input type="button" class="btn btn-dark" value="Отправить" onclick="createVariant()" /></p>
-                    }
-                </div>
-            </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
-        </div>
-    </div>
-</div>
-
-
-<div id="edit" class="modal fade">
-    <div class="modal-dialog  modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Редактирование варианта</h4><button class="close" type="button" data-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                @using (Html.BeginForm("Update", "Variants", FormMethod.Post))
-                {
-                    <p class="form-group row align-items-center">
-                        <label class="col-sm-4 col-form-label font-weight-bold">Номер варианта</label>
-                        <input class="form-control col-sm-5" id="EditNumber" name="Number" type="number" min="1" value="1" />
-                    </p>
-                    <p class="form-group">
-                        <label class="col-form-label font-weight-bold">Описание варианта</label>
-                        @Html.TextArea("Description", null, new { @class = "form-control", id = "EditDescription" })
-                    </p>
-                    <p>
-                        <label>Набор тестовых данных</label>
-                        <select onchange="SelectDataTest()" id="DataTestSelect"></select>
-                    </p>
-                    
-                    
-                    @Html.Hidden("variantId", null, new { id = "EditVariantId" })
-                    <p><input type="button" class="btn btn-dark" value="Отправить" onclick="editVariant()" /></p>
-                }
-            </div>
-            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
-        </div>
-    </div>
-</div>
 
 
 <div id="CreateVariant" class="modal fade">
@@ -195,7 +89,7 @@
             <div class="modal-body">
                 <div class="container-fluid ">
                     <div class="col text-center">
-                        <form asp-page="Manage" asp-page-handler="AddLab" method="post">
+                        <form asp-page="ManageTask" asp-page-handler="AddVariant" method="post">
                             <div class="input-group">
                                 <label class="mr-sm-2">Номер варианта:</label>
                                 <input class="form-control" asp-for="@Model.Variant.VariantNumber" type="number" min="1" value="1" />
@@ -216,3 +110,26 @@
     </div>
 </div>
 
+<div id="EditVariant" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Редактирование варианта</h4><button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('button.details').on('click', function () {
+                $('.modal-body').load(`/ManageTask/Variant?id=${$(this).data('id')}`);
+            });
+        })
+    </script>
+}

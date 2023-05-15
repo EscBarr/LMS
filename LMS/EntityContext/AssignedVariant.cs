@@ -14,7 +14,7 @@ namespace LMS.EntityСontext
         public DateTime CompletionDateTime { get; set; }
         public int Mark { get; set; }
 
-        public int MaxMark { get; set; }
+        //public int MaxMark { get; set; }
 
         public User User { get; set; }
         public Variant Variant { get; set; }

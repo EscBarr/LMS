@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LMS.EntityСontext;
+using LMS.DTO;
 
 namespace LMS.EntityContext
 {
@@ -42,6 +43,26 @@ namespace LMS.EntityContext
         {
             LaboratoryWork laboratory = await _db.LaboratoryWorks.FindAsync(LabID);
             _db.LaboratoryWorks.Remove(laboratory);
+        }
+
+        public async Task AddVariant(int? ID, Variant variant)
+        {
+            LaboratoryWork laboratory = await GetById(ID);
+            laboratory.Variants.Add(variant);
+            Update(laboratory);
+        }
+
+        public async Task UpdateVariant(int? ID, Variant variant)
+        {
+            _db.Variants.Update(variant);
+        }
+
+        public async Task DeleteVariant(int ID, int VariantID)
+        {
+            LaboratoryWork laboratory = await GetById(ID);
+            Variant variant = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == VariantID);
+            laboratory.Variants.Remove(variant);
+            Update(laboratory);
         }
 
         public async Task Save()

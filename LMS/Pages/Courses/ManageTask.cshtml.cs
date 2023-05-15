@@ -70,26 +70,34 @@ namespace LMS.Pages
 
         public async Task<IActionResult> OnPostAddVariant()
         {
-            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
-            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
+            Variant.LaboratoryWorkId = LabWorkId;
+            await _labWorksRepo.AddVariant(LabWorkId, Variant);
+            await _labWorksRepo.Save();
+            return RedirectToPage("ManageTask", LabWorkId);
+        }
 
-            return RedirectToPage("Manage", CourseId);
+        public async Task<PartialViewResult> OnGetVariant(int id)
+        {
+            return Partial("_ProductDetails", await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == id));
         }
 
         public async Task<IActionResult> OnPostUpdateVariant()
         {
-            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
-            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            return RedirectToPage("Manage", CourseId);
+            var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
+            Variant.LaboratoryWorkId = LabWorkId;
+            await _labWorksRepo.AddVariant(LabWorkId, Variant);
+            await _labWorksRepo.Save();
+            return RedirectToPage("ManageTask", LabWorkId);
         }
 
-        public async Task<IActionResult> OnPostDeleteVariant()
+        public async Task<IActionResult> OnPostDeleteVariant(int VarID)
         {
-            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
-            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            return RedirectToPage("Manage", CourseId);
+            var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
+            Variant.LaboratoryWorkId = LabWorkId;
+            await _labWorksRepo.AddVariant(LabWorkId, Variant);
+            await _labWorksRepo.Save();
+            return RedirectToPage("ManageTask", LabWorkId);
         }
     }
 }
