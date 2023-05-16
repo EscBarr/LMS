@@ -41,6 +41,13 @@
 
   <ItemGroup>
     <None Include="Pages\Courses\Partials\_CoursesTeacher.cshtml" />
+    <None Include="Views\FileView\Blob.cshtml" />
+    <None Include="Views\FileView\Files.cshtml" />
+    <None Include="Views\FileView\Init.cshtml" />
+    <None Include="Views\FileView\Tree.cshtml" />
+    <None Include="wwwroot\img\directory.svg" />
+    <None Include="wwwroot\img\file.svg" />
+    <None Include="wwwroot\img\logo_white.svg" />
   </ItemGroup>
 
 </Project>

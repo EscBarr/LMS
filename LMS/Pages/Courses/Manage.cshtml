@@ -95,7 +95,8 @@
 
                                 <span class="mb-0"> @item.Name</span>
                                 <div class="d-flex">
-                                    <a class="btn btn-primary " data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a class="btn btn-primary" asp-page="AssignTasks" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a class="btn btn-info " data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
                                     <form method="post">
 
                                         <button type="submit" class="btn btn-danger" asp-page-handler="DeleteLab" asp-route-LabId="@item.Id">Удалить</button>

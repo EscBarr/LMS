@@ -1,4 +1,4 @@
-﻿namespace ASTU_LMS.StartupPrep
+﻿namespace LMS.StartupPrep
 {
     public static partial class MiddlewareInitializer
     {
@@ -31,7 +31,7 @@
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseMvc(routes => RouteConfig.RegisterRoutes(routes));
             //app.UseSwagger().UseSwaggerUI();
 
             return app;
