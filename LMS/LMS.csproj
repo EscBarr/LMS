@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\GitPart\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -209,6 +209,7 @@ myButtonInBlock:hover {
     flex-grow: 1;
     width: stretch;
     height: fit-content;
+    justify-content: space-between;
 }
 
 .footerCourse {

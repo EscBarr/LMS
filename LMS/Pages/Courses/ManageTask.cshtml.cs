@@ -1,10 +1,7 @@
-using LMS.DTO;
 using LMS.EntityContext;
 using LMS.EntityСontext;
-using LMS.Repos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +25,9 @@ namespace LMS.Pages
 
         [BindProperty(SupportsGet = true)]
         public int? Id { get; set; } //ID лабораторной работы
+
+        [BindProperty(SupportsGet = true)]
+        public int SelectedVarID { get; set; }
 
         [BindProperty]
         public string CourseName { get; set; }//Название курса
@@ -62,10 +62,19 @@ namespace LMS.Pages
 
         public async Task<IActionResult> OnPostUpdateLab()
         {
-            var CourseId = (int)HttpContext.Session.GetInt32("CourseId");
+            var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
+            CourseID = HttpContext.Session.GetInt32("CourseId");
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            return RedirectToPage("Manage", CourseId);
+            //var LabUpdate = await _labWorksRepo.GetById(LabWorkId);
+            Cur_laboratoryWork.Id = LabWorkId;
+            Cur_laboratoryWork.CourseId = (int)CourseID;
+            Cur_laboratoryWork.UserId = UserId;
+            //LabUpdate.Name = Cur_laboratoryWork.Name;
+            //LabUpdate.Description = Cur_laboratoryWork.Description;
+            //LabUpdate.MaxMark = Cur_laboratoryWork.MaxMark;
+            _labWorksRepo.Update(Cur_laboratoryWork);
+            await _labWorksRepo.Save();
+            return RedirectToPage("ManageTask", LabWorkId);
         }
 
         public async Task<IActionResult> OnPostAddVariant()
@@ -77,16 +86,17 @@ namespace LMS.Pages
             return RedirectToPage("ManageTask", LabWorkId);
         }
 
-        public async Task<PartialViewResult> OnGetVariant(int id)
+        public async Task<PartialViewResult> OnGetVariantDetails()
         {
-            return Partial("_ProductDetails", await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == id));
+            var test = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID);
+            return Partial("_EditVariant", await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID));
         }
 
-        public async Task<IActionResult> OnPostUpdateVariant()
+        public async Task<IActionResult> OnPostUpdateVariant(Variant variant)
         {
             var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
-            Variant.LaboratoryWorkId = LabWorkId;
-            await _labWorksRepo.AddVariant(LabWorkId, Variant);
+            variant.LaboratoryWorkId = LabWorkId;
+            await _labWorksRepo.UpdateVariant(variant);
             await _labWorksRepo.Save();
             return RedirectToPage("ManageTask", LabWorkId);
         }
@@ -94,8 +104,7 @@ namespace LMS.Pages
         public async Task<IActionResult> OnPostDeleteVariant(int VarID)
         {
             var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
-            Variant.LaboratoryWorkId = LabWorkId;
-            await _labWorksRepo.AddVariant(LabWorkId, Variant);
+            await _labWorksRepo.DeleteVariant(LabWorkId, VarID);
             await _labWorksRepo.Save();
             return RedirectToPage("ManageTask", LabWorkId);
         }

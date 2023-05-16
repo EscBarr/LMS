@@ -63,12 +63,15 @@
                     {
                         foreach (var item in Model.Cur_Course.Users)
                         {
-                            <div class="StudentContainer">
+                            <div class="d-flex align-items-center p-3 my-3 StudentContainer">
 
-                                <span> @item.Surname @item.Name @item.Patronymic</span>
-                                <form class="float-end align-middle" method="post">
-                                    <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.Id">Удалить</button>
-                                </form>
+                                <span class="mb-0"> @item.Surname @item.Name @item.Patronymic</span>
+                                <div class="d-flex">
+                                    <form class="float-end align-middle" method="post">
+                                        <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteUser" asp-route-UserId="@item.Id">Удалить</button>
+                                    </form>
+                                </div>
+                               
                             </div>
                         }
                     }
@@ -87,15 +90,18 @@
                     {
                         foreach (var item in Model.Cur_Course.LaboratoryWorks)
                         {
-                            <div class="StudentContainer ">
+                            <div class="d-flex align-items-center p-3 my-3 StudentContainer">
 
-                                <span> @item.Name</span>
 
-                                <a class="btn btn-primary float-end" data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <form class="float-end align-middle" method="post">
+                                <span class="mb-0"> @item.Name</span>
+                                <div class="d-flex">
+                                    <a class="btn btn-primary " data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <form method="post">
 
-                                    <button type="submit" class="btn btn-danger align-middle" asp-page-handler="DeleteLab" asp-route-LabId="@item.Id">Удалить</button>
-                                </form>
+                                        <button type="submit" class="btn btn-danger" asp-page-handler="DeleteLab" asp-route-LabId="@item.Id">Удалить</button>
+                                    </form>
+                                </div>
+                               
                             </div>
                         }
                     }

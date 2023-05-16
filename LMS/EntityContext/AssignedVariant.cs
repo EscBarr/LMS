@@ -10,6 +10,8 @@ namespace LMS.EntityСontext
         public int VariantId { get; set; }
         public int ChatID { get; set; }
 
+        public int RepoID { get; set; }
+
         public DateTime AssignDateTime { get; set; }
         public DateTime CompletionDateTime { get; set; }
         public int Mark { get; set; }

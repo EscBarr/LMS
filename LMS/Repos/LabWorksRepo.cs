@@ -52,7 +52,7 @@ namespace LMS.EntityContext
             Update(laboratory);
         }
 
-        public async Task UpdateVariant(int? ID, Variant variant)
+        public async Task UpdateVariant(Variant variant)
         {
             _db.Variants.Update(variant);
         }
