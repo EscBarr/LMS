@@ -265,7 +265,7 @@ namespace LMS.Git
             catch (Exception ex) { e = ex; }
 
             if (e != null)
-                throw new Exception("Ну удалось удалить репозиторий", e);
+                throw new Exception("Не удалось удалить репозиторий", e);
         }
 
         public ReferenceCollection GetReferences(string repoName, int userId) => GetRepository(repoName).Refs;
