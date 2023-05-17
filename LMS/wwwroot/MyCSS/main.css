@@ -232,118 +232,36 @@ myButtonInBlock:hover {
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-.code {
-    padding: 10px;
-}
-
-    .code > span {
-        font-family: monospace;
-        color: black;
-    }
-
-    .code > .comment {
-        color: #008000;
-    }
-
-    .code > .string {
-        color: #a31515;
-    }
-
-    .code > .keyword {
-        color: #0000ff;
-    }
-
 ul.file-browser {
     list-style-type: none;
     padding-left: unset;
 }
 
 li.file {
-    background: url("/img/text-file-16.png") no-repeat left top;
+    background: url("../img/text-file-16.png") no-repeat left top;
     height: 20px;
     padding-left: 20px;
 }
 
 li.dir {
-    background: url("/img/folder-16.png") no-repeat left top;
+    background: url("../img/folder-16.png") no-repeat left top;
     height: 20px;
     padding-left: 20px;
 }
 
-.following.bar.light {
-    background-color: #00B5AD;
-    border-bottom: 1px solid #DDDDDD;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.04);
-}
-
-.following.bar .top.menu a.item {
-    color: white;
-}
-
-#git-stats .list {
+#git-stats.list {
     width: 100%;
 }
 
-    #git-stats .list .item {
+    #git-stats.list.item {
         margin-left: 0;
         width: 33.33%;
-    }
-
-.user {
-    padding-top: 15px;
-}
-
-    .user .inline label {
-        width: 100px !important;
-        text-align: right;
-    }
-
-    .user.signin form input {
-        width: 60% !important;
     }
 
 .dashboard {
     padding-top: 10px;
     padding-bottom: 40px;
     min-height: 100%;
-}
-
-.full.height {
-    padding: 0;
-    margin: 0 0 -80px 0;
-    min-height: 100%;
-}
-
-footer {
-    margin-top: 54px !important;
-    height: 40px;
-    background-color: white;
-    border-top: 1px solid #d6d6d6;
-    clear: both;
-    width: 100%;
-    color: #888888;
-}
-
-    footer .container {
-        padding-top: 10px;
-    }
-
-    footer .ui .left {
-        float: left;
-    }
-
-    footer .ui .right {
-        float: right;
-    }
-
-.guide .item {
-    padding: 1em;
-}
-
-.markdown pre {
-    padding: 1em;
-    background-color: #f7f7f7;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////*/
