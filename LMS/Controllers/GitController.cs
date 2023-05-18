@@ -9,7 +9,7 @@ using System.IO;
 
 namespace LMS.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Windows")]
+    
     public class GitController : GitControllerBase
     {
         public GitController(
