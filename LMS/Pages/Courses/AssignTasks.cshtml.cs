@@ -1,14 +1,18 @@
 using LMS.EntityContext;
 using LMS.Entity—ontext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Security.Claims;
 
 namespace LMS.Pages.Courses
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
     public class AssignTasksModel : PageModel
     {
         private readonly ApplicationContext _db;

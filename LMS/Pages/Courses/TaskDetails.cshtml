@@ -4,7 +4,12 @@
 @{
     Layout = "_Layout";
     var request = ViewContext.HttpContext.Request;
-    var giturl = $"{request.Scheme}://{request.Host}/{Model.AssignedRepo.UserName}/{Model.AssignedRepo.Name}.git";
+    var giturl = $"{request.Scheme}://{request.Host}/";
+    if (Model.AssignedRepo!=null)
+    {
+        giturl = $"{request.Scheme}://{request.Host}/{Model.AssignedRepo.UserName}/{Model.AssignedRepo.Name}.git";
+    }
+    
 }
 
 <div class="row">

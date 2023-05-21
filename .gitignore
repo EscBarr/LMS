@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/LMS/Repositories/makar/Test
-/LMS/Repositories/makar/Lab3
+/LMS/Repositories
+
+
