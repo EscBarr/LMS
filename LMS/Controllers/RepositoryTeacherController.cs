@@ -36,7 +36,7 @@ namespace LMS.Controllers
         public async Task<IActionResult> GetRepos([FromHeader] int curUserId)
         {
             //var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return Ok(await Task.Run(() => _db.Repos.Where(repo => repo.UserId == curUserId).Select(repo => new { repo.Id, repo.Name, repo.Description, repo.UpdateTime }).ToList()));
+            return Ok(await Task.Run(() => _db.Repos.Where(repo => repo.UserId == curUserId).Select(repo => new { repo.Id, repo.Name, repo.Description, repo.UpdateTime, repo.User.GitUsername }).ToList()));
         }
     }
 }
