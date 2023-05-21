@@ -27,6 +27,8 @@ namespace LMS.EntityСontext
 
         public int CourseId { get; set; }//Курс
 
+        //public DateTime DueDateTime { get; set; }//Крайний срок выполнения
+
         public User User { get; set; }
 
         public Course Course { get; set; }

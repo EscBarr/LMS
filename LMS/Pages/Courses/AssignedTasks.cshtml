@@ -1,4 +1,55 @@
-﻿@page
+﻿@page "{id?}"
 @model LMS.Pages.Courses.AssignedTasksModel
 @{
+    Layout = "_Layout";
 }
+<ul class="nav nav-underline nav-justified mt-3" id="myTab" role="tablist" >
+    <li class="nav-item border-primary" role="presentation">
+        <button class="nav-link active" id="Users-tab" data-bs-toggle="tab" data-bs-target="#ActiveTask-tab-pane" type="button" role="tab" aria-controls="ActiveTask-tab-pane" aria-selected="true">Назначено</button>
+
+    </li>
+    <li class="nav-item border-primary" role="presentation">
+        <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#DueTasks-tab-pane" type="button" role="tab" aria-controls="DueTasks-tab-pane" aria-selected="true">Пропущен срок сдачи</button>
+    </li>
+    <li class="nav-item border-primary" role="presentation">
+        <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#CompletedTasks-tab-pane" type="button" role="tab" aria-controls="CompletedTasks-tab-pane" aria-selected="true">Выполнено</button>
+    </li>
+ 
+</ul>
+<div class="d-flex flex-column pb-4 pt-4 tab-content overflow-auto justify-content-center text-center " id="myTabContent">
+    <div class="tab-pane fade show active align-middle" id="ActiveTask-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0" @*style="margin:25vh"*@>
+        
+        @if (Model.AssignedVariants.Count==0)
+        {
+            <h2>Заданий пока нет</h2>
+        }
+        else
+        {
+            foreach (var item in Model.AssignedVariants)
+            {
+                <div class="ContainerCourse text-start">
+                    <h4>@item.Variant.LaboratoryWork.Name</h4>
+                    <div class="footerCourse">
+                        Номер варианта @item.Variant.VariantNumber
+                        Стоимость в баллах @item.Variant.LaboratoryWork.MaxMark
+                    </div>
+                    <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                </div>
+            }
+        }
+
+    </div>
+    <div class="tab-pane fade align-middle" id="DueTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+        @{
+
+            <h2>Отлично! Вы не просрочили ни одной работы.</h2>
+        }
+    </div>
+    <div class="tab-pane fade align-middle" id="CompletedTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+        @{
+
+            <h2 >Тут будут все выполненные работы</h2>
+        }
+    </div>
+
+</div>

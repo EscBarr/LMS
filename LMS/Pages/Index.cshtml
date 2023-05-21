@@ -1,9 +1,12 @@
-﻿@page "{handler?}"
+﻿@page 
 @model LMS.Pages.Index
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Домашняя страница";
+    HttpContext.Session.Remove("CourseId");
+    HttpContext.Session.Remove("LabWorkId");
+   
 }
 
 
@@ -47,22 +50,12 @@ function ShowInfo()
 
         buttonGit.innerText = "Инструкция по работе с модулем контроля версий";
         buttonGit.classList = "btn btn-primary edit-item";
-        //buttonComponentsInstruction.classList = "btn btn-primary edit-item";
-        //buttonTemplateInstruction.classList = "btn btn-primary edit-item";
-        //chooseBlock.appendChild(buttonTemplateInstruction);
-        //chooseBlock.appendChild(buttonComponentsInstruction);
          chooseBlock.appendChild(buttonGit);
         let helpBlock = document.createElement('div');
         helpBlock.style = "padding-top: 20px;"
         helpBlock.id = "helpBlock";
         contentBlock.appendChild(helpBlock);
-        //buttonComponentsInstruction.onclick = (ev => {
-        //    $('#helpBlock').load('TeacherInstructionComponents.html');
-        //});
         
-        //buttonTemplateInstruction.onclick = (ev => {
-        //    $('#helpBlock').load('TemplateInstruction.html');
-        //});
          buttonGit.onclick = (ev => {
             $('#helpBlock').load('GitTeacherInstruction.html');
         });

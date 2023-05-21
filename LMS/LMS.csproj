@@ -36,11 +36,12 @@
 
   <ItemGroup>
     <Folder Include="Controllers\GitPart\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\makar\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\Courses\Partials\_CoursesTeacher.cshtml" />
+    <None Include="Pages\Courses\TaskDetails.cshtml" />
     <None Include="Views\FileView\Blob.cshtml" />
     <None Include="Views\FileView\Files.cshtml" />
     <None Include="Views\FileView\Init.cshtml" />
@@ -48,6 +49,14 @@
     <None Include="wwwroot\img\directory.svg" />
     <None Include="wwwroot\img\file.svg" />
     <None Include="wwwroot\img\logo_white.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Courses\TaskDetails.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Courses\TaskDetails.cshtml" />
   </ItemGroup>
 
 </Project>

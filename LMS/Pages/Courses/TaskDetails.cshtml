@@ -1,0 +1,102 @@
+﻿@page "{id?}"
+@using System.Security.Claims;
+@model LMS.Pages.Courses.TaskDetailsModel
+@{
+    Layout = "_Layout";
+    var request = ViewContext.HttpContext.Request;
+    var giturl = $"{request.Scheme}://{request.Host}/{Model.AssignedRepo.UserName}/{Model.AssignedRepo.Name}.git";
+}
+
+<div class="row">
+    <div class="col-7">
+        <div class="container-fluid ">
+            <div class="col text-center">
+                <form asp-page="TaskDetails" asp-page-handler="SendToVerify" method="post">
+
+                    <div class="input-group">
+                        <label class="mr-sm-2">Описание лабораторной работы:</label>
+                        <textarea class="form-control" style="width: 100%; height: fit-content;" readonly>@Model.AssignedVariantDetails.Variant.LaboratoryWork.Description</textarea>
+                    </div>
+                    <div class="input-group align-items-center">
+                        <label class="mr-sm-2">Описание варианта:</label>
+                        <textarea class="form-control" style="width: 100%; height: fit-content;" readonly>@Model.AssignedVariantDetails.Variant.Description</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success ">Отправить на проверку</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-5">
+        
+    
+
+        @{
+            
+            var Role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            if (Role == "Teacher")
+            {
+                if (Model.AssignedVariantDetails.RepoID == 0)
+                {
+                    <div class="body customCenter myHeadingPage ">
+                        <h2>Студент еще не прикрепил репозиторий</h2>
+                    </div>
+                }
+                else
+                {
+
+                    <div class="body customCenter myHeadingPage ">
+                        <h2>Прикрепленный репозиторий</h2>
+                        <a href=@("~/index/"+Model.AssignedRepo.UserName+"/"+Model.AssignedRepo.Name+".git")>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+                        
+                    </div>
+                }
+            }
+            else if (Role == "Student")
+            {
+                if (Model.AssignedVariantDetails.RepoID == 0)
+                {
+                    <div class="body customCenter myHeadingPage ">
+                        <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#CreateRepo">Создать репозиторий</div>
+                    </div>
+                }
+                else
+                {
+                    
+                    <div class="body customCenter myHeadingPage ">
+                       <h2>Прикрепленный репозиторий</h2>
+                        <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+                      
+                    </div>
+                }
+            }
+
+            
+            
+        }
+
+    </div>
+</div>
+
+<div id="CreateRepo" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Прикрепить репозиторий</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form asp-page-handler="CreateRepo" method="post">
+                    @Html.Label("Название репозитория:\t")
+                    <input type="text" asp-for="@Model.modelRepo.Name">
+                    @Html.Label("Описание репозитория:\t")
+                    <input type="text" asp-for="@Model.modelRepo.Description">
+                    <button class="btn-primary" type="submit">Добавить</button>
+                </form>
+ 
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
+

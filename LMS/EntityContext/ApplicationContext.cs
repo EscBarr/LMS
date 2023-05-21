@@ -15,8 +15,10 @@ namespace LMS.EntityСontext
         public DbSet<Group> Groups { get; set; }
         public DbSet<LaboratoryWork> LaboratoryWorks { get; set; }
         public DbSet<RepositoryEntity> Repos { get; set; }
-        public DbSet<RepoTemplate> ReposTemplates { get; set; }
+
+        //public DbSet<RepoTemplate> ReposTemplates { get; set; }
         public DbSet<Role> Roles { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         //public DbSet<UserCourses> UserCourses { get; set; }

@@ -66,7 +66,7 @@ namespace LMS.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            var test = this.Id;
+            //var test = this.Id;
             HttpContext.Session.SetInt32("CourseId", Id);
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             Cur_Course = await _courseRepo.GetById(Id);

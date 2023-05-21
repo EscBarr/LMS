@@ -1,4 +1,83 @@
-﻿@page
+﻿@page "{id?}"
 @model LMS.Pages.Courses.AssignTasksModel
 @{
+    Layout = "_Layout";
 }
+<div aria-label="breadcrumb">
+    <ol class="mybreadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/index">На главную</a>
+        </li>
+        <li class="breadcrumb-item not-active" aria-current="page">
+            <a href="~/courses">Все курсы</a>
+        </li>
+        <li class="breadcrumb-item not-active" aria-current="page">
+            <a href="~/courses/Manage/@Model.CourseID">@Model.CourseName</a>
+        </li>
+        <li class="breadcrumb-item not-active" aria-current="page">
+            Назначение вариантов заданий
+        </li>
+    </ol>
+</div>
+
+<div class="row">
+    <div class="col ms-sm-auto px-md-4">
+
+        <div class="pt-3 pb-2 mb-3 border-primary border-bottom">
+            <form class="mw-100 w-100" method="post">
+                <div class="row">
+                    <div class="col">
+                        <span class="h1 bg-transparent border-0 h-100 w-100" >@Model.Cur_laboratoryWork.Name </span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+<div class="col-5 ">
+        <div class="ps-4">
+            <label asp-for="DueDate"></label><br />
+            <input asp-for="DueDate" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+            <span asp-validation-for="DueDate"></span>
+        </div>
+        
+</div>
+<div class="col-7">
+        <div class="btn custom btn-primary float-end">Назначить случайно</div>
+</div>
+ </div>
+<div class="row">
+    <div class="col">
+        @foreach (var item in Model.Cur_Users)
+        {
+            <div class="d-flex align-items-center StudentContainer">
+
+                <span > @item.Surname @item.Name @item.Patronymic</span>
+                <div class="d-flex">
+                    <form id="Form+@item.Id" class="align-middle" asp-page-handler="AssignVar" method="post">
+                        <input id="Date+@item.Id" name="Due" type="datetime-local" hidden>
+                        <input type="hidden" name="userId" readonly value="@item.Id">
+                        <label>Вариант №:</label>
+                        <select class="selectpicker form-control" name="VarId" data-style="btn border" title="Выберите вариант" asp-items="Model._CurrentVariants" onchange="CaptureDueDate(@item.Id)">
+                        </select>
+                    </form>
+                </div>
+
+            </div>
+        }
+    </div>
+ 
+</div>
+
+<script>
+    function CaptureDueDate(Id)
+    {
+       var elem = document.getElementById("DueDate").value;
+        document.getElementById("Date+" + Id).value = elem;
+       document.forms["Form+"+Id].submit();
+    }
+</script>
+<partial name="_ValidationScriptsPartial"/>
