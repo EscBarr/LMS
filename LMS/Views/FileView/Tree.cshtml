@@ -1,0 +1,92 @@
+﻿@using LMS.Extensions
+@using LMS.Models
+@using LibGit2Sharp
+@model TreeModel
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "_Layout";
+    string currRepo = (string)ViewContext.RouteData.Values["repoName"];
+    string currUser = (string)ViewContext.RouteData.Values["userName"];
+    string currId = (string)ViewContext.RouteData.Values["id"];
+    var request = ViewContext.HttpContext.Request;
+    var giturl = $"{request.Scheme}://{request.Host}/{currUser}/{currRepo}.git";
+    var repo = Model.Repository;
+    var lastcommit = repo.Commits.FirstOrDefault();
+}
+
+<div aria-label="breadcrumb">
+    <ol class="mybreadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/index">На главную</a>
+        </li>
+        <li class="breadcrumb-item not-active" aria-current="page">
+            <a href="~/repositoryuser">Все репозитории</a>
+        </li>
+        <li class="breadcrumb-item not-active" aria-current="page">
+            Cодержимое репозитория @currUser/@currRepo
+        </li>
+    </ol>
+</div>
+
+<div class="row">
+
+<div class="col-6 order-3 ui fluid action input">
+    <input id="Giturl" type="text" value="@giturl" readonly style="width:fit-content">
+    <button class="btn-primary" onclick="CopyToBuffer()"> <i class="fa-solid fa-copy"></i> Скопировать </button>
+</div>
+
+   
+        <div class="col-3">
+            <a href="#"><span class="ui text black"><i class="icon history"></i> <b>@repo.Commits.Count()</b> Количество коммитов</span> </a>
+        </div>
+        <div class="col-3">
+            <a href="#"><span class="ui text black"><i class="icon git"></i><b>@repo.Branches.Count()</b> Количество веток</span> </a>
+        </div>
+</div>
+
+<table class="table table-striped w-100">
+
+    <thead>
+        <tr>
+            <th scope="col">@lastcommit.Author.Name</th>
+            <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита</th>
+            <th scope="col"><span> Дата @*@lastcommit.Message*@</span></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Parent != null)
+        {
+            <tr>
+                <td class="collapsing"><i class="fa-solid fa-folder"></i><a href="@Url.UnencodedRouteLink("GetTreeView", new { repoName = currRepo, id = currId, path = Model.Parent })">..</a></td>
+                @*<td>Сообщение коммита</td>
+                <td class="collapsing">Дата</td>*@
+            </tr>
+        }
+        @foreach (FileViewModel fvm in Model.Children)
+        {
+            bool isTree = fvm.Type == ObjectType.Tree;
+            <tr>
+                <td class="collapsing"><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
+                <td>@lastcommit.MessageShort</td>
+                <td >@lastcommit.Committer.When.ToString("yyyy-MM-dd HH:mm:ss")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<script>
+        function CopyToBuffer() {
+
+            var copyText = document.getElementById("Giturl");
+
+
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+
+            navigator.clipboard.writeText(copyText.value);
+
+        }
+</script>

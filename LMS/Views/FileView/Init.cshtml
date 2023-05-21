@@ -1,0 +1,69 @@
+﻿@{
+    //ViewBag.Title = "";
+    Layout = "_Layout";
+    string currRepo = (string)ViewContext.RouteData.Values["repoName"];
+    string currUser = (string)ViewContext.RouteData.Values["userName"];
+    string currId = (string)ViewContext.RouteData.Values["id"];
+    var request = ViewContext.HttpContext.Request;
+    var giturl = $"{request.Scheme}://{request.Host}/{currUser}/{currRepo}.git";
+}
+<div class="ui clearing segment">
+    <h3 class="ui left floated header">@currUser / @currRepo</h3>
+</div>
+<div class="ui container">
+    <div class="ui grid">
+        <div class="sixteen wide column content">
+            <h4 class="ui top attached header">
+                Быстрый старт
+            </h4>
+            <div class="ui attached guide table segment">
+                <div class="item">
+                    <h3>Добавьте файлы в репозиторий <small>Не знаете как? <a href="http://git-scm.com/book/en/Git-Basics-Getting-a-Git-Repository" rel="nofollow"></a> Руководство по созданию！</small></h3>
+                    <div class="ui fluid action small input">
+                        <button class="ui basic clone button blue" id="repo-clone-https" data-link="@giturl">
+                            HTTP
+                        </button>
+                         <input id="Giturl" type="text" value="@giturl" readonly style="width:fit-content">
+                         <button class="btn-primary" onclick="CopyToBuffer()"> <i class="fa-solid fa-copy"></i> Скопировать </button>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+
+                <div class="item">
+                    <h3>Создайте новый репозиторий с помощь команд git</h3>
+                    <div class="markdown">
+                        <pre><code>touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin <span class="clone-url">@giturl</span>
+git push -u origin master</code></pre>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+
+                <div class="item">
+                    <h3>Или отправьте уже существующий репозиторий</h3>
+                    <div class="markdown">
+                        <pre><code>git remote add origin <span class="clone-url">@giturl</span>
+git push -u origin master</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function CopyToBuffer() {
+
+        var copyText = document.getElementById("Giturl");
+
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+
+        navigator.clipboard.writeText(copyText.value);
+
+    }
+</script>

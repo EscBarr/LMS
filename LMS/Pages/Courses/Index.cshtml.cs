@@ -62,7 +62,7 @@ namespace LMS.Pages
         {
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var Course = new Course { Name = name, UserId = UserId };
-            _courseRepo.Create(Course);
+            await _courseRepo.Create(Course);
             await _courseRepo.Save();
             return RedirectToPage("index");
         }

@@ -1,0 +1,32 @@
+@using LMS.Extensions
+@using LMS.Models
+
+@model BlobModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = Model.Name;
+}
+
+@if(Model.IsBinary)
+{
+	<p>This file is binary and cannot be displayed.</p>
+}
+else
+{
+    <pre><code>@Model.Content</code></pre>
+    //Html.HighlightCode(Model.Content, Highlighter.FromExtension(System.IO.Path.GetExtension(Model.Name)), "code")
+}
+
+<link rel="stylesheet" href="~/lib/highlight.js/styles/default.min.css">
+<script src="~/lib/highlight.js/highlight.min.js"></script>
+<script src="~/lib/highlightjs-line-numbers.js/highlightjs-line-numbers.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script>
+    $(document).ready(function () {
+        $('pre code').each(function (i, block) {
+            hljs.lineNumbersBlock(block);
+            // hljs.highlightBlock(block);
+        });
+    });
+</script>

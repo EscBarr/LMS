@@ -28,6 +28,16 @@ namespace LMS.EntityContext
             return await _db.Courses.Where(course => course.Users.Any(us => us.Id == userId)).ToListAsync();
         }
 
+        public async Task<List<User>> GetAllUsersFromCourse(int CourseId)//Получить всех пользователей из курса и назначенные им варианты
+        {
+            return await _db.Courses.Where(course => course.CourseId == CourseId).SelectMany(c => c.Users).Include(c => c.AssignedVariants).ToListAsync();
+        }
+
+        public async Task<List<User>> GetAllUsersFromCoursePerLab(int CourseId, int LabId)//Получить всех пользователей из курса и назначенные им варианты в конкретной лабораторной работе
+        {
+            return await _db.Courses.Where(course => course.CourseId == CourseId).SelectMany(c => c.Users).Include(c => c.AssignedVariants.Where(a => a.Variant.LaboratoryWorkId == LabId)).ToListAsync();
+        }
+
         public async Task<Course> GetById(int? ID)
         {
             return await _db.Courses.Include(course => course.LaboratoryWorks).Include(course => (course.Users)).FirstOrDefaultAsync(m => m.CourseId == ID);
@@ -48,7 +58,7 @@ namespace LMS.EntityContext
             Course course = await GetById(ID);
             var Users = await _db.Users.Where(T => UserID.Contains(T.Id)).ToListAsync();
             course.Users = course.Users.Union(Users).ToList();
-            Update(course);
+            await Update(course);
         }
 
         public async Task DeleteUsers(int ID, int[] UserID)
@@ -60,7 +70,7 @@ namespace LMS.EntityContext
             {
                 course.Users.Remove(user);
             }
-            Update(course);
+            await Update(course);
         }
 
         public async Task DeleteUser(int ID, int UserID)

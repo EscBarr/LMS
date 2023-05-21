@@ -36,6 +36,13 @@
     {
       "library": "highlight.js@11.8.0",
       "destination": "wwwroot/js/highlight.js/"
+    },
+    {
+      "library": "highlightjs-line-numbers.js@2.8.0",
+      "destination": "wwwroot/lib/highlightjs-line-numbers.js/",
+      "files": [
+        "highlightjs-line-numbers.min.js"
+      ]
     }
   ]
 }

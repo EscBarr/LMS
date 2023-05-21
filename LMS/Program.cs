@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using System.Numerics;
-using ASTU_LMS.StartupPrep;
+using LMS.StartupPrep;
 
 var builder = WebApplication.CreateBuilder(args);
 

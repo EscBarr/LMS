@@ -14,6 +14,8 @@ namespace LMS.EntityСontext
 
         public DateTime AssignDateTime { get; set; }
         public DateTime CompletionDateTime { get; set; }
+
+        public DateTime DueDateTime { get; set; }//Крайний срок выполнения
         public int Mark { get; set; }
 
         //public int MaxMark { get; set; }

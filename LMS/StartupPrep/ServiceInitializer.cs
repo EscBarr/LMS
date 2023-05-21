@@ -12,7 +12,7 @@ using LMS.EntityContext;
 using LMS.Git;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace ASTU_LMS.StartupPrep
+namespace LMS.StartupPrep
 {
     public static partial class ServiceInitializer
     {
@@ -25,14 +25,15 @@ namespace ASTU_LMS.StartupPrep
 
             RegisterAuthDependencies(services, configuration);
 
-            RegisterSwagger(services);
+            //RegisterSwagger(services);
             return services;
         }
 
         private static void RegisterCustomDependencies(IServiceCollection services, IConfiguration configuration)
         {
             // Add services to the container.
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddRazorPages();
             //services.AddRazorPages().AddRazorPagesOptions(options =>
             //{
@@ -53,7 +54,7 @@ namespace ASTU_LMS.StartupPrep
             services.AddScoped<CourseRepo>();
             services.AddScoped<GitService>();
             services.AddScoped<LabWorksRepo>();
-            services.AddScoped<VariantsRepo>();
+            services.AddScoped<AssignedVariantsRepo>();
             services.AddScoped<UsersRepo>();
         }
 

@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using System.Data;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+
+//< a class= "btn btn-primary" asp - page = "AssignTasks" asp - route - Id = "@item.Id" >< i class= "fa-solid fa-pen-to-square" ></ i ></ a >
 
 namespace LMS.Pages
 {
@@ -63,7 +66,7 @@ namespace LMS.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            var test = this.Id;
+            //var test = this.Id;
             HttpContext.Session.SetInt32("CourseId", Id);
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             Cur_Course = await _courseRepo.GetById(Id);
