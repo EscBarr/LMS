@@ -22,6 +22,9 @@
                 <i class="fa-solid fa-user"></i> @item.Users.Count()
                 <i class="fas fa-tasks"></i>  @item.LaboratoryWorks.Count()
             </div>
+           
+            <a class="link-info" asp-page="Journal" asp-route-id="@item.CourseId">Журнал сдачи</a>
+           
         </div>
       
     }

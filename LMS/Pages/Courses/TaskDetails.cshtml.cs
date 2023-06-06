@@ -77,6 +77,12 @@ namespace LMS.Pages.Courses
             return RedirectToPage("TaskDetails", Id);
         }
 
+        public async Task<IActionResult> OnPostDetachRepo()
+        {
+            Id = (int)HttpContext.Session.GetInt32("TaskId");
+            return RedirectToPage("TaskDetails", Id);
+        }
+
         public async Task<IActionResult> OnPostSendToVerify()
         {
             Id = (int)HttpContext.Session.GetInt32("TaskId");

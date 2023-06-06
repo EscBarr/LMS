@@ -55,15 +55,34 @@
         {
             <div class="d-flex align-items-center StudentContainer">
 
-                <span > @item.Surname @item.Name @item.Patronymic</span>
+                <span > @item.User.Surname @item.User.Name @item.User.Patronymic</span>
                 <div class="d-flex">
-                    <form id="Form+@item.Id" class="align-middle" asp-page-handler="AssignVar" method="post">
-                        <input id="Date+@item.Id" name="Due" type="datetime-local" hidden>
-                        <input type="hidden" name="userId" readonly value="@item.Id">
-                        <label>Вариант №:</label>
-                        <select class="selectpicker form-control" name="VarId" data-style="btn border" title="Выберите вариант" asp-items="Model._CurrentVariants" onchange="CaptureDueDate(@item.Id)">
-                        </select>
-                    </form>
+                    @{
+                        var AsVariant = item.User.AssignedVariants.FirstOrDefault(As => As.Variant.LaboratoryWorkId == Model.Id);
+                        if (AsVariant != null)
+                        {
+                            <form id="Form+@item.User.Id" class="align-middle" asp-page-handler="UpdateAssignVar" method="post">
+                                <input id="Date+@item.User.Id" name="Due" type="datetime-local" hidden>
+                                <input type="hidden" name="userId" readonly value="@item.User.Id">
+                                <input type="hidden" name="CurId" readonly value="@item._Variants.First(t=>t.Selected = true).Value">
+                                <label>Вариант №:</label>
+                                <select class="selectpicker form-control" name="VarId" data-style="btn border" title="Выберите вариант" asp-items="item._Variants" onchange="CaptureDueDate(@item.User.Id)">
+                                </select>
+                            </form>
+                        }
+                        else
+                        {
+                            <form id="Form+@item.User.Id" class="align-middle" asp-page-handler="AssignVar" method="post">
+                                <input id="Date+@item.User.Id" name="Due" type="datetime-local" hidden>
+                                <input type="hidden" name="userId" readonly value="@item.User.Id">
+                                <label>Вариант №:</label>
+                                <select class="selectpicker form-control" name="VarId" data-style="btn border" title="Выберите вариант" asp-items="item._Variants" onchange="CaptureDueDate(@item.User.Id)">
+
+                                </select>
+                            </form>
+                        }
+                    }
+                    
                 </div>
 
             </div>

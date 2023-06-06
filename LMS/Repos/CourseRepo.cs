@@ -25,7 +25,7 @@ namespace LMS.EntityContext
 
         public async Task<List<Course>> GetAllWhereUser(int userId)//Получить все курсы, в которых состоит пользователь
         {
-            return await _db.Courses.Where(course => course.Users.Any(us => us.Id == userId)).ToListAsync();
+            return await _db.Courses.Where(course => course.Users.Any(us => us.Id == userId)).Include(course => course.LaboratoryWorks).ToListAsync();
         }
 
         public async Task<List<User>> GetAllUsersFromCourse(int CourseId)//Получить всех пользователей из курса и назначенные им варианты
@@ -38,9 +38,14 @@ namespace LMS.EntityContext
             return await _db.Courses.Where(course => course.CourseId == CourseId).SelectMany(c => c.Users).Include(c => c.AssignedVariants.Where(a => a.Variant.LaboratoryWorkId == LabId)).ToListAsync();
         }
 
+        public async Task<List<LaboratoryWork>> GetAllLabsFromCourseAndAssignedVariants(int CourseId)//Получить всех лабораторные работы из курса и назначенные варианты
+        {
+            return await _db.Courses.Where(course => course.CourseId == CourseId).SelectMany(c => c.LaboratoryWorks).Include(c => c.Variants).ThenInclude(c => c.AssignedVariants).ToListAsync();
+        }
+
         public async Task<Course> GetById(int? ID)
         {
-            return await _db.Courses.Include(course => course.LaboratoryWorks).Include(course => (course.Users)).FirstOrDefaultAsync(m => m.CourseId == ID);
+            return await _db.Courses.Include(course => course.LaboratoryWorks).ThenInclude(lab => lab.Variants).Include(course => (course.Users)).FirstOrDefaultAsync(m => m.CourseId == ID);
         }
 
         public async Task Create(Course course)

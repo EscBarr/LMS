@@ -138,5 +138,39 @@ namespace LMS.Controllers
                 }
             });
         }
+
+        //TODO Реализовать историю коммитов
+        public IActionResult GetCommitsHistory(string userName, string repoName, string id, string path)
+        {
+            //return TryGetResult(repoName, () =>
+            //{
+            //    if (path == null)
+            //        return Redirect(Url.UnencodedRouteLink("GetTreeView", new { repoName = repoName, id = id, path = path }));
+
+            //    repoName = Path.Combine(userName, repoName);
+            //    Repository repo = RepositoryService.GetRepository(repoName);
+            //    Commit commit = repo.Branches[id]?.Tip ?? repo.Lookup<Commit>(id);
+
+            //    if (commit == null)
+            //        return NotFound();
+
+            //    TreeEntry entry = commit[path];
+            //    if (entry == null)
+            //        return NotFound();
+
+            //    switch (entry.TargetType)
+            //    {
+            //        case TreeEntryTargetType.Blob:
+            //            return View("Blob", new BlobModel(repo, entry.Path, entry.Name, (Blob)entry.Target));
+
+            //        case TreeEntryTargetType.Tree:
+            //            return Redirect(Url.UnencodedRouteLink("GetTreeView", new { repoName = repoName, id = id, path = path }));
+
+            //        default:
+
+            //    }
+            //});
+            return BadRequest();
+        }
     }
 }

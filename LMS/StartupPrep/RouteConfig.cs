@@ -48,6 +48,13 @@ namespace LMS.StartupPrep
                 new { method = new HttpMethodRouteConstraint("GET") }
             );
 
+            routeBuilder.MapRoute(
+             "GetCommitsHistory",
+             "{userName}/{repoName}/Commits",
+             new { controller = "FileView", action = "GetGetCommitsHistory" },
+             new { method = new HttpMethodRouteConstraint("GET") }
+         );
+
             #endregion Routes for viewing the file tree
         }
     }
