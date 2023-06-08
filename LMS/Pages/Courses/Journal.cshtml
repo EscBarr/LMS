@@ -28,18 +28,23 @@
     }
     else
     {
+        var cntr = 0;
         foreach (var item in Model.LabAssignedVariants)
         {
+            
             <div class="d-flex align-items-center p-3 my-3 StudentContainer">
 
 
                 <div class="mb-0">
                     @item.Name
                     <div class="footerCourse m-1">
-                        <i class="fas fa-tasks"></i>  @item.Variants.Count()
+                        <i class="fas fa-tasks"></i>  @Model.AssignedVarCount[cntr]
+                       
                     </div>
                 </div>
-
+                @{
+                    cntr = cntr + 1;
+                }
                 <div class="d-flex">
                     <a class="btn btn-primary me-1" data-bs-toggle="tooltip" data-bs-title="Назначить варианты" asp-page="AssignTasks" asp-route-Id="@item.Id"><i class="fa-sharp fa-solid fa-check-to-slot"></i></a>
                     <a class="btn btn-primary me-1" data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>

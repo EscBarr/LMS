@@ -16,6 +16,8 @@ namespace LMS.Pages.Courses
 
         public List<LaboratoryWork> LabAssignedVariants { get; set; }
 
+        public List<int> AssignedVarCount { get; set; }
+
         public JournalModel(ApplicationContext db, CourseRepo courseRepo)
         {
             _db = db;
@@ -30,6 +32,12 @@ namespace LMS.Pages.Courses
             LabAssignedVariants = LabAssignedVariants.OrderBy(x => x.Id).ToList();
 
             CourseName = await _db.Courses.Where(c => c.CourseId == Id).Select(c => c.Name).FirstOrDefaultAsync();
+            AssignedVarCount = new List<int> { };
+            foreach (var lab in LabAssignedVariants)
+            {
+                AssignedVarCount.Add(await _db.AssignedVariants.Where(s => s.Variant.LaboratoryWorkId == lab.Id).CountAsync());
+            }
+
             return Page();
         }
     }
