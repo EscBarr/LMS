@@ -20,42 +20,176 @@
     </ol>
 </div>
 
+@*<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="order-last col-2 border-start">
+            <h4>Sidebar</h4>
 
-@{
-    if (Model.LabAssignedVariants.Count == 0)
-    {
-        <p>Вы ещё не добавили заданий в курс</p>
-    }
-    else
-    {
-        var cntr = 0;
-        foreach (var item in Model.LabAssignedVariants)
-        {
-            
-            <div class="d-flex align-items-center p-3 my-3 StudentContainer">
+         
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>*@
+<div class="mt-4 container-fluid h-100">
+    <div class="row h-100">
+        <div class="order-last col-2 border-start">
+            <h4 class="text-center">Фильтрация</h4>
+
+            <select class="selectpicker form-control" data-style="btn border" title="Выберите студента" asp-for="SelectedUserID" asp-items="Model._SelectedUsers"></select>
+
+        </div>
+        <div class="col">
+            <ul class="nav nav-underline nav-justified mt-3" id="myTab" role="tablist">
+                <li class="nav-item border-primary" role="presentation">
+                    <button class="nav-link active" id="Users-tab" data-bs-toggle="tab" data-bs-target="#ActiveTask-tab-pane" type="button" role="tab" aria-controls="ActiveTask-tab-pane" aria-selected="true">Назначенные</button>
+                </li>
+                <li class="nav-item border-primary" role="presentation">
+                    <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#SendedTasks-tab-pane" type="button" role="tab" aria-controls="SendedTasks-tab-pane" aria-selected="true">Не проверены</button>
+                </li>
+                <li class="nav-item border-primary" role="presentation">
+                    <button class="nav-link" id="Labs-tab" data-bs-toggle="tab" data-bs-target="#VerifiedTasks-tab-pane" type="button" role="tab" aria-controls="VerifiedTasks-tab-pane" aria-selected="true">Проверены</button>
+                </li>
+            </ul>
 
 
-                <div class="mb-0">
-                    @item.Name
-                    <div class="footerCourse m-1">
-                        <i class="fas fa-tasks"></i>  @Model.AssignedVarCount[cntr]
-                       
-                    </div>
+            <div class="d-flex flex-column pb-4 pt-4 tab-content overflow-auto justify-content-center text-center " id="myTabContent">
+                <div class="tab-pane fade show active align-middle" id="ActiveTask-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0" @*style="margin:25vh"*@>
+
+                    @if (Model.LabAssignedVariants.Count == 0)
+                    {
+                        <p>Тут будут назначенные студентам задания</p>
+                    }
+                    else
+                    {
+
+                        foreach (var item in Model.LabAssignedVariants)
+                        {
+
+                            <div class="d-flex align-items-center ContainerTask">
+                                <div class="mb-0">
+                                    @item.Variant.LaboratoryWork.Name
+                                    <div class="footerCourse m-1">
+                                        <i class="fas fa-tasks"> </i> Номер варианта: @item.Variant.VariantNumber
+                                    </div>
+                                    <div class="footerCourse m-1">
+                                        <span class="mt-1"> Студент: @item.User.Surname @item.User.Name @item.User.Patronymic</span>
+                                    </div>
+                                    <div class="footerCourse m-1">
+                                        @{
+                                            if (@item.DueDateTime < DateTime.Now)
+                                            {
+                                                <span class="mt-1 text-danger">Крайний срок: @item.DueDateTime</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="mt-1 text-success">Крайний срок: @item.DueDateTime</span>
+                                            }
+                                        }
+                                    </div>
+                                    <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                                </div>
+                            </div>
+                        }
+                    }
+
                 </div>
-                @{
-                    cntr = cntr + 1;
-                }
-                <div class="d-flex">
-                    <a class="btn btn-primary me-1" data-bs-toggle="tooltip" data-bs-title="Назначить варианты" asp-page="AssignTasks" asp-route-Id="@item.Id"><i class="fa-sharp fa-solid fa-check-to-slot"></i></a>
-                    <a class="btn btn-primary me-1" data-bs-toggle="tooltip" data-bs-title="Редактирование задания" asp-page="ManageTask" asp-route-Id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <form method="post">
+                <div class="tab-pane fade align-middle" id="SendedTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+                    @{
 
-                        <button type="submit" class="btn btn-danger" asp-page-handler="DeleteLab" asp-route-LabId="@item.Id">Удалить</button>
-                    </form>
+                        @if (Model.LabSendedVariants.Count == 0)
+                        {
+                            <p>Тут будут отправленные на проверку работы</p>
+                        }
+                        else
+                        {
+
+                            foreach (var item in Model.LabSendedVariants)
+                            {
+
+                                <div class="d-flex align-items-center p-3 my-3 ContainerTask">
+
+
+                                    <div class="mb-0">
+
+                                        @item.Variant.LaboratoryWork.Name
+                                        <div class="footerCourse">
+                                            <i class="fas fa-tasks"> Номер варианта: @item.Variant.VariantNumber</i>
+                                            <span class=""> @item.User.Surname @item.User.Name @item.User.Patronymic</span>
+                                            @{
+                                                if (@item.DueDateTime < DateTime.Now)
+                                                {
+                                                    <span class=" text-danger">Крайний срок: @item.DueDateTime</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class=" text-success">Крайний срок: @item.DueDateTime</span>
+                                                }
+                                            }
+
+                                            <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <div class="tab-pane fade align-middle" id="VerifiedTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+
+                    @{
+
+                        @if (Model.LabVerifiedVariants.Count == 0)
+                        {
+                            <p>Тут будут все проверенные работы</p>
+                        }
+                        else
+                        {
+
+                            foreach (var item in Model.LabVerifiedVariants)
+                            {
+
+                                <div class="d-flex align-items-center p-3 my-3 ContainerTask">
+
+
+                                    <div class="mb-0">
+
+                                        @item.Variant.LaboratoryWork.Name
+                                        <div class="footerCourse m-1">
+                                            <i class="fas fa-tasks"> Номер варианта: @item.Variant.VariantNumber</i>
+                                            <span class="mt-1"> @item.User.Surname @item.User.Name @item.User.Patronymic</span>
+                                            @{
+                                                if (@item.DueDateTime < item.CompletionDateTime)
+                                                {
+                                                    <span class="mt-1 text-danger">Была просрочена: @item.CompletionDateTime</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="mt-1 text-success">Сдана в срок: @item.CompletionDateTime</span>
+                                                }
+                                            }
+
+                                            <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    }
+
                 </div>
 
             </div>
-        }
-    }
 
-}
+        </div>
+    </div>
+</div>
+
+
+
+

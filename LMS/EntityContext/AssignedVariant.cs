@@ -1,3 +1,4 @@
+using LMS.EntityContext;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace LMS.EntityСontext
         public int AssignedVariantId { get; set; }
         public int UserId { get; set; }
         public int VariantId { get; set; }
-        public int ChatID { get; set; }
+        //public int ChatID { get; set; }
 
         public int RepoID { get; set; }
 
@@ -23,6 +24,6 @@ namespace LMS.EntityСontext
         public User User { get; set; }
         public Variant Variant { get; set; }
 
-        //public ICollection<ChatMessages> HistoryMessages { get; set; }
+        public ICollection<ChatMessages> HistoryMessages { get; set; }
     }
 }

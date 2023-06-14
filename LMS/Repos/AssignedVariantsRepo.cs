@@ -30,6 +30,11 @@ namespace LMS.EntityContext
             return await _db.AssignedVariants.Include(var => var.Variant).ThenInclude(lab => lab.LaboratoryWork).Where(var => var.Variant.LaboratoryWork.CourseId == CourseID && var.Variant.LaboratoryWork.Id == LabId).ToListAsync();
         }
 
+        public async Task<List<AssignedVariant>> GetAllWhereByCourse(int CourseID)
+        {
+            return await _db.AssignedVariants.Include(u => u.User).Include(var => var.Variant).ThenInclude(lab => lab.LaboratoryWork).Where(var => var.Variant.LaboratoryWork.CourseId == CourseID).ToListAsync();
+        }
+
         public async Task<AssignedVariant> GetById(int Id)
         {
             return await _db.AssignedVariants.Include(var => var.Variant).ThenInclude(lab => lab.LaboratoryWork).FirstOrDefaultAsync(var => var.AssignedVariantId == Id);
