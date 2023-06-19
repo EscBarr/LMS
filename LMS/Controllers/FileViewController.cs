@@ -10,18 +10,16 @@ using System.Net;
 using Ionic.Zip;
 using System.Text;
 using System.Web;
+using Microsoft.AspNetCore.Builder;
 
 namespace LMS.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher, Student")]
     public class FileViewController : GitControllerBase
     {
-        public FileViewController(
-            IOptions<GitSettings> gitOptions,
-            GitService repoService
-        )
-            : base(gitOptions, repoService)
-        { }
+        public FileViewController(IOptions<GitSettings> gitOptions, GitService repoService) : base(gitOptions, repoService)
+        {
+        }
 
         public IActionResult RedirectGitLink(string userName, string repoName)
         {
@@ -178,63 +176,51 @@ namespace LMS.Controllers
             //Response.BufferOutput = false;
             //Response.Charset = "";
             Response.ContentType = "application/zip";
-
-            var repo = RepositoryService.GetRepository(repoName);
+            repoName = Path.Combine(userName, repoName);
             string headerValue = repoName + "-" + id + ".zip";
             Response.Headers.Add("Content-Disposition", headerValue);
-            Commit commit = repo.Branches[id]?.Tip ?? repo.Lookup<Commit>(id);
-            var Test = new TreeModel(repo, "/", repoName, commit.Tree);
-            //var test = RepositoryService.CreatePath(repoName);
-            //var Uri = new System.Uri(test).AbsoluteUri;
 
-            //var test2 = Path.Combine(Environment.CurrentDirectory, "Testing", userName);
-            //Directory.CreateDirectory(test2);
-            //Repository.Clone(Uri, Path.Combine(Environment.CurrentDirectory, "Testing", userName), new CloneOptions
-            //{
-            //    IsBare = true
-            //});
+            using (var outputZip = new ZipFile())
+            {
+                outputZip.UseZip64WhenSaving = Zip64Option.Always;
+                outputZip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                outputZip.AlternateEncoding = Encoding.Unicode;
 
-            //using (var outputZip = new ZipFile())
-            //{
-            //    outputZip.UseZip64WhenSaving = Zip64Option.Always;
-            //    outputZip.AlternateEncodingUsage = ZipOption.AsNecessary;
-            //    outputZip.AlternateEncoding = Encoding.Unicode;
-
-            //    using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, repo.Name)))
-            //    {
-            //        AddTreeToZip(browser, name, path, outputZip);
-            //    }
-
-            //    outputZip.Save(Response.Body);
-
-            //    return new EmptyResult();
-            //}
-            return new EmptyResult();
+                using (var browser = new RepositoryBrowser(Path.Combine(GitSettings.BasePath, repoName)))
+                {
+                    AddTreeToZip(browser, name, path, outputZip);
+                }
+                outputZip.Save(Response.Body);
+                return new EmptyResult();
+            }
         }
 
-        //private static void AddTreeToZip(RepositoryBrowser browser, string name, string path, ZipFile outputZip)
-        //{
-        //    string referenceName;
-        //    var treeNode = browser.BrowseTree(name, path, out referenceName);
+        private static void AddTreeToZip(RepositoryBrowser browser, string name, string path, ZipFile outputZip)
+        {
+            string referenceName;
+            var treeNode = browser.BrowseTree(name, path, out referenceName);
 
-        //    foreach (var item in treeNode)
-        //    {
-        //        if (item.IsLink)
-        //        {
-        //            outputZip.AddDirectoryByName(Path.Combine(item.TreeName, item.Path));
-        //        }
-        //        else if (!item.IsTree)
-        //        {
-        //            string blobReferenceName;
-        //            var model = browser.BrowseBlob(item.TreeName, item.Path, out blobReferenceName);
-        //            outputZip.AddEntry(Path.Combine(item.TreeName, item.Path), model.Data);
-        //        }
-        //        else
-        //        {
-        //            // recursive call
-        //            AddTreeToZip(browser, item.TreeName, item.Path, outputZip);
-        //        }
-        //    }
-        //}
+            foreach (var item in treeNode)
+            {
+                if (item.IsLink)
+                {
+                    outputZip.AddDirectoryByName(Path.Combine(item.TreeName, item.Path));
+                }
+                else if (!item.IsTree)
+                {
+                    string blobReferenceName;
+                    var model = browser.BrowseBlob(item.TreeName, item.Path, out blobReferenceName);
+                    if (model != null)
+                    {
+                        outputZip.AddEntry(Path.Combine(item.TreeName, item.Path), model.Data);
+                    }
+                }
+                else
+                {
+                    // recursive call
+                    AddTreeToZip(browser, item.TreeName, item.Path, outputZip);
+                }
+            }
+        }
     }
 }

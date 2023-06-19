@@ -90,7 +90,7 @@
         {
             bool isTree = fvm.Type == ObjectType.Tree;
             <tr>
-                <td class="collapsing"><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
+                <td ><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
                 <td>@fvm.Comment</td>
                 <td >@fvm.DateChange</td>
             </tr>
