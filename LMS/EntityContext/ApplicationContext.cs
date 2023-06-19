@@ -9,7 +9,7 @@ namespace LMS.EntityСontext
     {
         public DbSet<AssignedVariant> AssignedVariants { get; set; }
 
-        //public DbSet<ChatMessages> ChatMessages { get; set; }
+        public DbSet<ChatMessages> ChatMessages { get; set; }
         public DbSet<Course> Courses { get; set; }
 
         public DbSet<Group> Groups { get; set; }

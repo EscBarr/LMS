@@ -1,4 +1,6 @@
 ﻿using LibGit2Sharp;
+using System;
+using System.IO;
 
 namespace LMS.Models
 {
@@ -8,6 +10,7 @@ namespace LMS.Models
         private GitObject _object;
         private string _path;
         private string _name;
+        private string _comment;
 
         public Repository Repository => _repository;
         public GitObject Object => _object;
@@ -16,6 +19,11 @@ namespace LMS.Models
         public ObjectType Type => Repository.ObjectDatabase.RetrieveObjectMetadata(_object.Id).Type;
         public string Path => _path;
         public string Name => _name;
+        public string Comment { get; set; }
+
+        public DateTime DateChange { get; set; }
+
+        //public string Size => _size;
 
         protected internal FileViewModel(Repository repo, string path, string name, GitObject obj)
         {
@@ -47,6 +55,7 @@ namespace LMS.Models
 
         protected internal FileViewModel(Repository repo, string path, string name, TObject obj) : base(repo, path, name, obj)
         {
+            //GetCommitMessage(path, Repository);
         }
     }
 }

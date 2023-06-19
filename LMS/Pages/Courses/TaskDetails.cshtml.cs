@@ -31,6 +31,8 @@ namespace LMS.Pages.Courses
         [BindProperty]
         public RepositoryDTO modelRepo { get; set; }
 
+        public string TeacherName { get; set; }
+
         public TaskDetailsModel(ApplicationContext db, AssignedVariantsRepo assignedVariantsRepo, GitService gitService)
         {
             _db = db;
@@ -49,6 +51,13 @@ namespace LMS.Pages.Courses
             {
                 AssignedRepo = await _db.Repos.FirstOrDefaultAsync(r => r.Id == AssignedVariantDetails.RepoID);
             }
+            var CourseID = HttpContext.Session.GetInt32("CourseId");
+            if (CourseID == null)
+            {
+                return BadRequest("Переход на страницу был совершен не со страницы курса");
+            }
+
+            TeacherName = await _db.Courses.Where(c => c.CourseId == Id).Select(c => c.User.Name + " " + c.User.Surname).FirstOrDefaultAsync();
             HttpContext.Session.SetInt32("TaskId", Id);
             return Page();
         }
@@ -80,6 +89,16 @@ namespace LMS.Pages.Courses
         public async Task<IActionResult> OnPostDetachRepo()
         {
             Id = (int)HttpContext.Session.GetInt32("TaskId");
+            AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
+            AssignedVariantDetails.RepoID = 0;
+            return RedirectToPage("TaskDetails", Id);
+        }
+
+        public async Task<IActionResult> OnPostSendComment()
+        {
+            Id = (int)HttpContext.Session.GetInt32("TaskId");
+            var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
             return RedirectToPage("TaskDetails", Id);
         }
 

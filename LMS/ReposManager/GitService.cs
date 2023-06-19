@@ -22,6 +22,11 @@ namespace LMS.Git
             _settings = gitOptions;
         }
 
+        public string CreatePath(string name)
+        {
+            return Path.Combine(Settings.BasePath, name);
+        }
+
         public Repository GetRepository(string name)
             => new Repository(Path.Combine(Settings.BasePath, name));
 

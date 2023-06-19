@@ -26,7 +26,7 @@ app.Run();
 
 void CreateNeedDirectory()
 {
-    var necessaryDirectories = new[] { "Repositories", "RepositoriesTemplates" };
+    var necessaryDirectories = new[] { "Repositories", "Testing" };
     foreach (var item in necessaryDirectories)
     {
         if (!Directory.Exists(item))

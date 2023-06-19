@@ -12,9 +12,10 @@
     var giturl = $"{request.Scheme}://{request.Host}/{currUser}/{currRepo}.git";
     var repo = Model.Repository;
     var lastcommit = repo.Commits.FirstOrDefault();
+    
 }
 
-<div aria-label="breadcrumb">
+@*<div aria-label="breadcrumb">
     <ol class="mybreadcrumb">
         <li class="breadcrumb-item">
             <a href="~/index">На главную</a>
@@ -27,30 +28,52 @@
         </li>
     </ol>
 </div>
+*@
+<h1 class="border- border-bottom">@currRepo</h1>
 
-<div class="row">
+<div class="row pb-2" @*style=" margin-left:15%;"*@>
 
-<div class="col-6 order-3 ui fluid action input">
-    <input id="Giturl" type="text" value="@giturl" readonly style="width:fit-content">
-    <button class="btn-primary" onclick="CopyToBuffer()"> <i class="fa-solid fa-copy"></i> Скопировать </button>
+<div class="col-3 order-3 ">
+        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Код
+        </button>
+        <ul class="dropdown-menu" style="top:6px; width:400px; max-width: calc(100vw-320px);">
+            <li class="p-3">
+                
+                <div class="flex-row">
+                    <h4>Клонировать</h4>
+                    <div class="input-group">
+                        <input class="form-control mr-0" id="Giturl" type="text" value="@giturl" readonly style="min-width:fit-content; border-bottom-left-radius: 15px; border-top-left-radius: 15px;">
+                        <button class="btn-primary p-2" onclick="CopyToBuffer()" style="border-bottom-right-radius: 15px; border-top-right-radius: 15px;"> <i class="fa-solid fa-copy"></i></button>
+                    </div>
+                   
+                </div>
+       
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li class ="p-3">
+                <a href="@Url.Action("Download", new { userName = currUser,  repoName = currRepo, id = currId, path = Model.Parent })"> <i class="fa-solid fa-file-zipper"></i> Скачать ZIP</a>
+            </li>
+        </ul>
+    
 </div>
 
-   
-        <div class="col-3">
-            <a href="#"><span class="ui text black"><i class="icon history"></i> <b>@repo.Commits.Count()</b> Количество коммитов</span> </a>
+    <div class="col-3">
+        <a href="#"><span><i class="fa-brands fa-git-alt"></i> <b>@repo.Branches.Count()</b> Количество веток</span> </a>
+    </div>
+        <div class="col-6">
+        <a href="#"><span> <i class="fas fa-history"></i> <b>@repo.Commits.Count()</b> Количество коммитов</span> </a>
         </div>
-        <div class="col-3">
-            <a href="#"><span class="ui text black"><i class="icon git"></i><b>@repo.Branches.Count()</b> Количество веток</span> </a>
-        </div>
+       
 </div>
 
-<table class="table table-striped w-100">
+<table class="table table-hover table-borderless" @*style="width:70%; margin-left:auto; margin-right:auto"*@>
 
     <thead>
         <tr>
             <th scope="col">@lastcommit.Author.Name</th>
-            <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита</th>
-            <th scope="col"><span> Дата @*@lastcommit.Message*@</span></th>
+            <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита: @lastcommit.Message</th>
+            <th scope="col"><span> Дата: @lastcommit.Author.When.ToString("yyyy-MM-dd HH:mm:ss")</span></th>
         </tr>
     </thead>
 
@@ -58,7 +81,7 @@
         @if (Model.Parent != null)
         {
             <tr>
-                <td class="collapsing"><i class="fa-solid fa-folder"></i><a href="@Url.UnencodedRouteLink("GetTreeView", new { repoName = currRepo, id = currId, path = Model.Parent })">..</a></td>
+                <td class="collapsing"><i class="fa-solid fa-folder"></i><a href="@Url.UnencodedRouteLink("GetTreeView", new { repoName = currRepo, id = currId, path = Model.Parent })">....</a></td>
                 @*<td>Сообщение коммита</td>
                 <td class="collapsing">Дата</td>*@
             </tr>
@@ -68,8 +91,8 @@
             bool isTree = fvm.Type == ObjectType.Tree;
             <tr>
                 <td class="collapsing"><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
-                <td>@lastcommit.MessageShort</td>
-                <td >@lastcommit.Committer.When.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@fvm.Comment</td>
+                <td >@fvm.DateChange</td>
             </tr>
         }
     </tbody>

@@ -6,6 +6,11 @@ namespace LMS.EntityСontext
 {
     public class AssignedVariant
     {
+        public AssignedVariant()
+        {
+            HistoryMessages = new List<ChatMessages>();
+        }
+
         public int AssignedVariantId { get; set; }
         public int UserId { get; set; }
         public int VariantId { get; set; }

@@ -14,19 +14,26 @@
 }
 else
 {
-    <pre><code>@Model.Content</code></pre>
+    <div class=" border pt-2">
+        <pre><code>@Model.Content</code></pre>
+    </div>
+    
     
 }
 
-<link rel="stylesheet" href="~/lib/highlight.js/styles/default.min.css">
+
 <script src="~/lib/highlight.js/highlight.min.js"></script>
 <script src="~/lib/highlightjs-line-numbers.js/highlightjs-line-numbers.min.js"></script>
 <script>hljs.highlightAll();</script>
 <script>
     $(document).ready(function () {
-        $('pre code').each(function (i, block) {
+        addCss()
+        $('pre code').each(function (i, block) 
+        {
             hljs.lineNumbersBlock(block);
-           
         });
     });
+
+        
+
 </script>

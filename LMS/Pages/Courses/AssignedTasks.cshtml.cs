@@ -16,13 +16,10 @@ namespace LMS.Pages.Courses
         private readonly ApplicationContext _db;
         private readonly AssignedVariantsRepo _assignedVariantsRepo;
 
-        [BindProperty]
         public List<AssignedVariant> AssignedVariants { get; set; }
 
-        [BindProperty]
         public List<AssignedVariant> DueAssignedVariants { get; set; }//Просроченные
 
-        [BindProperty]
         public List<AssignedVariant> CompletedAssignedVariants { get; set; }//Выполненные задания
 
         [BindProperty(SupportsGet = true)]
@@ -39,9 +36,25 @@ namespace LMS.Pages.Courses
         {
             HttpContext.Session.SetInt32("CourseId", Id);
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            //TODO После получения всех заданий разбить их на 3 категории
-            AssignedVariants = await _assignedVariantsRepo.GetAllWhereUser(UserId, Id);
 
+            AssignedVariants = await _assignedVariantsRepo.GetAllWhereUser(UserId, Id);
+            DueAssignedVariants = new List<AssignedVariant>();
+            CompletedAssignedVariants = new List<AssignedVariant>();
+            var TempList = new List<AssignedVariant>();
+            foreach (var item in AssignedVariants)
+            {
+                if (item.CompletionDateTime == DateTime.MinValue & item.Mark == 0 & item.DueDateTime < DateTime.Now)
+                {
+                    DueAssignedVariants.Add(item);
+                    TempList.Add(item);
+                }
+                else if (item.CompletionDateTime != DateTime.MinValue)
+                {
+                    CompletedAssignedVariants.Add(item);
+                    TempList.Add(item);
+                }
+            }
+            AssignedVariants.RemoveAll(item => TempList.Contains(item));
             return Page();
         }
     }

@@ -21,7 +21,7 @@
 }
 else if (Model.IsDirectory)
 {
-	<ul class="file-browser">
+	<ul>
 		@foreach (FileTreeEntry entry in Model)
 		{
 			<li class="@(entry.IsFile ? "file" : "dir")">

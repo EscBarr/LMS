@@ -1,4 +1,5 @@
 ﻿@page "{handler?}"
+@using System.Security.Claims;
 @model LMS.Pages.RepositoryUserModel
 @{
     Layout = "_Layout";
@@ -18,14 +19,22 @@
     <div class="myHeadingPage">
         Список репозиториев
     </div>
+
     
+
       <div class="d-flex d-flex align-items-end">
             <div class="mySubContainerForFilter">
                 <input onchange="RepoSearch()" id="RepoSearch" placeholder="Найти репозиторий…">
             </div>
-            <div сlass="">
-        <button title="Создание нового репозитория" class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Создать</button>
-            </div>
+            @{
+                var Role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+                if (Role == "Teacher")
+                {
+                    <div сlass="">
+                        <button title="Создание нового репозитория" class="btn custom btn-success btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Создать</button>
+                    </div>
+                }
+            }
         </div>
 
 

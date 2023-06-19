@@ -44,11 +44,13 @@ namespace LMS.Pages.Courses
 
         public async Task<IActionResult> OnGet()
         {
+            HttpContext.Session.SetInt32("CourseId", Id);
             LabAssignedVariants = await _assignedVariantsRepo.GetAllWhereByCourse(Id);
             LabAssignedVariants = LabAssignedVariants.OrderBy(x => x.AssignDateTime).ToList();
             LabSendedVariants = new List<AssignedVariant>();
             LabVerifiedVariants = new List<AssignedVariant>();
             _SelectedUsers = new List<SelectListItem>();
+            var TempList = new List<AssignedVariant>();
             foreach (var item in LabAssignedVariants)
             {
                 var SelUser = new SelectListItem { Value = item.User.Id.ToString(), Text = item.User.Name + " " + item.User.Surname + " " + item.User.Patronymic };
@@ -56,15 +58,17 @@ namespace LMS.Pages.Courses
                 if (item.CompletionDateTime != DateTime.MinValue & item.Mark == 0)
                 {
                     LabSendedVariants.Add(item);
-                    LabAssignedVariants.Remove(item);
+                    TempList.Add(item);
+                    //LabAssignedVariants.Remove(item);
                 }
                 else if (item.CompletionDateTime != DateTime.MinValue & item.Mark != 0)
                 {
                     LabVerifiedVariants.Add(item);
-                    LabAssignedVariants.Remove(item);
+                    TempList.Add(item);
+                    //LabAssignedVariants.Remove(item);
                 }
             }
-
+            LabAssignedVariants.RemoveAll(item => TempList.Contains(item));
             CourseName = await _db.Courses.Where(c => c.CourseId == Id).Select(c => c.Name).FirstOrDefaultAsync();
 
             return Page();

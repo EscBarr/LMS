@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" type="text/css" />
     <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
 
+    <link id="white" rel="stylesheet" href="~/lib/highlight.js/styles/atom-one-light.min.css">
+    <link id="dark" rel="stylesheet" href="~/lib/highlight.js/styles/dark.min.css">
 
    
    @* <link type="text/css" rel="stylesheet" media="all" href="~/css/Flatly.min.css" id="Theme" />*@
@@ -189,6 +191,7 @@
                 //speciality.css('display', 'block');
                 results.css('display', 'block');
                 vcsteacher.css('display', 'block');
+                vcs.css('display', 'block');
             }
             if (roles.includes('Admin')) {
                 btnLog.style = "display: block";
@@ -224,11 +227,26 @@
         //}
         function switchThemeDark() {
             localStorage.setItem('theme', 'dark')
+            addCss()
             document.documentElement.setAttribute('data-bs-theme', 'dark')
         }
         function switchThemeLight() {
             localStorage.setItem('theme', 'light')
+            addCss()
             document.documentElement.setAttribute('data-bs-theme', 'light')
+        }
+
+        function addCss() {
+            var storedTheme = localStorage.getItem('theme')
+            if (storedTheme == 'dark') {
+                document.getElementById('white').disabled = true
+                document.getElementById('dark').disabled = false
+            }
+            else {
+                document.getElementById('dark').disabled = true
+                document.getElementById('white').disabled = false
+
+            }
         }
 
         (() => {
@@ -280,6 +298,8 @@
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
         });
+
+        
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

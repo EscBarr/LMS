@@ -9,7 +9,6 @@
     {
         giturl = $"{request.Scheme}://{request.Host}/{Model.AssignedRepo.UserName}/{Model.AssignedRepo.Name}.git";
     }
-    
 }
 
 <div class="row">
@@ -19,12 +18,22 @@
                 <form asp-page="TaskDetails" asp-page-handler="SendToVerify" method="post">
 
                     <div class="input-group">
-                        <label class="mr-sm-2">Описание лабораторной работы:</label>
-                        <textarea class="form-control" style="width: 100%; height: fit-content;" readonly>@Model.AssignedVariantDetails.Variant.LaboratoryWork.Description</textarea>
+                        
+                        <h1 style="overflow:hidden; word-wrap:break-word;"> 
+                            <span style="white-space:pre-wrap"> Тема: @Model.AssignedVariantDetails.Variant.LaboratoryWork.Description </span>
+
+                        </h1>
+                        
+                      
                     </div>
+                    <div class="input-group">
+                        <label class="mr-sm-2">Описание лабораторной работы:</label>
+                        <textarea class="form-control" style="width: 100%; min-height:20%; " readonly>@Model.AssignedVariantDetails.Variant.LaboratoryWork.Description</textarea>
+                    </div>
+                    
                     <div class="input-group align-items-center">
                         <label class="mr-sm-2">Описание варианта:</label>
-                        <textarea class="form-control" style="width: 100%; height: fit-content;" readonly>@Model.AssignedVariantDetails.Variant.Description</textarea>
+                        <textarea class="form-control" style="width: 100%; min-height:50%;" readonly>@Model.AssignedVariantDetails.Variant.Description</textarea>
                     </div>
                     <button type="submit" class="btn btn-success ">Отправить на проверку</button>
                 </form>
@@ -47,6 +56,7 @@
                     <div class="body customCenter myHeadingPage ">
                         <h2>Студент еще не прикрепил репозиторий</h2>
                     </div>
+
                 }
                 else
                 {
@@ -65,6 +75,7 @@
                     <div class="body customCenter myHeadingPage ">
                         <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#CreateRepo">Создать репозиторий</div>
                     </div>
+                
                 }
                 else
                 {
@@ -72,11 +83,24 @@
                     <div class="body customCenter myHeadingPage ">
                        <h2>Прикрепленный репозиторий</h2>
                         <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+
+                        <form asp-page-handler="DetachRepo" method="post">
+                            <button class="btn-danger" type="submit">Открепить репозиторий</button>
+                        </form>
+
                       
+
                     </div>
                 }
             }
-
+            <h2>Комментарии к работе</h2>
+            <form asp-page-handler="SendComment" method="post">
+                <div class="input-group">
+                    <input class="form-control mr-0" id="Giturl" type="text" placeholder="Оставьте свой комментарий по поводу задания" style="min-width:fit-content; border-bottom-left-radius: 15px; border-top-left-radius: 15px;">
+                    <button class="btn-primary p-2" type="submit" style="border-bottom-right-radius: 15px; border-top-right-radius: 15px;"> <i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </form>
+           
             
             
         }

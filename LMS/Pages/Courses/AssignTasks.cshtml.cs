@@ -120,5 +120,25 @@ namespace LMS.Pages.Courses
             await _assignedVariantsRepo.Save();
             return RedirectToPage("AssignTasks", LabWorkId);
         }
+
+        public async Task<IActionResult> OnPostRandomAssign()
+        {
+            Id = HttpContext.Session.GetInt32("LabWorkId");
+            Cur_laboratoryWork = await _labWorksRepo.GetById(Id);
+            List<int> AssignmentsIds = Cur_laboratoryWork.Variants.Select(a => a.VariantId).ToList();
+            var Test = await _courseRepo.GetAllUsersFromCoursePerLab((int)CourseID, (int)Id);
+
+            foreach (var user in Test)
+            {
+                var AsVariant = user.AssignedVariants.FirstOrDefault(As => As.Variant.LaboratoryWorkId == Id);
+                if (AsVariant != null)
+                {
+                }
+                else
+                {
+                }
+            }
+            return RedirectToPage("AssignTasks", Id);
+        }
     }
 }
