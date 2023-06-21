@@ -94,6 +94,17 @@
                 }
             }
             <h2>Комментарии к работе</h2>
+            <div class="border" style="height:50%">
+
+                @{
+                    int LastUserId = 0;
+                    foreach (var item in Model.AssignedVariantDetails.HistoryMessages)
+                    {
+                        var LastUserId = item.UserId;
+                    }   
+                }
+                
+            </div>
             <form asp-page-handler="SendComment" method="post">
                 <div class="input-group">
                     <input class="form-control mr-0" id="Giturl" type="text" placeholder="Оставьте свой комментарий по поводу задания" style="min-width:fit-content; border-bottom-left-radius: 15px; border-top-left-radius: 15px;">

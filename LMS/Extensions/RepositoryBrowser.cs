@@ -114,11 +114,12 @@ namespace LMS.Extensions
             if (Path.GetExtension(path).Equals(".pdf", StringComparison.OrdinalIgnoreCase))
             {
                 //var encoding = Encoding.UTF8;
-                //using (var memoryStream = new MemoryStream())
+                //using (var memoryStream = new FileStream())
                 //{
                 //    ((Blob)entry.Target).GetContentStream().CopyTo(memoryStream);
-                //    StreamReader reader = new StreamReader(memoryStream, Encoding.UTF8);
-                //    model.Data = reader.;
+                //    StreamReader reader = new StreamReader(memoryStream, Encoding.UTF8, true);
+                //    reader.BaseStream.CopyTo(memoryStream);
+                //    model.Data = memoryStream.ToArray();
                 //}
                 return null;
             }

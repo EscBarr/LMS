@@ -1,0 +1,63 @@
+﻿@using LMS.Extensions
+@using LMS.Models
+
+@model TestResultModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Результаты запуска в контейнере";
+}
+
+@if (Model.UmlFounded)
+{
+    if (Model.ProcessExtCode == 0)
+    {
+        <h2 class="text-success text-center">Тесты пройдены успешно</h2>
+        <h3 class="text-success">Лог тестирования</h3>
+        <div class=" border pt-2">
+            <pre><code>@Model.stdOut</code></pre>
+        </div>
+    }
+    else
+    {
+
+        <h2 class="text-danger text-center">Тесты не пройдены</h2>
+        <div class="row">
+            <div class="col">
+                <h3 class="text-danger">Лог тестирования</h3>
+                <div class="border pt-2">
+                    <pre><code>@Model.stdOut</code></pre>
+                </div>
+            </div>
+            <div class="col">
+                <h3 class="text-danger">Лог ошибок</h3>
+                <div class="border pt-2">
+                    <pre><code>@Model.stdErr</code></pre>
+                </div>
+            </div>
+        </div>
+
+
+    }
+}
+else
+{
+    <h2 class="text-danger text-center">Файл drone.yml не найден, тестирование невозможно</h2>
+}
+
+
+
+<script src="~/lib/highlight.js/highlight.min.js"></script>
+<script src="~/lib/highlightjs-line-numbers.js/highlightjs-line-numbers.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script>
+    $(document).ready(function () {
+        addCss()
+        $('pre code').each(function (i, block) {
+            hljs.lineNumbersBlock(block);
+        });
+    });
+
+
+
+</script>

@@ -26,13 +26,21 @@ app.Run();
 
 void CreateNeedDirectory()
 {
-    var necessaryDirectories = new[] { "Repositories", "Testing" };
+    var necessaryDirectories = new[] { "Repositories" };
+
     foreach (var item in necessaryDirectories)
     {
         if (!Directory.Exists(item))
         {
             Directory.CreateDirectory(item);
         }
+    }
+
+    var test2 = Path.GetPathRoot(Environment.CurrentDirectory);
+    var testLocation = Path.Combine(test2, "Testing");
+    if (!Directory.Exists(testLocation))
+    {
+        Directory.CreateDirectory(testLocation);
     }
 }
 

@@ -59,6 +59,7 @@ namespace LMS.Pages.Courses
 
             TeacherName = await _db.Courses.Where(c => c.CourseId == Id).Select(c => c.User.Name + " " + c.User.Surname).FirstOrDefaultAsync();
             HttpContext.Session.SetInt32("TaskId", Id);
+            AssignedVariantDetails.HistoryMessages = AssignedVariantDetails.HistoryMessages.OrderBy(m => m.SendDate).ToList();
             return Page();
         }
 

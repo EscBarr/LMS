@@ -35,7 +35,7 @@
 
 <div class="col-3 order-3 ">
         <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Код
+            Действия
         </button>
         <ul class="dropdown-menu" style="top:6px; width:400px; max-width: calc(100vw-320px);">
             <li class="p-3">
@@ -54,15 +54,19 @@
             <li class ="p-3">
                 <a href="@Url.Action("Download", new { userName = currUser,  repoName = currRepo, id = currId, path = Model.Parent })"> <i class="fa-solid fa-file-zipper"></i> Скачать ZIP</a>
             </li>
+            <li><hr class="dropdown-divider"></li>
+            <li class="p-3">
+                <a href="@Url.Action("StartTest", new { userName = currUser,  repoName = currRepo, id = currId, path = Model.Parent })"> <i class="fa-solid fa-flask"></i> Запуск тестирования</a>
+            </li>
         </ul>
     
 </div>
 
     <div class="col-3">
-        <a href="#"><span><i class="fa-brands fa-git-alt"></i> <b>@repo.Branches.Count()</b> Количество веток</span> </a>
+        <span><i class="fa-brands fa-git-alt"></i> <b>@repo.Branches.Count()</b> Количество веток</span>
     </div>
         <div class="col-6 text-center">
-        <a href="#"><span> <i class="fas fa-history"></i> <b>@repo.Commits.Count()</b> Количество коммитов</span> </a>
+            <span> <i class="fas fa-history"></i> <b>@repo.Commits.Count()</b> Количество коммитов</span>
         </div>
        
 </div>
@@ -104,12 +108,8 @@
         function CopyToBuffer() {
 
             var copyText = document.getElementById("Giturl");
-
-
             copyText.select();
             copyText.setSelectionRange(0, 99999); 
-
             navigator.clipboard.writeText(copyText.value);
-
         }
 </script>

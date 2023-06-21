@@ -61,7 +61,7 @@
 <div id="DecsofElem" class="d-flex align-items-center" @*style="justify-content: space-between"*@> 
     <div class="col-sm-2">Название</div>
     <div class="col-sm-4">Описание</div>
-    <div class="col-sm-3">Дата обновления</div>
+    <div class="col-sm-3">Дата создания</div>
     <div class="col-sm-3" style="visibility: hidden">Удаление</div>
 </div>
 <div id="ContentRepos"></div>
@@ -79,8 +79,8 @@ $.ajax(
                                 dateStyle: 'short',
                                 timeStyle: 'short'
                             };
-                let NavBarName = document.getElementById("Namenavbar");
-                NavBarName.textContent = "LMS.Git";
+                //let NavBarName = document.getElementById("Namenavbar");
+                //NavBarName.textContent = "LMS.Git";
                 let contentZone = document.getElementById("ContentRepos");
                 repos.sort(function(a, b) 
                 {

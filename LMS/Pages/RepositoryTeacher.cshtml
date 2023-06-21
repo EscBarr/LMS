@@ -33,7 +33,7 @@
 <div id="DecsofElem" class="d-flex align-items-center" @*style="justify-content: space-between"*@> 
     <div class="col-sm-3">Название</div>
     <div class="col-sm-6">Описание</div>
-    <div class="col-sm-3">Дата обновления</div>
+    <div class="col-sm-3">Дата создания</div>
    @*<div class="col-sm-3" style="visibility: hidden">Удаление</div>*@
 </div>
 <div id="ContentRepos"></div>
@@ -47,8 +47,8 @@
                 },
                 success: (groups) => {
                     let sel = $('#groupSelect');
-                      let NavBarName = document.getElementById("Namenavbar");
-                      NavBarName.textContent = "LMS.Git";
+                      //let NavBarName = document.getElementById("Namenavbar");
+                      //NavBarName.textContent = "LMS.Git";
                     if (groups.length === 0) {
                         alert('Не существует групп студентов');
                         history.go(-1);

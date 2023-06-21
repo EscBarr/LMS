@@ -178,7 +178,7 @@ namespace LMS.Controllers
             Response.ContentType = "application/zip";
             repoName = Path.Combine(userName, repoName);
             string headerValue = repoName + "-" + id + ".zip";
-            Response.Headers.Add("Content-Disposition", headerValue);
+            Response.Headers.Add("Content-Disposition", "attachment; filename=" + headerValue);
 
             using (var outputZip = new ZipFile())
             {
@@ -220,6 +220,27 @@ namespace LMS.Controllers
                     // recursive call
                     AddTreeToZip(browser, item.TreeName, item.Path, outputZip);
                 }
+            }
+        }
+
+        //TODO Тестирование с Drone
+        public async Task<ActionResult> StartTest(string userName, string repoName, string id, string path)
+        {
+            var name = id;
+            repoName = Path.Combine(userName, repoName);
+            using (var outputZip = new ZipFile())
+            {
+                outputZip.UseZip64WhenSaving = Zip64Option.Always;
+                outputZip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                outputZip.AlternateEncoding = Encoding.Unicode;
+
+                using (var browser = new RepositoryBrowser(Path.Combine(GitSettings.BasePath, repoName)))
+                {
+                    AddTreeToZip(browser, name, path, outputZip);
+                }
+                DroneTest droneTest = new DroneTest(outputZip, userName);
+                await droneTest.ExecuteTask();
+                return View("TestResults", droneTest.TestResultModel);
             }
         }
     }
