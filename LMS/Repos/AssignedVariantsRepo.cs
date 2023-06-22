@@ -37,7 +37,7 @@ namespace LMS.EntityContext
 
         public async Task<AssignedVariant> GetById(int Id)
         {
-            return await _db.AssignedVariants.Include(ch => ch.HistoryMessages).Include(var => var.Variant).ThenInclude(lab => lab.LaboratoryWork).FirstOrDefaultAsync(var => var.AssignedVariantId == Id);
+            return await _db.AssignedVariants.Include(ch => ch.HistoryMessages).ThenInclude(ch => ch.User).Include(var => var.Variant).ThenInclude(lab => lab.LaboratoryWork).FirstOrDefaultAsync(var => var.AssignedVariantId == Id);
         }
 
         public async Task Create(AssignedVariant var)

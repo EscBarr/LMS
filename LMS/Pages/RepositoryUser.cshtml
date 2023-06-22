@@ -22,10 +22,10 @@
 
     
 
-      <div class="d-flex d-flex align-items-end">
-            <div class="mySubContainerForFilter">
-                <input onchange="RepoSearch()" id="RepoSearch" placeholder="Найти репозиторий…">
-            </div>
+      <div class="d-flex d-flex align-items-start">
+          @*  <div class="mySubContainerForFilter">
+                <input onchange="RepoSearch()" id="RepoSearch" placeholder="Найти репозиторий…" hidden>
+            </div>*@
             @{
                 var Role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
                 if (Role == "Teacher")
@@ -51,7 +51,7 @@
                     @Html.TextBox("Name", null, new { id = "newName" })
                     @Html.Label("Описание репозитория:\t")
                     @Html.TextBox("Desc", null, new { id = "newDesc" })
-                    <p><input type="button" class="btn btn-dark" value="Подтвердить" onclick="createRepo()" /></p>
+                    <p><input type="button" class="btn btn-success mt-2" value="Подтвердить" onclick="createRepo()" /></p>
                 }
             </div>
             <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
@@ -104,7 +104,7 @@ $.ajax(
                     let divContent = document.createElement('div');
                     divContent.className = "nameTheme col-sm-2";
                     let RefContent = document.createElement('a');
-                    RefContent.textContent = sessionStorage.getItem(gitusername) + '/' + repo.name +'.git';
+                    RefContent.textContent = repo.name;
                     RefContent.setAttribute('href',sessionStorage.getItem(gitusername) + '/' + repo.name +'.git');
                     RefContent.setAttribute('title',"Нажмите для перехода в репозиторий");
                     divContent.appendChild(RefContent);

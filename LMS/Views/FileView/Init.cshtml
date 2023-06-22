@@ -7,9 +7,7 @@
     var request = ViewContext.HttpContext.Request;
     var giturl = $"{request.Scheme}://{request.Host}/{currUser}/{currRepo}.git";
 }
-<div class="ui clearing segment">
-    <h3 class="ui left floated header">@currUser / @currRepo</h3>
-</div>
+<h1 class="border- border-bottom">@currRepo</h1>
 <div class="ui container">
     <div class="ui grid">
         <div class="sixteen wide column content">

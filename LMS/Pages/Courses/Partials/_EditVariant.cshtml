@@ -1,26 +1,41 @@
 ﻿@using LMS.EntityСontext
-@model Variant
+@model EditVarModel 
 @{
 
 }
+
+   
 
 
 <div class="container-fluid ">
     <div class="col text-center">
         <form asp-page="ManageTask" asp-page-handler="UpdateVariant" method="post">
-            <input type="hidden" asp-for="@Model.VariantId"/>
+            <input type="hidden" name="VariantId" value="@Model.Variant.VariantId" />
             <div class="input-group">
                 <label class="mr-sm-2">Номер варианта:</label>
-                <input class="form-control" asp-for="@Model.VariantNumber" type="number" min="1" value="@Model.VariantNumber" />
+                <input class="form-control" name="VariantNumber" type="number" min="1" value="@Model.Variant.VariantNumber" />
             </div>
             <div class="input-group">
                 <label class="mr-sm-2">Описание варианта:</label>
-                <textarea class="form-control" asp-for="@Model.Description" style="width: 100%; height: 500px;">@Model.Description </textarea>
+                <textarea class="form-control" name="Description" style="width: 100%; height: 500px;">@Model.Variant.Description </textarea>
             </div>
+            <label class="mr-sm-2">Выберите репозиторий для работы:</label>
+            <select class="selectpicker form-control" data-style="btn border" title="Репозиторий" name="SelectedRepoId" asp-items="@Model._AllRepos">
+                <option value="0">Репозиторий</option>
+            </select>
             <button type="submit" class="btn btn-success ">Изменить</button>
+            
         </form>
     </div>
 
 
 </div>
 <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker('show');
+    });
+</script>
+

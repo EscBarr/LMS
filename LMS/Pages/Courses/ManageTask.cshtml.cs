@@ -4,11 +4,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace LMS.Pages
 {
+    public class EditVarModel
+    {
+        public Variant Variant { get; set; }//Вариант курса для добавления
+        public List<SelectListItem> _AllRepos { get; set; }
+
+        public int SelectedRepoId { get; set; }
+    }
+
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Teacher")]
     public class LaboratoryWorksModel : PageModel
     {
@@ -35,6 +44,11 @@ namespace LMS.Pages
         [BindProperty]
         public Variant Variant { get; set; }//Вариант курса для добавления
 
+        public List<SelectListItem> _AllRepos { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int SelectedRepoId { get; set; }
+
         public LaboratoryWorksModel(ApplicationContext db, /*CourseRepo courseRepo,*/ LabWorksRepo labWorksRepo)
         {
             _db = db;
@@ -56,8 +70,21 @@ namespace LMS.Pages
             CourseName = await _db.Courses.Where(c => c.CourseId == CourseID).Select(c => c.Name).FirstOrDefaultAsync();
             //TODO ЗАПРОС К БД С ПОЛЯМИ ДЛЯ ЗАПОЛНЕНИЯ ЗАДАНИЯ
             Cur_laboratoryWork = await _labWorksRepo.GetById(Id);
+            SetRepoData();
             HttpContext.Session.SetInt32("LabWorkId", (int)Id); //Сохраняем ID задания для дальнейшего доступа(добавление вариантов,прикрепление репозитория)
             return Page();
+        }
+
+        private void SetRepoData()
+        {
+            var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var TeacherRepos = _db.Repos.Where(repo => repo.UserId == curUserId).Select(repo => new { repo.Id, repo.Name }).ToList();
+            _AllRepos = new List<SelectListItem>();
+            foreach (var item in TeacherRepos)
+            {
+                var Repos = new SelectListItem { Value = item.Id.ToString(), Text = item.Name };
+                _AllRepos.Add(Repos);
+            }
         }
 
         public async Task<IActionResult> OnPostUpdateLab()
@@ -81,6 +108,7 @@ namespace LMS.Pages
         {
             var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
             Variant.LaboratoryWorkId = LabWorkId;
+            Variant.AttachedRepoId = SelectedRepoId;
             await _labWorksRepo.AddVariant(LabWorkId, Variant);
             await _labWorksRepo.Save();
             return RedirectToPage("ManageTask", LabWorkId);
@@ -89,14 +117,25 @@ namespace LMS.Pages
         public async Task<PartialViewResult> OnGetVariantDetails()
         {
             var test = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID);
-            return Partial("_EditVariant", await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID));
+            SetRepoData();
+            EditVarModel editVarModel = new EditVarModel();
+            editVarModel.Variant = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID);
+            editVarModel._AllRepos = _AllRepos;
+            return Partial("_EditVariant", editVarModel);
         }
 
-        public async Task<IActionResult> OnPostUpdateVariant(Variant variant)
+        public async Task<IActionResult> OnPostUpdateVariant(int VariantId, int VariantNumber, string Description, int SelectedRepoId)
         {
             var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
-            variant.LaboratoryWorkId = LabWorkId;
-            await _labWorksRepo.UpdateVariant(variant);
+            var Variant = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == VariantId);
+            Variant.LaboratoryWorkId = LabWorkId;
+            if (SelectedRepoId != 0)
+            {
+                Variant.AttachedRepoId = SelectedRepoId;
+            }
+            Variant.Description = Description;
+            Variant.VariantNumber = VariantNumber;
+            await _labWorksRepo.UpdateVariant(Variant);
             await _labWorksRepo.Save();
             return RedirectToPage("ManageTask", LabWorkId);
         }

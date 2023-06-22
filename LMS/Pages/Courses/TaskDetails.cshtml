@@ -15,9 +15,9 @@
     <div class="col-7">
         <div class="container-fluid ">
             <div class="col text-center">
-                <form asp-page="TaskDetails" asp-page-handler="SendToVerify" method="post">
+                
 
-                    <div class="input-group">
+                    <div class="input-group mt-3">
                         
                         <h1 style="overflow:hidden; word-wrap:break-word;"> 
                             <span style="white-space:pre-wrap"> Тема: @Model.AssignedVariantDetails.Variant.LaboratoryWork.Description </span>
@@ -35,8 +35,55 @@
                         <label class="mr-sm-2">Описание варианта:</label>
                         <textarea class="form-control" style="width: 100%; min-height:50%;" readonly>@Model.AssignedVariantDetails.Variant.Description</textarea>
                     </div>
-                    <button type="submit" class="btn btn-success ">Отправить на проверку</button>
-                </form>
+                    @{
+                        var Role1 = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+                        if (Role1 == "Teacher")
+                        {
+                        if (@Model.AssignedVariantDetails.CompletionDateTime != DateTime.MinValue)
+                        {
+                            <form asp-page="TaskDetails" asp-page-handler="RateWork" method="post">
+                                <div class="input-group align-items-center">
+                                    <label class="mr-sm-2">Оценка:</label>
+                                    <input class="form-control" name="Grade" type="number" min="1" max="@Model.AssignedVariantDetails.Variant.LaboratoryWork.MaxMark" value="@Model.AssignedVariantDetails.Mark" />
+                                </div>
+
+                                <button type="submit" class="btn btn-success mt-3">Выставить оценку</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span>Студент еще не отправил работу на проверку</span>
+                        }
+                        
+                    }
+                    else
+                    {
+                        if (@Model.AssignedVariantDetails.Mark != 0)
+                        {
+                            <div class="input-group align-items-center">
+                                <label class="mr-sm-2">Оценка:</label>
+                                <input class="form-control" name="Grade" type="number" readonly value="@Model.AssignedVariantDetails.Mark" />
+                            </div>
+                        }
+                        else
+                        {
+                            if (Model.AssignedVariantDetails.RepoID!=0)
+                            {
+                                <form asp-page="TaskDetails" asp-page-handler="SendToVerify" method="post">
+                                    <button type="submit" class="btn btn-success mt-3">Отправить на проверку</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span>Вы еще не прикрепили репозиторий для проверки</span>
+                            }
+
+                        }
+                       
+                    }
+                    }
+                   
+               
             </div>
 
 
@@ -70,44 +117,77 @@
             }
             else if (Role == "Student")
             {
-                if (Model.AssignedVariantDetails.RepoID == 0)
+                if (Model.AssignedVariantDetails.TeacherAttachedRepoId == 0)
                 {
-                    <div class="body customCenter myHeadingPage ">
-                        <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#CreateRepo">Создать репозиторий</div>
-                    </div>
-                
+                    if (Model.AssignedVariantDetails.RepoID == 0)
+                    {
+                        <div class="body customCenter myHeadingPage ">
+                            <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#CreateRepo">Создать репозиторий</div>
+                        </div>
+
+                    }
+                    else
+                    {
+
+                        <div>
+                            <h2>Прикрепленный репозиторий</h2>
+                            <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+
+                            <form asp-page-handler="DetachRepo" method="post">
+                                <button class="btn btn-danger mt-3" type="submit">Открепить репозиторий</button>
+                            </form>
+
+
+
+                        </div>
+                    }
                 }
                 else
                 {
-                    
-                    <div class="body customCenter myHeadingPage ">
-                       <h2>Прикрепленный репозиторий</h2>
-                        <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+                    if (Model.AssignedVariantDetails.RepoID == 0)
+                    {
+                        <div class="body customCenter myHeadingPage ">
+                            <div class="btn custom btn-success" data-bs-toggle="modal" data-bs-target="#InitiateRepo">Получить репозиторий</div>
+                        </div>
+                    }
+                    else
+                    {
 
-                        <form asp-page-handler="DetachRepo" method="post">
-                            <button class="btn-danger" type="submit">Открепить репозиторий</button>
-                        </form>
+                        <div>
+                            <h2>Прикрепленный репозиторий</h2>
+                            <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
 
-                      
-
-                    </div>
+                            <form asp-page-handler="DetachRepo" method="post">
+                                <button class="btn btn-danger mt-3" type="submit">Открепить репозиторий</button>
+                            </form>
+                        </div>
+                    }
                 }
+                
             }
             <h2>Комментарии к работе</h2>
-            <div class="border" style="height:50%">
+            <div class="border mb-2  overflow-auto" style="height:30vh; max-height:60%;">
 
                 @{
-                    int LastUserId = 0;
-                    foreach (var item in Model.AssignedVariantDetails.HistoryMessages)
+                    var itm = Model.AssignedVariantDetails.HistoryMessages.FirstOrDefault();
+                    if (itm!= null)
                     {
-                        var LastUserId = item.UserId;
-                    }   
+                        
+                        foreach (var item in Model.AssignedVariantDetails.HistoryMessages)
+                        {
+                            <div class="container-chat m-2">
+                                <p>@item.User.Name: @item.Message</p>
+                                <span class="time-right">@item.SendDate</span>
+                            </div>
+                        }   
+                    }
+                    
                 }
                 
             </div>
             <form asp-page-handler="SendComment" method="post">
                 <div class="input-group">
-                    <input class="form-control mr-0" id="Giturl" type="text" placeholder="Оставьте свой комментарий по поводу задания" style="min-width:fit-content; border-bottom-left-radius: 15px; border-top-left-radius: 15px;">
+                    <input class="form-control mr-0" name="Message" type="text" placeholder="Оставьте свой комментарий по поводу задания" style="min-width:fit-content; border-bottom-left-radius: 15px; border-top-left-radius: 15px;">
                     <button class="btn-primary p-2" type="submit" style="border-bottom-right-radius: 15px; border-top-right-radius: 15px;"> <i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </form>
@@ -140,3 +220,23 @@
     </div>
 </div>
 
+<div id="InitiateRepo" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Прикрепить репозиторий</h4><button class="close" type="button" data-bs-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form asp-page-handler="InitiateRepo" method="post">
+                    @Html.Label("Название репозитория:\t")
+                    <input type="text" asp-for="@Model.modelRepo.Name">
+                    @Html.Label("Описание репозитория:\t")
+                    <input type="text" asp-for="@Model.modelRepo.Description">
+                    <button class="btn-primary" type="submit">Добавить</button>
+                </form>
+
+            </div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-bs-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>

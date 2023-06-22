@@ -66,7 +66,7 @@ namespace LMS.Git
         //    }
         //}
 
-        private static void CreateDirectoriesSources(string RepoName, string userName)
+        public static void CreateDirectoriesSources(string RepoName, string userName)
         {
             var userDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", userName);
             if (!Directory.Exists(userDirectory))

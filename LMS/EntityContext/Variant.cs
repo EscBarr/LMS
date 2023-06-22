@@ -14,14 +14,14 @@ namespace LMS.EntityСontext
         public int VariantId { get; set; }
         public int LaboratoryWorkId { get; set; }
 
-        public int? RepoTemplateId { get; set; }
+        public int? AttachedRepoId { get; set; }
 
         public int VariantNumber { get; set; }
 
         [StringLength(1024, MinimumLength = 5)]
         public string Description { get; set; }
 
-        public RepoTemplate? AttachedRepo { get; set; }
+        //public RepositoryEntity? AttachedRepo { get; set; }
 
         public ICollection<AssignedVariant> AssignedVariants { get; set; }
         public LaboratoryWork LaboratoryWork { get; set; }

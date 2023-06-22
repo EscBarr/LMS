@@ -103,7 +103,18 @@ namespace LMS.Pages.Courses
         public async Task<IActionResult> OnPostAssignVar(int userId, int VarId, DateTime Due)
         {
             var LabWorkId = HttpContext.Session.GetInt32("LabWorkId");
-            AssignedVariant assigned = new AssignedVariant { UserId = userId, VariantId = VarId, AssignDateTime = DateTime.Now, DueDateTime = Due };
+
+            var AssignedRepoid = await _db.Variants.Where(c => c.VariantId == VarId).Select(c => c.AttachedRepoId).FirstOrDefaultAsync();
+            AssignedVariant assigned;
+            if (AssignedRepoid != null)
+            {
+                assigned = new AssignedVariant { UserId = userId, VariantId = VarId, AssignDateTime = DateTime.Now, DueDateTime = Due, TeacherAttachedRepoId = (int)AssignedRepoid };
+            }
+            else
+            {
+                assigned = new AssignedVariant { UserId = userId, VariantId = VarId, AssignDateTime = DateTime.Now, DueDateTime = Due, TeacherAttachedRepoId = 0 };
+            }
+
             await _assignedVariantsRepo.Create(assigned);
             await _assignedVariantsRepo.Save();
             return RedirectToPage("AssignTasks", LabWorkId);
@@ -116,6 +127,15 @@ namespace LMS.Pages.Courses
             assigned.VariantId = VarId;
             assigned.AssignDateTime = DateTime.Now;
             assigned.DueDateTime = Due;
+            var AssignedRepoId = await _db.Variants.Where(c => c.VariantId == VarId).Select(c => c.AttachedRepoId).FirstOrDefaultAsync();
+            if (AssignedRepoId != null)
+            {
+                assigned.TeacherAttachedRepoId = (int)AssignedRepoId;
+            }
+            else
+            {
+                assigned.TeacherAttachedRepoId = 0; 
+            }
             await _assignedVariantsRepo.Update(assigned);
             await _assignedVariantsRepo.Save();
             return RedirectToPage("AssignTasks", LabWorkId);

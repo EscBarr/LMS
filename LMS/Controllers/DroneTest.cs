@@ -49,8 +49,24 @@ namespace LMS.Controllers
                     YmlPath = file.FullName;
                 }
             }
+            bool FileCorrect = true;
+
+            string[] lines = File.ReadAllLines(YmlPath);
+
+            foreach (string line in lines)
+            {
+                if (line.Contains("type:", System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (!line.Contains("type: docker", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        FileCorrect = false;
+                        break;
+                    }
+                }
+            }
+
             TestResultModel = new TestResultModel();
-            if (cntr == 0 || cntr > 1)
+            if (cntr == 0 || cntr > 1 || !FileCorrect)
             {
                 TestResultModel.UmlFounded = false;
                 DirectoryCleanup(userDirectory);

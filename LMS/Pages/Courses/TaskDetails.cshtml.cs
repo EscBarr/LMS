@@ -87,6 +87,61 @@ namespace LMS.Pages.Courses
             return RedirectToPage("TaskDetails", Id);
         }
 
+        public async Task<IActionResult> OnPostInitiateRepo()
+        {
+            Id = (int)HttpContext.Session.GetInt32("TaskId");
+            AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
+            RepositoryEntity entity = await _db.Repos.Where(r => r.Id == AssignedVariantDetails.TeacherAttachedRepoId).FirstOrDefaultAsync();
+            if (entity != null)
+            {
+                var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
+                GitService.CreateDirectoriesSources(modelRepo.Name, NickName);//Создаем папки репозитория студента
+                var StudentDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", NickName, modelRepo.Name);//Получаем путь для копирования
+                var TeacherDirectory = Path.Combine(Environment.CurrentDirectory, "Repositories", entity.UserName, entity.Name);//Получаем откуда копировать
+                DirectoryInfo diSource = new DirectoryInfo(TeacherDirectory);
+                DirectoryInfo diTarget = new DirectoryInfo(StudentDirectory);
+                Copy(diSource, diTarget);
+                var size_repo = RepoMager.GetRepositorySize(modelRepo.Name, NickName);
+                var repo = new RepositoryEntity { Name = modelRepo.Name, Description = modelRepo.Description, DefaultBranch = "main", UserName = NickName, CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
+                try
+                {
+                    await _db.Repos.AddAsync(repo);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateException e)
+                {
+                    await Response.WriteAsync(e.Message);
+                }
+
+                AssignedVariantDetails.RepoID = repo.Id;
+                await _assignedVariantsRepo.Update(AssignedVariantDetails);
+                await _assignedVariantsRepo.Save();
+            }
+
+            return RedirectToPage("TaskDetails", Id);
+        }
+
+        private void Copy(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            // Copy each file into the new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                //Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
+                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+            }
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                Copy(diSourceSubDir, nextTargetSubDir);
+            }
+        }
+
         public async Task<IActionResult> OnPostDetachRepo()
         {
             Id = (int)HttpContext.Session.GetInt32("TaskId");
@@ -95,18 +150,38 @@ namespace LMS.Pages.Courses
             return RedirectToPage("TaskDetails", Id);
         }
 
-        public async Task<IActionResult> OnPostSendComment()
+        public async Task<IActionResult> OnPostSendComment(string Message)
         {
             Id = (int)HttpContext.Session.GetInt32("TaskId");
             var UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
+            AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
+            ChatMessages chat = new ChatMessages();
+            chat.AssignedVariantId = Id;
+            chat.UserId = UserId;
+            chat.Message = Message;
+            chat.SendDate = DateTime.Now;
+            AssignedVariantDetails.HistoryMessages.Add(chat);
+            await _assignedVariantsRepo.Update(AssignedVariantDetails);
+            await _assignedVariantsRepo.Save();
             return RedirectToPage("TaskDetails", Id);
         }
 
         public async Task<IActionResult> OnPostSendToVerify()
         {
             Id = (int)HttpContext.Session.GetInt32("TaskId");
+            AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
+            AssignedVariantDetails.CompletionDateTime = DateTime.Now;
 
+            return RedirectToPage("TaskDetails", Id);
+        }
+
+        public async Task<IActionResult> OnPostRateWork(int Grade)
+        {
+            Id = (int)HttpContext.Session.GetInt32("TaskId");
+            AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
+            AssignedVariantDetails.Mark = Grade;
+            await _assignedVariantsRepo.Update(AssignedVariantDetails);
+            await _assignedVariantsRepo.Save();
             return RedirectToPage("TaskDetails", Id);
         }
     }

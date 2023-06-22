@@ -14,7 +14,8 @@ namespace LMS.EntityСontext
         public int AssignedVariantId { get; set; }
         public int UserId { get; set; }
         public int VariantId { get; set; }
-        //public int ChatID { get; set; }
+
+        public int TeacherAttachedRepoId { get; set; }
 
         public int RepoID { get; set; }
 
