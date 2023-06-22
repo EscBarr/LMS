@@ -44,7 +44,7 @@
                             <form asp-page="TaskDetails" asp-page-handler="RateWork" method="post">
                                 <div class="input-group align-items-center">
                                     <label class="mr-sm-2">Оценка:</label>
-                                    <input class="form-control" name="Grade" type="number" min="1" max="@Model.AssignedVariantDetails.Variant.LaboratoryWork.MaxMark" value="@Model.AssignedVariantDetails.Mark" />
+                                    <input class="form-control mt-2" name="Grade" type="number" min="1" max="@Model.AssignedVariantDetails.Variant.LaboratoryWork.MaxMark" value="@Model.AssignedVariantDetails.Mark" />
                                 </div>
 
                                 <button type="submit" class="btn btn-success mt-3">Выставить оценку</button>
@@ -62,7 +62,7 @@
                         {
                             <div class="input-group align-items-center">
                                 <label class="mr-sm-2">Оценка:</label>
-                                <input class="form-control" name="Grade" type="number" readonly value="@Model.AssignedVariantDetails.Mark" />
+                                <input class="form-control mt-2" name="Grade" type="number" readonly value="@Model.AssignedVariantDetails.Mark" />
                             </div>
                         }
                         else
@@ -108,10 +108,9 @@
                 else
                 {
 
-                    <div class="body customCenter myHeadingPage ">
+                    <div>
                         <h2>Прикрепленный репозиторий</h2>
                         <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
-                        
                     </div>
                 }
             }
@@ -133,12 +132,15 @@
                             <h2>Прикрепленный репозиторий</h2>
                             <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
 
-                            <form asp-page-handler="DetachRepo" method="post">
-                                <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
-                            </form>
+                            @{
 
-
-
+                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime != DateTime.MinValue)
+                                {
+                                    <form asp-page-handler="DetachRepo" method="post">
+                                        <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
+                                    </form>
+                                }
+                            }
                         </div>
                     }
                 }
@@ -156,10 +158,16 @@
                         <div>
                             <h2>Прикрепленный репозиторий</h2>
                             <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
+                            @{
 
-                            <form asp-page-handler="DetachRepo" method="post">
-                                <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
-                            </form>
+                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime != DateTime.MinValue)
+                                {
+                                    <form asp-page-handler="DetachRepo" method="post">
+                                        <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
+                                    </form>
+                                }
+                            }
+                             
                         </div>
                     }
                 }

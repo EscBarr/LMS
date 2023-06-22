@@ -115,7 +115,7 @@
 
                                         @item.Variant.LaboratoryWork.Name
                                         <div class="footerCourse">
-                                            <i class="fas fa-tasks"> Номер варианта: @item.Variant.VariantNumber</i>
+                                            <i class="fas fa-tasks"> </i> Номер варианта: @item.Variant.VariantNumber
                                             <span class=""> @item.User.Surname @item.User.Name @item.User.Patronymic</span>
                                             @{
                                                 if (@item.DueDateTime < DateTime.Now)
@@ -159,7 +159,7 @@
 
                                         @item.Variant.LaboratoryWork.Name
                                         <div class="footerCourse m-1">
-                                            <i class="fas fa-tasks"> Номер варианта: @item.Variant.VariantNumber</i>
+                                            <i class="fas fa-tasks"> </i> Номер варианта: @item.Variant.VariantNumber
                                             <span class="mt-1"> @item.User.Surname @item.User.Name @item.User.Patronymic</span>
                                             @{
                                                 if (@item.DueDateTime < item.CompletionDateTime)

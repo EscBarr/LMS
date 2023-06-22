@@ -171,7 +171,8 @@ namespace LMS.Pages.Courses
             Id = (int)HttpContext.Session.GetInt32("TaskId");
             AssignedVariantDetails = await _assignedVariantsRepo.GetById(Id);
             AssignedVariantDetails.CompletionDateTime = DateTime.Now;
-
+            await _assignedVariantsRepo.Update(AssignedVariantDetails);
+            await _assignedVariantsRepo.Save();
             return RedirectToPage("TaskDetails", Id);
         }
 
