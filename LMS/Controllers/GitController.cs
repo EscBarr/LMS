@@ -47,39 +47,40 @@ namespace LMS.Controllers
             return false;
         }
 
-        //TODO ÏÐÎÂÅÐÈÒÜ ÏÐÀÂÈËÜÍÎÑÒÜ ÑÎÇÄÀÍÈß ÏÓÒÈ
-
         [Route("{userName}/{repoName}.git/git-upload-pack")]
         public IActionResult ExecuteUploadPack(string userName, string repoName)
         {
             var Id = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            if (HasPermission(Id, repoName))
+            if (!HasPermission(Id, repoName))
             {
-                return TryGetResult(repoName, () => GitUploadPack(Path.Combine(userName, repoName)));
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            return TryGetResult(repoName, () => GitUploadPack(Path.Combine(userName, repoName)));
         }
 
         [Route("{userName}/{repoName}.git/git-receive-pack")]
         public IActionResult ExecuteReceivePack(string userName, string repoName)
         {
             var Id = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            if (HasPermission(Id, repoName))
+            if (!HasPermission(Id, repoName))
             {
-                return TryGetResult(repoName, () => GitUploadPack(Path.Combine(userName, repoName)));
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            return TryGetResult(repoName, () => GitReceivePack(Path.Combine(userName, repoName)));
         }
 
         [Route("{userName}/{repoName}.git/info/refs")]
         public IActionResult GetInfoRefs(string userName, string repoName, string service)
         {
             var Id = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            if (HasPermission(Id, repoName))
+            if (!HasPermission(Id, repoName))
             {
-                return TryGetResult(repoName, () => GitUploadPack(Path.Combine(userName, repoName)));
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            return TryGetResult(repoName, () => GitCommand(Path.Combine(userName, repoName), service, true));
         }
     }
 }

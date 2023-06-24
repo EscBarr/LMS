@@ -134,7 +134,7 @@ namespace LMS.Pages.Courses
             }
             else
             {
-                assigned.TeacherAttachedRepoId = 0; 
+                assigned.TeacherAttachedRepoId = 0;
             }
             await _assignedVariantsRepo.Update(assigned);
             await _assignedVariantsRepo.Save();
