@@ -43,6 +43,13 @@
       "files": [
         "highlightjs-line-numbers.min.js"
       ]
+    },
+    {
+      "library": "jquery.blockUI@2.70",
+      "destination": "wwwroot/jquery.blockUI/",
+      "files": [
+        "jquery.blockUI.min.js"
+      ]
     }
   ]
 }

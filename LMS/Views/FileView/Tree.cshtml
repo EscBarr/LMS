@@ -77,7 +77,7 @@
         <tr>
             <th scope="col">@lastcommit.Author.Name</th>
             <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита: @lastcommit.Message</th>
-            <th scope="col"><span> Дата: @lastcommit.Author.When.ToString("yyyy-MM-dd HH:mm:ss")</span></th>
+            <th scope="col"><span> Дата: @lastcommit.Author.When.LocalDateTime</span></th>
         </tr>
     </thead>
 
@@ -103,20 +103,31 @@
 </table>
 
 
-
+<script src="~/lib/jquery.blockUI/jquery.blockUI.min.js"></script>
 <script>
-        function CopyToBuffer() {
-
+        function CopyToBuffer() 
+        {
             var copyText = document.getElementById("Giturl");
             copyText.select();
             copyText.setSelectionRange(0, 99999); 
             navigator.clipboard.writeText(copyText.value);
         }
+
+</script>
+<script>
     $(document).ready(function () {
+
         $('#Test').click(function () {
             $.blockUI({
-                message: '<h1>Подождите выполняется тестирование</h1>',
-                
+                message: '<i class="fas fa-cog fa-5x fa-spin"></i>',
+                css: {
+                    border: 'none',
+                    backgroundColor: 'transparent'
+                    
+                },
+                overlayCSS: { backgroundColor: '#AAAFB4' }
+
             });
         });
+    });
 </script>
