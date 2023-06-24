@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\GitPart\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Repositories\makar\" />
   </ItemGroup>
 

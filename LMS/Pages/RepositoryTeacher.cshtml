@@ -1,4 +1,5 @@
 ﻿@page "{handler?}"
+@using System.Security.Claims;
 @model LMS.Pages.RepositoryTeacherModel
 @{
     Layout = "_Layout";
@@ -30,6 +31,7 @@
                 <input title="Введите название для поиска"  id="RepoSearch" placeholder="Найти репозиторий…" style="visibility:hidden">
             </div>
         </div>
+
 <div id="DecsofElem" class="d-flex align-items-center" @*style="justify-content: space-between"*@> 
     <div class="col-sm-3">Название</div>
     <div class="col-sm-6">Описание</div>

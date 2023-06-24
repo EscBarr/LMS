@@ -18,44 +18,16 @@
 </ul>
 <div class="d-flex flex-column pb-4 pt-4 tab-content overflow-auto justify-content-center text-center " id="myTabContent">
     <div class="tab-pane fade show active align-middle" id="ActiveTask-tab-pane" role="tabpanel" aria-labelledby="Users-tab" tabindex="0" @*style="margin:25vh"*@>
+
         
-        @if (Model.AssignedVariants.Count==0)
-        {
-            <h2>Заданий пока нет</h2>
-        }
-        else
-        {
-            foreach (var item in Model.AssignedVariants)
+            @if (Model.AssignedVariants.Count == 0)
             {
-                <div class="ContainerCourse text-start">
-                    <h4>@item.Variant.LaboratoryWork.Name</h4>
-                    <div class="footerCourse">
-                        Номер варианта: @item.Variant.VariantNumber
-                       
-                    </div>
-                    <div class="footerCourse">
-                        Стоимость в баллах: @item.Variant.LaboratoryWork.MaxMark
-                    </div>
-                    <div class="footerCourse">
-
-                        <span class="mt-1">Крайний срок: @item.DueDateTime</span>
-                    </div>
-                    
-                    <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
-                </div>
-            }
-        }
-
-    </div>
-    <div class="tab-pane fade align-middle" id="DueTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
-        @{
-            @if (Model.DueAssignedVariants.Count == 0)
-            {
-                <h2>Отлично! Вы не просрочили ни одной работы.</h2>
+                <h2>Заданий пока нет</h2>
             }
             else
             {
-                foreach (var item in Model.DueAssignedVariants)
+            <div class="d-flex">
+                @foreach (var item in Model.AssignedVariants)
                 {
                     <div class="ContainerCourse text-start">
                         <h4>@item.Variant.LaboratoryWork.Name</h4>
@@ -67,53 +39,98 @@
                             Стоимость в баллах: @item.Variant.LaboratoryWork.MaxMark
                         </div>
                         <div class="footerCourse">
-                            <span class="mt-1 text-danger">Крайний срок: @item.DueDateTime</span>
-                        </div>
 
-                        <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
-                    </div>
-                }
-            }
-            
-        }
-    </div>
-    <div class="tab-pane fade align-middle" id="CompletedTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
-
-        @{
-            @if (Model.CompletedAssignedVariants.Count == 0)
-            {
-                <h2>Тут будут все выполненные работы</h2>
-            }
-            else
-            {
-                foreach (var item in Model.CompletedAssignedVariants)
-                {
-                    <div class="ContainerCourse text-start">
-                        <h4>@item.Variant.LaboratoryWork.Name</h4>
-                        <div class="footerCourse">
-                            Номер варианта: @item.Variant.VariantNumber
-
-                        </div>
-                        <div class="footerCourse">
-                            Получено баллов: @item.Mark/@item.Variant.LaboratoryWork.MaxMark
-                        </div>
-                        <div class="footerCourse">
-                            <span class="mt-1">Дата сдачи: @item.CompletionDateTime</span>
-                        </div>
-                        <div class="footerCourse">
                             <span class="mt-1">Крайний срок: @item.DueDateTime</span>
                         </div>
 
                         <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
                     </div>
                 }
+            </div>
+                
             }
 
-        }
-        @{
+       
+       
 
-            
-        }
+    </div>
+    <div class="tab-pane fade align-middle" id="DueTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+       
+            @{
+                @if (Model.DueAssignedVariants.Count == 0)
+                {
+                    <h2>Отлично! Вы не просрочили ни одной работы.</h2>
+                }
+                else
+                {
+                    <div class="d-flex">
+                        @foreach (var item in Model.DueAssignedVariants)
+                        {
+                        
+                                <div class="ContainerCourse text-start">
+                                    <h4>@item.Variant.LaboratoryWork.Name</h4>
+                                    <div class="footerCourse">
+                                        Номер варианта: @item.Variant.VariantNumber
+
+                                    </div>
+                                    <div class="footerCourse">
+                                        Стоимость в баллах: @item.Variant.LaboratoryWork.MaxMark
+                                    </div>
+                                    <div class="footerCourse">
+                                        <span class="mt-1 text-danger">Крайний срок: @item.DueDateTime</span>
+                                    </div>
+
+                                    <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                                </div>
+
+                        }
+                    </div>
+                    
+                }
+
+            }
+        
+        
+    </div>
+    <div class="tab-pane fade align-middle" id="CompletedTasks-tab-pane" role="tabpanel" aria-labelledby="Labs-tab" tabindex="0">
+       
+            @{
+                @if (Model.CompletedAssignedVariants.Count == 0)
+                {
+                    <h2>Тут будут все выполненные работы</h2>
+                }
+                else
+                {
+                    <div class="d-flex">
+                        @foreach (var item in Model.CompletedAssignedVariants)
+                        {
+                            <div class="ContainerCourse text-start">
+                                <h4>@item.Variant.LaboratoryWork.Name</h4>
+                                <div class="footerCourse">
+                                    Номер варианта: @item.Variant.VariantNumber
+
+                                </div>
+                                <div class="footerCourse">
+                                    Получено баллов: @item.Mark/@item.Variant.LaboratoryWork.MaxMark
+                                </div>
+                                <div class="footerCourse">
+                                    <span class="mt-1">Дата сдачи: @item.CompletionDateTime</span>
+                                </div>
+                                <div class="footerCourse">
+                                    <span class="mt-1">Крайний срок: @item.DueDateTime</span>
+                                </div>
+
+                                <a asp-page="TaskDetails" asp-route-id="@item.AssignedVariantId">Просмотреть</a>
+                            </div>
+                        }
+                    </div>
+                    
+                }
+
+            }
+        
+
+    
     </div>
 
 </div> 

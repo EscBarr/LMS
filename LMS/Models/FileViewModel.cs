@@ -10,7 +10,6 @@ namespace LMS.Models
         private GitObject _object;
         private string _path;
         private string _name;
-        private string _comment;
 
         public Repository Repository => _repository;
         public GitObject Object => _object;

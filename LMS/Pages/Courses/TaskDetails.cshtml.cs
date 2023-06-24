@@ -47,6 +47,10 @@ namespace LMS.Pages.Courses
             {
                 return NotFound("Назначенное задание не найдено");
             }
+            if (int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) != AssignedVariantDetails.UserId && User.Claims.First(c => c.Type == ClaimTypes.Role).Value != "Teacher")
+            {
+                return BadRequest("Задание не было назначено вам");
+            }
             if (AssignedVariantDetails.RepoID != 0)
             {
                 AssignedRepo = await _db.Repos.FirstOrDefaultAsync(r => r.Id == AssignedVariantDetails.RepoID);

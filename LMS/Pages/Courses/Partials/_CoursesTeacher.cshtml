@@ -18,7 +18,7 @@
     {
         <div class="ContainerCourse">
             <a asp-page="Manage" asp-route-id="@item.CourseId">@item.Name</a>
-            <hr style="background-color:black; color:black;  height: 2px; border: none; opacity:1; width:100%">
+            <hr style="opacity:1; width:100%">
             <div class="footerCourse">
                 <i class="fa-solid fa-user"></i> @item.Users.Count()
                 <i class="fas fa-tasks"></i>  @item.LaboratoryWorks.Count()

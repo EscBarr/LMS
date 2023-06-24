@@ -11,6 +11,9 @@ using LMS.Repos;
 using LMS.EntityContext;
 using LMS.Git;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Authentication;
+using LMS.Services.BasicAuth;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace LMS.StartupPrep
 {
@@ -81,6 +84,13 @@ namespace LMS.StartupPrep
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddBasic();
+
             //ПАРАМЕТРЫ ТОКЕНА
             //Параметры авторизации
             services.AddAuthorization(options =>

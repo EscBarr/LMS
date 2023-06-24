@@ -1,4 +1,6 @@
-﻿namespace LMS.StartupPrep
+﻿using LMS.Services.BasicAuth;
+
+namespace LMS.StartupPrep
 {
     public static partial class MiddlewareInitializer
     {
@@ -32,6 +34,7 @@
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMvc(routes => RouteConfig.RegisterRoutes(routes));
+
             //app.UseSwagger().UseSwaggerUI();
 
             return app;
