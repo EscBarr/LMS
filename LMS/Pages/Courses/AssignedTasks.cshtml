@@ -26,7 +26,7 @@
             }
             else
             {
-            <div class="d-flex">
+            <div class="MainContainerCourse">
                 @foreach (var item in Model.AssignedVariants)
                 {
                     <div class="ContainerCourse text-start">
@@ -63,12 +63,12 @@
                 }
                 else
                 {
-                    <div class="d-flex">
+                <div class="MainContainerCourse">
                         @foreach (var item in Model.DueAssignedVariants)
                         {
                         
                                 <div class="ContainerCourse text-start">
-                                    <h4>@item.Variant.LaboratoryWork.Name</h4>
+                                    <h4 class="border-2 border-bottom">@item.Variant.LaboratoryWork.Name</h4>
                                     <div class="footerCourse">
                                         Номер варианта: @item.Variant.VariantNumber
 
@@ -101,7 +101,7 @@
                 }
                 else
                 {
-                    <div class="d-flex">
+                <div class="MainContainerCourse">
                         @foreach (var item in Model.CompletedAssignedVariants)
                         {
                             <div class="ContainerCourse text-start">

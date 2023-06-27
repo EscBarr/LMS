@@ -160,36 +160,20 @@
             info.css('display', 'none');
             vcsteacher.css('display', 'none');
             vcs.css('display', 'none');
-            //disciplines.css('display', 'none');
             journal.css('display', 'none');
             group.css('display', 'none');
-            //template.css('display', 'none');
-            //speciality.css('display', 'none');
-            //variant.css('display', 'none');
             cr.css('display', 'none');
             aw.css('display', 'none');
             contest.css('display', 'none');
-            //themes.css('display', 'none');
-            //components.css('display', 'none');
             results.css('display', 'none');
-            //plans.css('display', 'none');
             users.css('display', 'none');
             let roles = JSON.parse(sessionStorage.getItem('roles'));
             if (roles == null) return;
             if (roles.includes('Teacher')) {
                 btnLog.style = "display: block";
                 info.css('display', 'block');
-                //template.css('display', 'block');
-                //variant.css('display', 'block');
                 cr.css('display', 'block');
                 aw.css('display', 'block');
-                //themes.css('display', 'block');
-                //components.css('display', 'block');
-                //journal.css('display', 'block');
-                //group.css('display', 'block');
-                //disciplines.css('display', 'block');
-                //speciality.css('display', 'block');
-                results.css('display', 'block');
                 vcsteacher.css('display', 'block');
                 vcs.css('display', 'block');
             }
@@ -198,10 +182,7 @@
                 info.css('display', 'block');
                 cr.css('display', 'block');
                 group.css('display', 'block');
-                //speciality.css('display', 'block');
-                //components.css('display', 'block');
                 users.css('display', 'block');
-                //plans.css('display', 'block');
                 vcsteacher.css('display', 'block');
             }
             if (roles.includes('Student')) {
@@ -220,11 +201,6 @@
                 $('.userName').text(sessionStorage.getItem(username));
             }
         }
-        //function openCreateQuestionsWithParam() 
-        //{
-        //var queryString = "?id=" + userId;
-        //window.location.href = "/repositoryuser" + queryString; 
-        //}
         function switchThemeDark() {
             localStorage.setItem('theme', 'dark')
             addCss()

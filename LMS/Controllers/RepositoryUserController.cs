@@ -52,7 +52,16 @@ namespace LMS.Controllers
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
             //RepoMager.CreateRepository(model.Name, curUserId);
-            RepoMager.CreateRepository(model.Name, NickName);
+            try
+            {
+                RepoMager.CreateRepository(model.Name, NickName);
+            }
+            catch (Exception e)
+            {
+                await Response.WriteAsync(e.Message);
+                return Ok(model);
+            }
+
             var size_repo = RepoMager.GetRepositorySize(model.Name, NickName);
             var repo = new RepositoryEntity { Name = model.Name, Description = model.Description, DefaultBranch = "main", UserName = NickName, CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
             try
@@ -71,11 +80,26 @@ namespace LMS.Controllers
         public async Task<IActionResult> delete([FromHeader] int Id)
         {
             var Repo = await _db.Repos.FirstOrDefaultAsync(g => g.Id == Id);
-            var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
-            RepoMager.DeleteRepository(Repo.Name, NickName);
             if (Repo != null)
             {
+                var AssignedTasks = await _db.AssignedVariants.ToListAsync();
+                if (AssignedTasks.FirstOrDefault(A => A.RepoID == Repo.Id) != null)
+                {
+                    await Response.WriteAsync("Репозиторий прикреплен к назначенному заданию");
+                    return Ok();
+                }
+
+                var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
+                try
+                {
+                    RepoMager.DeleteRepository(Repo.Name, NickName);
+                }
+                catch (Exception e)
+                {
+                    //Не делаем ничего если не удалось найти репозиторий на диске, удаляем запись из бд
+                }
+
                 try
                 {
                     _db.Repos.Remove(Repo);
@@ -87,7 +111,8 @@ namespace LMS.Controllers
                 }
                 return Ok();
             }
-            return NotFound("Group not found");
+
+            return NotFound("Репозиторий не найден");
         }
     }
 }

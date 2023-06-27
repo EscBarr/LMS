@@ -132,7 +132,7 @@
 
                             @{
 
-                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime != DateTime.MinValue)
+                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime == DateTime.MinValue)
                                 {
                                     <form asp-page-handler="DetachRepo" method="post">
                                         <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
@@ -158,7 +158,7 @@
                             <a href=@giturl>@(Model.AssignedRepo.UserName + "/" + Model.AssignedRepo.Name + ".git")</a>
                             @{
 
-                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime != DateTime.MinValue)
+                                if (@Model.AssignedVariantDetails.Mark == 0 && @Model.AssignedVariantDetails.CompletionDateTime == DateTime.MinValue)
                                 {
                                     <form asp-page-handler="DetachRepo" method="post">
                                         <button class="btn btn-danger mt-2" type="submit">Открепить репозиторий</button>
@@ -246,3 +246,12 @@
         </div>
     </div>
 </div>
+
+@if (ViewData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            alert("@ViewData["Message"]");
+        };
+    </script>
+}

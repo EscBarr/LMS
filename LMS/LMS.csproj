@@ -39,6 +39,7 @@
     <Folder Include="Controllers\GitPart\" />
     <Folder Include="Migrations\" />
     <Folder Include="Repositories\makar\" />
+    <Folder Include="Repositories\tmpprepod\" />
   </ItemGroup>
 
   <ItemGroup>

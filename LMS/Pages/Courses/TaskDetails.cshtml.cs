@@ -54,6 +54,11 @@ namespace LMS.Pages.Courses
             if (AssignedVariantDetails.RepoID != 0)
             {
                 AssignedRepo = await _db.Repos.FirstOrDefaultAsync(r => r.Id == AssignedVariantDetails.RepoID);
+                if (AssignedRepo == null)
+                {
+                    AssignedVariantDetails.RepoID = 0;
+                    AssignedVariantDetails.CompletionDateTime = DateTime.MinValue;
+                }
             }
             var CourseID = HttpContext.Session.GetInt32("CourseId");
             if (CourseID == null)
@@ -72,7 +77,16 @@ namespace LMS.Pages.Courses
             Id = (int)HttpContext.Session.GetInt32("TaskId");
             var curUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var NickName = (User.FindFirst(ClaimTypes.Surname).Value);
-            RepoMager.CreateRepository(modelRepo.Name, NickName);
+            try
+            {
+                RepoMager.CreateRepository(modelRepo.Name, NickName);
+            }
+            catch (Exception e)
+            {
+                ViewData["Message"] = "Не удалось создать репозиторий";
+                return RedirectToPage("TaskDetails", Id);
+            }
+
             var size_repo = RepoMager.GetRepositorySize(modelRepo.Name, NickName);
             var repo = new RepositoryEntity { Name = modelRepo.Name, Description = modelRepo.Description, DefaultBranch = "main", UserName = NickName, CreationDate = System.DateTime.Now, UpdateTime = System.DateTime.Now, UserId = curUserId, Size = size_repo };
             try
