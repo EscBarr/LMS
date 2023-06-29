@@ -26,7 +26,6 @@ Global
 		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{700FDA66-7234-4FCF-BE80-13D25BE792A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
