@@ -129,7 +129,7 @@ namespace LMS.Pages
             return Partial("_EditVariant", editVarModel);
         }
 
-        public async Task<IActionResult> OnPostUpdateVariant(int VariantId, int VariantNumber, string Description, int SelectedRepoId)
+        public async Task<IActionResult> OnPostUpdateVariant(int VariantId, string Description, int SelectedRepoId)
         {
             var LabWorkId = (int)HttpContext.Session.GetInt32("LabWorkId");
             var Variant = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == VariantId);
@@ -139,7 +139,6 @@ namespace LMS.Pages
                 Variant.AttachedRepoId = SelectedRepoId;
             }
             Variant.Description = Description;
-            Variant.VariantNumber = VariantNumber;
             await _labWorksRepo.UpdateVariant(Variant);
             await _labWorksRepo.Save();
             return RedirectToPage("ManageTask", LabWorkId);
