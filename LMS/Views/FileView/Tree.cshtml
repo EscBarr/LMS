@@ -74,34 +74,34 @@
 <div class="border" style="border-radius: 15px">
     <table class="table table-hover table-borderless" @*style="width:70%; margin-left:auto; margin-right:auto"*@>
 
-    <thead>
-        <tr>
-            <th scope="col">@lastcommit.Author.Name</th>
-            <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита: @lastcommit.Message</th>
-            <th scope="col"><span> Дата: @lastcommit.Author.When.LocalDateTime</span></th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+                <th scope="col">@lastcommit.Author.Name</th>
+                <th scope="col"><i class="fa-solid fa-tag"></i> Сообщение коммита: @lastcommit.Message</th>
+                <th scope="col"><span> Дата: @lastcommit.Author.When.LocalDateTime</span></th>
+            </tr>
+        </thead>
 
-    <tbody>
-        @if (Model.Parent != null)
-        {
-            <tr>
-                <td class="collapsing"><i class="fa-solid fa-folder"></i><a href="@Url.UnencodedRouteLink("GetTreeView", new { repoName = currRepo, id = currId, path = Model.Parent })">....</a></td>
-                @*<td>Сообщение коммита</td>
+        <tbody>
+            @if (Model.Parent != null)
+            {
+                <tr>
+                    <td class="collapsing"><i class="fa-solid fa-folder"></i><a href="@Url.UnencodedRouteLink("GetTreeView", new { repoName = currRepo, id = currId, path = Model.Parent })">....</a></td>
+                    @*<td>Сообщение коммита</td>
                 <td class="collapsing">Дата</td>*@
-            </tr>
-        }
-        @foreach (FileViewModel fvm in Model.Children)
-        {
-            bool isTree = fvm.Type == ObjectType.Tree;
-            <tr>
-                <td ><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
-                <td>@fvm.Comment</td>
-                <td >@fvm.DateChange</td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tr>
+            }
+            @foreach (FileViewModel fvm in Model.Children)
+            {
+                bool isTree = fvm.Type == ObjectType.Tree;
+                <tr>
+                    <td><i class="@((isTree) ? "fa-solid fa-folder" : "fa-solid fa-file")"></i>  <a href="@Url.UnencodedRouteLink((isTree) ? "GetTreeView" : "GetBlobView", new { repoName = currRepo, id = currId, path = fvm.Path })">@fvm.Name</a></td>
+                    <td>@fvm.Comment</td>
+                    <td>@fvm.DateChange</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 

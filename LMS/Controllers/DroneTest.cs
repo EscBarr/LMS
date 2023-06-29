@@ -30,7 +30,7 @@ namespace LMS.Controllers
             {
                 DirectoryCleanup(userDirectory);
             }
-            RepoData.Save(UserName+".zip");
+            RepoData.Save(UserName + ".zip");
             RepoData.ExtractAll(userDirectory);
 
             DirectoryInfo di = new DirectoryInfo(userDirectory);

@@ -52,12 +52,16 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
         <div class="order-last col-2 border-start">
+            <form asp-page-handler="RandomAssign" method="post">
             <div class="ms-2">
                 <label asp-for="DueDate"></label><br />
                 <input type="datetime-local" asp-for="DueDate" asp-format="{0:yyyy-MM-ddTHH:mm}" />
                 <span asp-validation-for="DueDate"></span>
             </div>
-            <div class="btn custom btn-primary m-2" style="width:fit-content;">Назначить случайно</div>
+            
+                <button type="submit" class="btn custom btn-primary m-2" style="width:fit-content;">Назначить случайно</button>
+            </form>
+          
 
         </div>
         <div class="col">

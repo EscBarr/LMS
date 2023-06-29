@@ -1,5 +1,6 @@
 using LMS.EntityContext;
 using LMS.Entity—ontext;
+using LMS.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Claims;
@@ -144,20 +146,52 @@ namespace LMS.Pages.Courses
         public async Task<IActionResult> OnPostRandomAssign()
         {
             Id = HttpContext.Session.GetInt32("LabWorkId");
+            CourseID = HttpContext.Session.GetInt32("CourseId");
             Cur_laboratoryWork = await _labWorksRepo.GetById(Id);
             List<int> AssignmentsIds = Cur_laboratoryWork.Variants.Select(a => a.VariantId).ToList();
+            AssignmentsIds.Shuffle();
             var Test = await _courseRepo.GetAllUsersFromCoursePerLab((int)CourseID, (int)Id);
-
+            var counter = 0;
             foreach (var user in Test)
             {
                 var AsVariant = user.AssignedVariants.FirstOrDefault(As => As.Variant.LaboratoryWorkId == Id);
-                if (AsVariant != null)
+                if (AsVariant == null)
                 {
+                    var AssignedRepoid = await _db.Variants.Where(c => c.VariantId == AssignmentsIds[counter]).Select(c => c.AttachedRepoId).FirstOrDefaultAsync();
+                    if (AssignedRepoid != null)
+                    {
+                        AsVariant = new AssignedVariant { UserId = user.Id, VariantId = AssignmentsIds[counter], AssignDateTime = DateTime.Now, DueDateTime = DueDate, TeacherAttachedRepoId = (int)AssignedRepoid };
+                    }
+                    else
+                    {
+                        AsVariant = new AssignedVariant { UserId = user.Id, VariantId = AssignmentsIds[counter], AssignDateTime = DateTime.Now, DueDateTime = DueDate, TeacherAttachedRepoId = 0 };
+                    }
+
+                    await _assignedVariantsRepo.Create(AsVariant);
                 }
                 else
                 {
+                    var AssignedRepoid = await _db.Variants.Where(c => c.VariantId == AssignmentsIds[counter]).Select(c => c.AttachedRepoId).FirstOrDefaultAsync();
+
+                    if (AssignedRepoid != null)
+                    {
+                        AsVariant.VariantId = AssignmentsIds[counter];
+                        AsVariant.AssignDateTime = DateTime.Now;
+                        AsVariant.DueDateTime = DueDate;
+                        AsVariant.TeacherAttachedRepoId = (int)AssignedRepoid;
+                    }
+                    else
+                    {
+                        AsVariant.VariantId = AssignmentsIds[counter];
+                        AsVariant.AssignDateTime = DateTime.Now;
+                        AsVariant.DueDateTime = DueDate;
+                        AsVariant.TeacherAttachedRepoId = 0;
+                    }
+                    await _assignedVariantsRepo.Update(AsVariant);
                 }
+                counter = counter + 1 == AssignmentsIds.Count ? 0 : ++counter;
             }
+            await _assignedVariantsRepo.Save();
             return RedirectToPage("AssignTasks", Id);
         }
     }

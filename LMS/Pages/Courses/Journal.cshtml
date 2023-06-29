@@ -36,8 +36,11 @@
     <div class="row h-100">
         <div class="order-last col-2 border-start">
             <h4 class="text-center">Фильтрация</h4>
-
-            <select class="selectpicker form-control" data-style="btn border" title="Выберите студента" asp-for="SelectedUserID" asp-items="Model._SelectedUsers"></select>
+            <form asp-page-handler="FilterStudent" method="post">
+            <select class="selectpicker form-control" name="StudentId" data-style="btn border" title="Выберите студента" asp-items="Model._SelectedUsers" onchange="this.form.submit()">
+                <option value="0">Выберите студента</option>
+            </select>
+            </form>
 
         </div>
         <div class="col">

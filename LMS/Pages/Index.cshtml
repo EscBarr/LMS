@@ -46,19 +46,13 @@ function ShowInfo()
         let chooseBlock = document.createElement('div');
         contentBlock.appendChild(chooseBlock);
 
-        let buttonGit = document.createElement('button');
-
-        buttonGit.innerText = "Инструкция по работе с модулем контроля версий";
-        buttonGit.classList = "btn btn-primary edit-item";
-         chooseBlock.appendChild(buttonGit);
+        
         let helpBlock = document.createElement('div');
         helpBlock.style = "padding-top: 20px;"
         helpBlock.id = "helpBlock";
         contentBlock.appendChild(helpBlock);
         
-         buttonGit.onclick = (ev => {
-            $('#helpBlock').load('GitTeacherInstruction.html');
-        });
+        
         $('#helpBlock').load('GitTeacherInstruction.html');
         
     }
