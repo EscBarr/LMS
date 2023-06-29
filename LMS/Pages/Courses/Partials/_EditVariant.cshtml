@@ -11,10 +11,10 @@
     <div class="col text-center">
         <form asp-page="ManageTask" asp-page-handler="UpdateVariant" method="post">
             <input type="hidden" name="VariantId" value="@Model.Variant.VariantId" />
-            <div class="input-group">
+@*            <div class="input-group">
                 <label class="mr-sm-2">Номер варианта:</label>
-                <input class="form-control" name="VariantNumber" type="number" min="1" value="@Model.Variant.VariantNumber" />
-            </div>
+                <input class="form-control" name="VariantNumber" type="number" min="@Model.Variant.VariantNumber" value="@Model.Variant.VariantNumber" />
+            </div>*@
             <div class="input-group">
                 <label class="mr-sm-2">Описание варианта:</label>
                 <textarea class="form-control" name="Description" style="width: 100%; height: 500px;">@Model.Variant.Description </textarea>

@@ -3,6 +3,7 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Добавление лабораторной работы";
+    var maxvariant = Model.Cur_laboratoryWork.Variants.Count() + 1;
 }
 <div aria-label="breadcrumb">
     <ol class="mybreadcrumb">
@@ -98,7 +99,7 @@
                         <form asp-page="ManageTask" asp-page-handler="AddVariant" method="post">
                             <div class="input-group">
                                 <label class="mr-sm-2">Номер варианта:</label>
-                                <input class="form-control" asp-for="@Model.Variant.VariantNumber" type="number" min="1" value="1" />
+                                <input class="form-control" asp-for="@Model.Variant.VariantNumber" type="number" min="@maxvariant" max="@maxvariant" value="@maxvariant" />
                             </div>
                             <div class="input-group">
                                 <label class="mr-sm-2">Описание варианта:</label>

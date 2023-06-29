@@ -120,7 +120,12 @@ namespace LMS.Pages
             SetRepoData();
             EditVarModel editVarModel = new EditVarModel();
             editVarModel.Variant = await _db.Variants.FirstOrDefaultAsync(L => L.VariantId == SelectedVarID);
+            if (editVarModel.Variant.AttachedRepoId != 0)
+            {
+                _AllRepos.Find(I => I.Value == editVarModel.Variant.AttachedRepoId.ToString()).Selected = true;
+            }
             editVarModel._AllRepos = _AllRepos;
+
             return Partial("_EditVariant", editVarModel);
         }
 
