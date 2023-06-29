@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Authentication;
 using LMS.Services.BasicAuth;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace LMS.StartupPrep
 {
@@ -59,6 +60,10 @@ namespace LMS.StartupPrep
             services.AddScoped<LabWorksRepo>();
             services.AddScoped<AssignedVariantsRepo>();
             services.AddScoped<UsersRepo>();
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
         }
 
         private static void RegisterDBContextDependencies(IServiceCollection services, IConfiguration configuration)
